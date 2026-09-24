@@ -2,7 +2,7 @@
 
 ## Current phase
 
-The user has explicitly authorized **M1B – Authentication & Security**: local login/logout/current identity, PostgreSQL sessions, Spring Security/CSRF, role guards, minimal identity/schema/audit foundations, development users, login UI and security tests. Full production MFA enrollment/recovery remains a separate delivery: this milestone must fail closed in production until a real MFA adapter is available, and must never claim it is implemented. Registration, email verification/reset delivery, notification/outbox processing, alumni/business features and SSO/OBS/e-Devlet remain outside this task. Preserve their architectural boundaries without precreating unused features. Do not start M2, commit or push.
+The user has explicitly authorized **M1C – Public Landing & Authentication Experience**: public landing, responsive navigation, illustrative product previews, login visual polish and honest unavailable reset UX. Preserve the completed M1A/M1B authentication and security behavior, backend implementation and regression tests. Public preview illustrations are explicitly authorized by this request; label them as illustrative and never treat them as real metrics or member data. No business modules, registration/reset delivery, notifications, MFA enrollment, SSO/OBS/e-Devlet or new portals. Do not start M2, commit or push.
 
 Read [decisions](docs/decisions.md), [requirements](docs/requirements.md), [architecture](docs/architecture.md), [database](docs/database.md), [API](docs/api.md), [repository structure](docs/repository-structure.md) and [roadmap](docs/roadmap.md) before making changes. Keep these documents consistent. The user's finalized decisions supersede the earlier open alternatives; remaining institutional inputs are recorded only in the decision register.
 
@@ -59,4 +59,4 @@ Read [decisions](docs/decisions.md), [requirements](docs/requirements.md), [arch
 - Run the checks relevant to a change and report what ran. For documentation-only work, check links, consistency and whitespace; do not claim application tests passed when no application exists.
 - Update the API contract and documentation alongside behavior changes. Document migration/backfill and rollback considerations in relevant reviews.
 - Preserve unrelated user changes. Never deploy or start a later milestone merely because a roadmap exists.
-- For the current M1B task, do not commit or push. Do not proceed to M2 automatically.
+- For the current M1C task, do not commit or push. Do not proceed to M2 automatically.

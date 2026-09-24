@@ -1,6 +1,6 @@
 # Architecture decisions
 
-Status: accepted product decisions from the user's follow-up on 2026-09-22. This record supersedes the open alternatives in the initial foundation. The subsequent requests authorize M1A and M1B authentication/security. Business features, commits and pushes remain unauthorized. Detailed contracts remain in their owning documents; [roadmap](roadmap.md) maps delivery to milestones.
+Status: accepted product decisions from the user's follow-up on 2026-09-22. This record supersedes the open alternatives in the initial foundation. The subsequent requests authorize M1A, M1B authentication/security and M1C public experience. Alumni business features, commits and pushes remain unauthorized. Detailed contracts remain in their owning documents; [roadmap](roadmap.md) maps delivery to milestones.
 
 ## Accepted decisions
 
@@ -67,3 +67,9 @@ The latest M1B request supersedes the broader original M1B roadmap. Implement lo
 - TOTP is the intended future local MFA factor; no factor adapter or production-ready bypass exists. The production startup guard rejects the missing implementation even when MFA is marked required.
 - Process-local bounded login limits are appropriate for this local single-instance foundation. Shared enforcement and target-environment load validation remain production prerequisites.
 - No institutional policy input is invented. I-01–I-05 remain the sole institutional decision register.
+
+## M1C execution decisions — 2026-09-24
+
+M1C adds a frontend public landing and authentication experience polish while retaining the M1B security architecture unchanged. Root stays public for all visitors; existing sessions receive an account-entry link rather than a forced redirect. `/login` keeps its role-based redirect and no public admin choice is exposed.
+
+The explicit M1C request authorizes labelled static product-preview compositions on the public site. These are explanatory illustrations of planned features, not dashboard metrics, personal records or business functionality. Text identity is used because no official university logo asset was available. Legal/contact placeholders remain inactive, and the password-reset control is visibly disabled with Yakında. The direct informational reset route is retained for compatibility. No new API, migration, library dependency, role or portal is introduced. Design evidence and layout differences are recorded in [the M1C design review](design/m1c-public-experience.md).

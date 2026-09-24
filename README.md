@@ -2,9 +2,9 @@
 
 Alumni and career ecosystem for Bursa Technical University.
 
-**M1A technical foundation and M1B local authentication/security are implemented. Business features remain deferred. Production startup is blocked until real ADMIN MFA is delivered.** This is a local development foundation, not a production release.
+**M1A technical foundation, M1B local authentication/security and M1C public landing experience are implemented. Alumni business features remain deferred. Production startup is blocked until real ADMIN MFA is delivered.** This is a local development foundation, not a production release.
 
-One React/TypeScript SPA, one Java 21 Spring Boot modular monolith, PostgreSQL and Flyway. The [Figma Make design](https://www.figma.com/make/7AqVYRogPUjTclUHbML9IW/Finalize-Mezun360-Design?fullscreen=1) remains the UI source of truth; the current interface contains login and guarded alumni/admin placeholders. See [M1B verification](docs/m1b-verification.md), [security/runbook](docs/m1b-security.md), [M1A verification](docs/m1a-verification.md) and [design evidence](docs/design/m1a-foundation.md).
+One React/TypeScript SPA, one Java 21 Spring Boot modular monolith, PostgreSQL and Flyway. The [Figma Make design](https://www.figma.com/make/7AqVYRogPUjTclUHbML9IW/Finalize-Mezun360-Design?fullscreen=1) remains the UI source of truth; the current interface contains a responsive public landing, login and guarded alumni/admin placeholders. See [M1C verification](docs/m1c-verification.md), [M1C design review](docs/design/m1c-public-experience.md), [M1B verification](docs/m1b-verification.md), [security/runbook](docs/m1b-security.md), [M1A verification](docs/m1a-verification.md) and [design evidence](docs/design/m1a-foundation.md).
 
 ## Prerequisites
 
@@ -66,11 +66,11 @@ npm ci
 npm run dev
 ```
 
-Open [the technical page](http://127.0.0.1:5173/__dev/foundation) to check the real API connection, palette and accessible primitives. It is excluded from production JavaScript. Use [login](http://127.0.0.1:5173/login) after local demo setup below. `/app` and `/admin` are guarded placeholders; future business paths remain absent.
+Open [the technical page](http://127.0.0.1:5173/__dev/foundation) to check the real API connection, palette and accessible primitives. It is excluded from production JavaScript. Start at [the public landing](http://127.0.0.1:5173/) and choose Giriş Yap after local demo setup above. `/app` and `/admin` are guarded placeholders; future business paths remain absent.
 
 | Local URL | Purpose |
 | --- | --- |
-| [Frontend](http://127.0.0.1:5173/) | Foundation entry |
+| [Frontend](http://127.0.0.1:5173/) | Public landing and platform introduction |
 | [Login](http://127.0.0.1:5173/login) | Local email/password login |
 | [Development controls](http://127.0.0.1:5173/__dev/foundation) | Live connection and primitive checks |
 | [Backend readiness](http://127.0.0.1:8080/api/v1/health) | Backend plus real PostgreSQL query |
@@ -118,7 +118,7 @@ npm run typecheck
 npm run build
 ```
 
-The build is in `frontend/dist/`. Use `npm run test:watch` for interactive testing and `npm run preview` for the production placeholder. After editing the reviewed [OpenAPI contract](contracts/openapi/mezun360.yaml), run `npm run api:generate`; never edit generated transport types manually.
+The build is in `frontend/dist/`. Use `npm run test:watch` for interactive testing and `npm run preview` to inspect the production frontend build (without an API proxy). After editing the reviewed [OpenAPI contract](contracts/openapi/mezun360.yaml), run `npm run api:generate`; never edit generated transport types manually.
 
 From the checkout root:
 
@@ -154,3 +154,11 @@ The documentation check includes untracked files, local Markdown links, fenced J
 | [Roadmap](docs/roadmap.md) | M1A/M1B and M2–M6 delivery boundaries |
 
 Local password/session authentication and role enforcement are implemented. Full production ADMIN MFA and operator recovery/provisioning are outstanding release blockers. Alumni verification, opt-in privacy and all business workflows remain later milestones. SSO/OBS, e-Devlet, employers and internal applications remain deferred. No commit, push or deployment is part of this task.
+
+## Public experience (M1C)
+
+The public landing stays available without login and even when identity lookup is unavailable. Navigation links reach its Platform, Mezun Ağı, Kariyer, Mentörlük and Hakkında sections. “Mezun Ağına Katıl” opens the existing login entry; it does not create an account. Signed-in visitors can choose “Alanıma dön”; `/login` still redirects ALUMNI to `/app` and ADMIN to `/admin`.
+
+Product previews are static, clearly labelled illustrations of planned capabilities, without real people or metric data. They do not implement private dashboards or business APIs. Official logo assets were not available, so the interface uses the authorized text identity. Legal/contact items are visibly marked Yakında; no legal text or contact address was invented.
+
+“Şifremi Unuttum” is disabled and marked Yakında. The direct `/forgot-password` informational fallback remains for existing links. Real token/reset/email workflows and production MFA remain pending. [M1C verification](docs/m1c-verification.md) records responsive/manual checks and security regression results. Do not start M2A automatically.

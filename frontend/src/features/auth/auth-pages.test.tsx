@@ -43,7 +43,8 @@ describe('session authentication UX', () => {
     expect(request.mock.calls.some(([url]) => String(url).endsWith('/auth/login'))).toBe(false)
     await user.click(screen.getByRole('button', { name: 'Parolayı göster' }))
     expect(screen.getByLabelText('Parola', { exact: true })).toHaveAttribute('type', 'text')
-    expect(screen.getByRole('link', { name: 'Şifremi Unuttum' })).toHaveAttribute('href', '/forgot-password')
+    expect(screen.getByRole('button', { name: 'Şifremi Unuttum' })).toBeDisabled()
+    expect(screen.getByText('Yakında')).toBeVisible()
   })
   it.each([['ALUMNI', '/app', 'Mezun360 Mezun Alanı'], ['ADMIN', '/admin', 'Mezun360 Yönetim Alanı']] as const)('redirects authenticated %s using backend identity', async (role, path, heading) => {
     const { user } = setup(role)

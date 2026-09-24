@@ -1,6 +1,6 @@
 # Requirements
 
-Status: updated MVP requirements, 2026-09-22. The [accepted decision register](decisions.md) resolves the original architecture alternatives. Detailed engineering choices explicitly labeled **proposed** remain refinements, not unresolved product scope. M1A technical foundation and M1B local authentication/security are authorized and implemented; see [M1B security](m1b-security.md) for exact scope and production blockers; the business capabilities below remain future requirements. See the [M1A evidence](m1a-verification.md) and [roadmap](roadmap.md).
+Status: updated MVP requirements, 2026-09-22. The [accepted decision register](decisions.md) resolves the original architecture alternatives. Detailed engineering choices explicitly labeled **proposed** remain refinements, not unresolved product scope. M1A technical foundation, M1B local authentication/security and M1C public experience are authorized and implemented; see [M1B security](m1b-security.md) for exact scope and production blockers; the business capabilities below remain future requirements. See the [M1A evidence](m1a-verification.md) and [roadmap](roadmap.md).
 
 ## Sources and evidence
 
@@ -137,3 +137,9 @@ This was a functional preview review, not a complete visual or responsive audit.
 ## M1B design and implementation evidence
 
 On 2026-09-24 the linked Figma Make preview again loaded the alumni home and established navy/pastel/Barlow visual language. A dedicated login view was not reachable through the prototype logout control. The implemented login uses the existing reviewed tokens and primitives; its split composition is provisional, not claimed as an exact Figma login reproduction. Only login and minimal authenticated placeholders were built. No prototype role switch, metric, personal record or dashboard was copied into production code. See [verification](m1b-verification.md).
+
+## M1C public entry acceptance
+
+The public landing now introduces the platform, four value areas, three planned participation steps, the university career ecosystem, illustrative product/center views and privacy principles. The five navigation anchors and login CTAs work on desktop/tablet/mobile. Legal/contact text is unavailable rather than fabricated. Join leads to existing login, reset is marked Yakında, and no business feature is implied to be active merely because its planned experience is illustrated.
+
+The live Figma alumni/home/network/jobs/mentors/admin views were reviewed again on 2026-09-24; see [M1C design evidence](design/m1c-public-experience.md). There was no dedicated public landing or official logo asset to reproduce. The user's public-site brief supplies the composition; exact existing palette and Barlow are preserved. [Verification](m1c-verification.md) records the tested current behavior without replacing the future business acceptance criteria above.

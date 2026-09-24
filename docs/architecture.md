@@ -1,6 +1,6 @@
 # Architecture
 
-Status: architecture aligned with the [accepted decisions](decisions.md). M1A technical foundation and M1B local authentication/security are implemented. [M1B security](m1b-security.md) records exact runtime behavior and production blockers; registration/reset, full MFA, notifications and business behavior below remain the target. Preserve the existing modular monolith and engineering safeguards. [Roadmap](roadmap.md) describes future delivery; unresolved institutional policy details do not reopen accepted choices.
+Status: architecture aligned with the [accepted decisions](decisions.md). M1A technical foundation, M1B local authentication/security and M1C public landing are implemented. [M1B security](m1b-security.md) records exact runtime behavior and production blockers; registration/reset, full MFA, notifications and business behavior below remain the target. Preserve the existing modular monolith and engineering safeguards. [Roadmap](roadmap.md) describes future delivery; unresolved institutional policy details do not reopen accepted choices.
 
 ## System shape
 
@@ -56,7 +56,7 @@ Transactions are local PostgreSQL transactions started by services. Write busine
 
 ## Frontend boundaries
 
-- `app/` owns bootstrap, providers and React Router configuration; `layouts/` owns shells and `routes/paths.ts` catalogs future destinations. The explicit M1A request settles public/auth, `/app/*` for alumni and `/admin/*`, superseding the earlier `/alumni/*` proposal. Registered routes include `/login`, informational `/forgot-password`, guarded `/app` and `/admin` placeholders, the root, development-only `/__dev/foundation` and not-found view. Business dashboards remain deferred.
+- `app/` owns bootstrap, providers and React Router configuration; `layouts/` owns shells and `routes/paths.ts` catalogs future destinations. The explicit M1A request settles public/auth, `/app/*` for alumni and `/admin/*`, superseding the earlier `/alumni/*` proposal. Registered routes include the public `/` landing, `/login`, informational `/forgot-password`, guarded `/app` and `/admin` placeholders, development-only `/__dev/foundation` and not-found view. Business dashboards remain deferred.
 - `features/` mirrors user capabilities; each feature owns its API hooks, screens, forms, schemas, components and relevant Vitest tests. Staff pages compose these features under a staff layout rather than duplicating the entire frontend.
 - `components/ui/` holds shadcn/ui primitives; shared composites go in `components/`. Tailwind tokens use the user-specified colors/Barlow font. Shared primitives follow shadcn/ui composition with Radix Dialog/Slot. Spacing/radius choices are provisional engineering defaults, recorded in the [design evidence](design/m1a-foundation.md).
 - TanStack Query owns remote state and cache invalidation. Router/search parameters own navigable filters. Local React state owns temporary UI/form state. Do not introduce a global state library without a demonstrated need.
@@ -157,3 +157,9 @@ Future CI order: contract/lint/type checks → fast unit/security/component test
 - Back up PostgreSQL and encryption keys separately with controlled access. Rehearse restores, configured retention processing and session invalidation after security incidents. BTÜ input I-04 defines recovery and availability objectives before release.
 - Retention durations remain “TBD – to be defined by Bursa Technical University according to institutional policy and applicable KVKK requirements.” A category/version-based retention policy contract drives future cleanup; no hard-coded legal periods or destructive fallback when unset. Security expiration and delivery-secret expiry remain separate technical controls.
 - Future SSO/OBS, internal applications, employers and waitlists require explicit implementation scope. Their adapter seams do not authorize connectors or extra infrastructure now.
+
+## M1C public frontend boundary
+
+`features/public` owns the landing, disclosure navigation and static labelled previews. It does not import business services or request alumni/contact/analytics data. The only optional remote state is the existing `/auth/me` identity query used to offer an account-entry link; loading/failure never blocks public content. Shared text identity connects public, login and authenticated placeholder shells. Public information stays accessible to authenticated visitors without a redirect loop.
+
+Preview components use CSS/SVG and existing Lucide icons; no tracking, media downloads, chart library or new dependency is introduced. They are explanatory design compositions explicitly authorized in M1C, not hardcoded production dashboard metrics. M1B cookie/CSRF/auth transport, account services, security configuration and migrations remain unchanged.

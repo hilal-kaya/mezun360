@@ -5,9 +5,9 @@ import { App } from './app'
 import { AppProviders } from './providers'
 
 describe('application routing', () => {
-  it('renders the technical placeholder with a main landmark', () => {
+  it('renders the public landing with a main landmark', () => {
     render(<AppProviders><MemoryRouter><App /></MemoryRouter></AppProviders>)
-    expect(screen.getByRole('heading', { name: 'BTÜ Mezun360' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: /BTÜ ile bağın.*mezuniyetle bitmez/ })).toBeInTheDocument()
     expect(screen.getByRole('main')).toHaveAttribute('id', 'main')
   })
 

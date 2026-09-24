@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Eye, EyeOff, GraduationCap, ArrowRight, LogOut, ShieldCheck } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight, LogOut, ShieldCheck } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input, Label } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -50,17 +50,17 @@ export function LoginPage() {
   if (identity.data) return <Navigate to={homeFor(identity.data)} replace />
   return (
     <div className="grid overflow-hidden rounded-3xl border bg-card shadow-sm md:grid-cols-2">
-      <section className="relative flex flex-col justify-between gap-10 bg-primary p-8 text-primary-foreground sm:p-12" aria-label="BTÜ Mezun360">
-        <div className="flex items-center gap-3"><GraduationCap size={34} aria-hidden="true" /><div><p className="text-xl font-bold">BTÜ Mezun360</p><p className="text-sm text-pastel-blue">Bursa Teknik Üniversitesi</p></div></div>
-        <div className="space-y-5"><span className="inline-flex rounded-full bg-white/10 px-4 py-1 text-sm text-pastel-turquoise">Aynı üniversite. Yeni yollar.</span><h1 className="max-w-sm leading-tight">BTÜ ile bağın mezuniyetle bitmez.</h1><p className="max-w-sm text-lg text-pastel-blue">Mezun topluluğumuzla bağını sürdür, kariyer yolculuğuna birlikte devam edelim.</p></div>
+      <section className="relative hidden flex-col justify-between md:flex gap-10 bg-primary p-8 text-primary-foreground sm:p-12" aria-label="BTÜ Mezun360">
+        <div><p className="text-2xl font-semibold">BTÜ Mezun360</p><p className="mt-1 text-sm text-pastel-blue">Kariyer ve Mezun Platformu</p></div>
+        <div className="space-y-5"><span className="inline-flex rounded-full bg-white/10 px-4 py-1 text-sm text-pastel-turquoise">Aynı üniversite. Yeni yollar.</span><h2 className="max-w-sm text-3xl leading-tight sm:text-4xl">BTÜ ile bağın mezuniyetle bitmez.</h2><p className="max-w-sm text-lg text-pastel-blue">Mezun topluluğumuzla bağını sürdür, kariyer yolculuğuna birlikte devam edelim.</p></div>
         <p className="flex items-center gap-2 text-sm text-pastel-blue"><ShieldCheck size={18} aria-hidden="true" />Üniversitenle güvenli bir bağ.</p>
       </section>
       <section className="p-8 sm:p-12" aria-labelledby="login-title">
-        <div className="mb-8 space-y-2"><h2 id="login-title" className="text-3xl">Tekrar hoş geldin</h2><p className="text-muted-foreground">Mezun360 hesabınla giriş yap.</p></div>
+        <div className="mb-8 space-y-2"><h1 id="login-title" className="text-3xl">Tekrar hoş geldin</h1><p className="text-muted-foreground">Mezun360 hesabınla yolculuğuna devam et.</p></div>
         <form noValidate onSubmit={submit} className="space-y-5" aria-busy={busy}>
           <div className="space-y-2"><Label htmlFor="email">E-posta adresi</Label><Input id="email" name="email" type="email" autoComplete="username" maxLength={254} required disabled={busy} placeholder="ornek@eposta.com" /></div>
           <div className="space-y-2"><Label htmlFor="password">Parola</Label><div className="relative"><Input className="pr-14" id="password" name="password" type={visible ? 'text' : 'password'} autoComplete="current-password" maxLength={128} required disabled={busy} /><Button variant="ghost" className="absolute right-0 top-0 px-3" aria-label={visible ? 'Parolayı gizle' : 'Parolayı göster'} aria-pressed={visible} onClick={() => setVisible(!visible)}>{visible ? <EyeOff size={18} /> : <Eye size={18} />}</Button></div></div>
-          <div className="text-right"><Link to="/forgot-password" className="text-sm font-semibold text-primary underline">Şifremi Unuttum</Link></div>
+          <div className="flex flex-wrap items-center justify-end gap-2 text-sm"><button type="button" disabled className="cursor-not-allowed text-muted-foreground" aria-describedby="reset-availability">Şifremi Unuttum</button><span id="reset-availability" className="rounded bg-pastel-lavender px-2 py-1 text-xs font-medium text-primary">Yakında</span></div>
           {(error || identity.isError) && <p role="alert" className="rounded-md bg-pastel-peach p-3 text-sm text-destructive">{error || 'Oturum bilgisi alınamadı. Bağlantınızı kontrol edip tekrar deneyin.'}</p>}
           <Button type="submit" className="w-full" disabled={busy}>{busy ? 'Giriş yapılıyor…' : 'Giriş Yap'}<ArrowRight size={18} aria-hidden="true" /></Button>
         </form>

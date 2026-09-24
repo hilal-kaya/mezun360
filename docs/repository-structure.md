@@ -1,6 +1,6 @@
 # Repository structure
 
-Status: M1A and M1B foundations exist. Future business modules are added incrementally when authorized; empty placeholder module trees are intentionally absent.
+Status: M1A/M1B foundations and M1C public experience exist. Future business modules are added incrementally when authorized; empty placeholder module trees are intentionally absent.
 
 ## Current layout
 
@@ -16,7 +16,8 @@ mezun360/
 │   ├── requirements.md / decisions.md / architecture.md
 │   ├── database.md / api.md / roadmap.md / repository-structure.md
 │   ├── m1a-verification.md / m1b-verification.md / m1b-security.md
-│   └── design/m1a-foundation.md
+│   ├── m1c-verification.md
+│   └── design/                        # M1A tokens and M1C public review
 ├── contracts/openapi/mezun360.yaml       # Implemented health/auth/security contract
 ├── frontend/
 │   ├── package.json / package-lock.json / .nvmrc / .env.example
@@ -28,7 +29,9 @@ mezun360/
 │       ├── app/                         # Router, Query provider, app tests
 │       ├── layouts/                     # Technical root shell
 │       ├── routes/paths.ts              # Future public, /app and /admin catalog
+│       ├── components/product-identity.tsx # Shared text product identity
 │       ├── components/ui/               # Primitives and dialog behavior test
+│       ├── features/public/             # Landing, navigation, labelled preview illustrations/tests
 │       ├── features/auth/               # Login, session identity, UX guards and tests
 │       ├── dev/                         # DEV-only health/palette controls
 │       ├── lib/api/                     # Fetch transport, tests, generated types
