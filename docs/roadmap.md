@@ -1,0 +1,34 @@
+# Milestone roadmap
+
+Status: M1A technical foundation and M1B local authentication/security are implemented. Production security completion and M2–M6 require separate authorization. [decisions.md](decisions.md) is the single register of accepted decisions and remaining institutional inputs; the original open alternatives are superseded.
+
+## Milestones
+
+| Milestone | Scope | Exit criteria / dependencies |
+| --- | --- | --- |
+| M0 — Requirements and design agreement | Record accepted decisions; review the now-accessible Figma preview and map screens/states | Product choices settled in D-02–D-10; initial observed areas in requirements; capture immutable revision and finish state/responsive mapping before corresponding UI work |
+| M1A — Technical foundation | Compatible version pins; React/Vite/Router/Query and design primitives; API client and generated types; Java 21/Spring Boot health/errors/validation; root PostgreSQL Compose; Flyway technical schema; tests, CI and setup | Actual frontend/backend/database startup; clean and repeated Flyway validation; frontend/backend tests, lint, build and real proxied health pass. No authentication, business pages, roles or domain tables. See [verification](m1a-verification.md). |
+| M1B — Authentication and security foundation | Local password/session authentication, CSRF, role checks, identity/session schema, minimal security audit, local demo bootstrap and login UI; fail-closed MFA boundary | Implemented and verified: password/session/CSRF checks, no self-promotion, server admin checks, pre-MFA denial, production startup refusal, clean/upgrade migrations; see M1B verification. Full MFA, operator provisioning/recovery, registration/reset/email and outbox are deferred by the latest task; must precede public onboarding/production. |
+| M2 — Alumni identity and privacy | Profile/contact separation, opt-in visibility, default-false inactive employer preference, education/history and manual ADMIN PENDING/VERIFIED/REJECTED review; privacy intake | Owner/visibility/mass-assignment tests, canonical status transitions, no anonymous profiles, audited staff private-data reads; I-02 evidence and I-03 notices/purposes confirmed for rollout; no OBS connector |
+| M3 — External career opportunities | Organizations, member-only job lifecycle/discovery/bookmarks; both application-mode concepts with only EXTERNAL_APPLICATION enabled; validated destination handoff | Invalid/unsafe URLs and internal-mode activation rejected; deadline/ownership tests; no application records, internal-review routes or false completed-application counts; destination policy from I-05 |
+| M4 — Mentorship and events | Mentor opt-in/moderation; topic/message/method/time requests with STANDARD/QUICK types; exact mentorship lifecycle; event capacity/registration/cancellation/attendance; workflow notifications | Self/duplicate/unauthorized-transition and shared quick/standard capacity tests; concurrent event last-seat/cancellation tests; full events rejected; no active waitlist subsystem; durable reminders honor current state; I-05 scheduling/attendance policy |
+| M5 — Content, reporting and operational completion | Selected university news/announcements; live authorized dashboards, privacy fulfillment/configurable retention interface, delivery/retry views and IN_APP/EMAIL preferences | Public reads only explicitly published/public content; no guest analytics or member leakage; real defined metrics with internal-application metrics absent; I-03 policy values/disclosure rules wired through configuration; unset retention cannot trigger deletion; transport adapters pass contract tests; I-05 editorial authority |
+| M6 — Provider-neutral release readiness | Full-stack security/design/accessibility review, agreed-scale testing, Compose deployment configuration, real email adapter binding, migration/restore exercises, runbooks and UAT | Required CI passes; production ADMIN MFA enforced, mock email/MFA forbidden; I-01–I-05 operational prerequisites satisfied as applicable; institution-supplied retention policies configured; no guessed periods; secrets/TLS/backups/alerts/recovery verified without Kubernetes/microservices |
+
+Dependencies are sequential for core invariants; do not postpone security, audit or transactions until M6. Notification/outbox primitives and local mock/log email were excluded from the latest M1B scope. Deliver them in separately authorized supporting work before a feature requires transactional notifications. Real MFA/operator provisioning must precede production staff access. Only create migrations/contracts for authorized scope. Timing estimates follow the complete Figma inventory and staffing; no dates are invented here.
+
+## Remaining inputs and future work
+
+Only BTÜ institutional inputs I-01–I-05 remain in [decisions.md](decisions.md). Local authentication, manual verification, opt-in privacy, external-first jobs, the mentorship lifecycle, provider independence and public scope are settled; do not ask to reconfirm them.
+
+Beyond M6, separately authorized work may add BTÜ SSO, e-Devlet, OBS, internal applications, employer accounts or waitlists through the documented module boundaries. No future integration, inactive controller, migration or background connector is a prerequisite for completing MVP. Prototype surveys/ratings/uploads are not automatically scheduled.
+
+## Engineering choices that can proceed within an authorized milestone
+
+Use the monorepo/modules and Maven/npm boundaries; determine compatible dependency versions, maintained MFA implementation, validated bounds and test helpers during M1B. M1A version pins are recorded in its verification report. Choose indexes from observed queries and verify them. These routine choices do not need individual permission requests unless they change the requested stack or an agreed boundary.
+
+## Current completion and remaining dependency
+
+M1A introduced the technical foundation. M1B adds authentication/security, two forward migrations and local login UI. See [M1A verification](m1a-verification.md) and [M1B verification](m1b-verification.md). Business modules and deployment remain unimplemented. Do not commit, push or start M2 automatically.
+
+The Figma link is accessible; requirements records the initial functional review and the [M1A design record](design/m1a-foundation.md) records the current recheck. Full screen/state mapping, immutable revision capture and responsive visual QA remain design work, not an unresolved authentication/access choice or a blocker for M1A.

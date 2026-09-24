@@ -1,0 +1,16 @@
+.DS_Store
+.idea/
+.vscode/
+*.iml
+.env
+.env.*
+!.env.example
+node_modules/
+dist/
+coverage/
+target/
+*.log
+playwright-report/
+test-results/
+*.tsbuildinfo
+

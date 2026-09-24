@@ -1,0 +1,63 @@
+@import '@fontsource/barlow/latin-400.css';
+@import '@fontsource/barlow/latin-ext-400.css';
+@import '@fontsource/barlow/latin-500.css';
+@import '@fontsource/barlow/latin-ext-500.css';
+@import '@fontsource/barlow/latin-600.css';
+@import '@fontsource/barlow/latin-ext-600.css';
+@import '@fontsource/barlow/latin-700.css';
+@import '@fontsource/barlow/latin-ext-700.css';
+@import 'tailwindcss';
+
+:root {
+  --background: #fafaf7;
+  --foreground: #1f2937;
+  --primary: #233a85;
+  --primary-foreground: #ffffff;
+  --pastel-blue: #dde7ff;
+  --pastel-turquoise: #ddf6f4;
+  --pastel-mint: #e4f4ea;
+  --pastel-lavender: #ece8fa;
+  --pastel-peach: #fce9de;
+  --card: #ffffff;
+  --muted-foreground: #4b5563;
+  --border: #cbd5e1;
+  --input: #64748b;
+  --destructive: #b42318;
+  --radius: 0.75rem;
+}
+
+@theme inline {
+  --font-sans: 'Barlow', system-ui, sans-serif;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-pastel-blue: var(--pastel-blue);
+  --color-pastel-turquoise: var(--pastel-turquoise);
+  --color-pastel-mint: var(--pastel-mint);
+  --color-pastel-lavender: var(--pastel-lavender);
+  --color-pastel-peach: var(--pastel-peach);
+  --color-card: var(--card);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-destructive: var(--destructive);
+  --color-ring: var(--primary);
+  --radius-sm: calc(var(--radius) - 0.25rem);
+  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 0.25rem);
+}
+
+@layer base {
+  * { @apply border-border; }
+  body { @apply m-0 bg-background font-sans text-base leading-relaxed text-foreground antialiased; }
+  h1 { @apply text-3xl font-semibold tracking-tight sm:text-4xl; }
+  h2 { @apply text-xl font-semibold; }
+  button, input, select, textarea { font: inherit; }
+  a { @apply underline-offset-4; }
+  :focus-visible { @apply outline-2 outline-offset-4 outline-ring; }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+  }
+}

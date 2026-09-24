@@ -1,0 +1,11 @@
+springdoc:
+  api-docs:
+    enabled: ${OPENAPI_ENABLED:true}
+  swagger-ui:
+    enabled: ${OPENAPI_ENABLED:true}
+
+mezun360:
+  security:
+    cookie-secure: ${SESSION_COOKIE_SECURE:false}
+    cookie-name: ${SESSION_COOKIE_NAME:mezun360-session}
+    admin-mfa-required: ${ADMIN_MFA_REQUIRED:false}
