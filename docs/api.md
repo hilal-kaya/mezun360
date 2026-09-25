@@ -1,6 +1,6 @@
 # API design
 
-Status: M1A health/errors and M1B authentication/security probes are implemented in the [machine-readable contract](../contracts/openapi/mezun360.yaml). All business inventory below remains target-only. Registration, verification/reset delivery and MFA APIs are also unimplemented. [M1B security](m1b-security.md) describes production blockers and the exact local runtime.
+Status: M1A health/errors and M1B authentication/security probes are implemented in the [machine-readable contract](../contracts/openapi/mezun360.yaml). M2A implements owner-only GET/PUT profile; its section below supersedes the earlier profile/child-route proposals. Other business inventory remains target-only. Registration, verification/reset delivery and MFA APIs are also unimplemented. [M1B security](m1b-security.md) describes production blockers and the exact local runtime.
 
 The health service executes `SELECT 1` against PostgreSQL and returns `{status: "UP", service: "mezun360-api"}` or a sanitized `503 SERVICE_UNAVAILABLE`. Every request receives a server-generated `X-Request-ID`; health/errors use `Cache-Control: no-store`. Local OpenAPI JSON/UI is available at `/v3/api-docs` and `/swagger-ui/index.html`; disabled by default outside the local profile. No authentication requirement is implied for M1A readiness.
 
@@ -211,3 +211,21 @@ Test guest/unverified/verified/admin and restricted pre-MFA access, including di
 ## Implemented technical authorization probes
 
 GET `/api/v1/admin/security-check`: anonymous 401, ALUMNI 403, ADMIN 200. GET `/api/v1/alumni/security-check`: ALUMNI 200; it tests the role only and must not be reused as proof of alumni verification. Both return `{status:"OK"}` without business data and use server route plus service method checks. No account/role mutation route exists.
+
+## Implemented M2A owner profile contract
+
+The two implemented profile operations are `GET /api/v1/me/profile` and `PUT /api/v1/me/profile`. Both require an active authenticated ALUMNI; guest GET receives 401 and ADMIN receives 403. PUT also requires the existing CSRF token. There is no public, peer, admin inspection or ID-addressed profile endpoint.
+
+M2A chooses the user-authorized **aggregate replacement** option. This supersedes the earlier proposed independent `/me/education` and `/me/employment` CRUD routes, which are not registered. Bounded history/skills/certification arrays are saved atomically with the profile and one concurrency token. Each frontend section edits a local copy and submits the aggregate, preserving other fields. Future independently managed institutional evidence will require its own command boundary; it must not become an editable owner property.
+
+GET returns `{exists, data, completionPercentage, createdAt, updatedAt}` and a strong `ETag`. A new account receives `exists:false`, `data:null`, null timestamps, 0 completion and `ETag: "empty"` without a database write. Existing data contains only the editable professional/profile fields and server-assigned child IDs. No userId, role, email, password, session, visibility or verification fields are returned or writable.
+
+PUT sends the complete `ProfileWrite` DTO from OpenAPI. First/last name are required; optional scalar fields clear when omitted/null/blank. All collections and `contribution` must be present, even when empty. Existing child IDs must belong to the current owner's same collection and must not repeat; absent IDs create new server IDs, omitted existing children are removed. Unknown properties at every nesting level are rejected. Never pass response envelope fields back as editable data. The server derives the owner from the current-account service.
+
+Every PUT requires the exact `If-Match` from the GET, including `"empty"` for first creation. A missing precondition returns 428 `PRECONDITION_REQUIRED`; a stale, weak, wildcard or otherwise mismatched token returns 412 `VERSION_CONFLICT`. Successful PUT returns 200 plus updated envelope/ETag. GET/PUT are `Cache-Control: no-store`. Repeating a PUT with an old token cannot overwrite newer content. The UI keeps a conflicted draft visible and requires explicit reload; it does not retry stale writes automatically.
+
+Bean Validation plus service rules produce the existing RFC 9457 `VALIDATION_FAILED` shape with paths such as `career[0].endDate`. Lists and text are bounded as documented in [database](database.md). Plain text excludes markup/control characters. Credential links must be public-host-shaped HTTPS without credentials, numeric IP/local/internal host forms, unsafe characters or nonstandard ports; the server never fetches or resolves them. Browser links use noopener/noreferrer/no-referrer. This is syntactic link validation, not a certification issuer trust check or DNS-based URL reputation service.
+
+Completion is calculated on every response, not stored: 20 points each for (1) first/last name + department + graduation year + city, (2) nonblank about, (3) at least one employment record, (4) at least one education record, (5) at least one skill. Empty profile scores zero. Current company/position, certifications and contribution choices do not independently add or subtract points. The percentage is an onboarding aid, never evidence of verification or authority.
+
+The reviewed [OpenAPI contract](../contracts/openapi/mezun360.yaml) and generated frontend schema contain these DTOs and operations. Existing identity/security contract drift tests now also cover profile schemas/routes. All other business tables/routes in this document remain target scope unless explicitly marked implemented.

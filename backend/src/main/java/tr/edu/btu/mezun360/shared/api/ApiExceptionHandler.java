@@ -106,6 +106,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
                 "The service is temporarily unavailable.", List.of(), new HttpHeaders(), request);
     }
 
+    @ExceptionHandler(tr.edu.btu.mezun360.shared.exception.RequestRuleException.class)
+    ResponseEntity<Object> rule(tr.edu.btu.mezun360.shared.exception.RequestRuleException ex, HttpServletRequest request) {
+        return problem(HttpStatus.valueOf(ex.status), ex.code, "The request could not be processed.", ex.errors, new HttpHeaders(), request);
+    }
+
     @ExceptionHandler(Exception.class)
     ResponseEntity<Object> unexpected(Exception ex, HttpServletRequest request) {
         // No request body, exception message, SQL or credentials in diagnostic output.

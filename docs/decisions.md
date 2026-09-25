@@ -1,6 +1,6 @@
 # Architecture decisions
 
-Status: accepted product decisions from the user's follow-up on 2026-09-22. This record supersedes the open alternatives in the initial foundation. The subsequent requests authorize M1A, M1B authentication/security and M1C public experience. Alumni business features, commits and pushes remain unauthorized. Detailed contracts remain in their owning documents; [roadmap](roadmap.md) maps delivery to milestones.
+Status: accepted product decisions from the user's follow-up on 2026-09-22. This record supersedes the open alternatives in the initial foundation. The subsequent requests authorize M1A, M1B authentication/security and M1C public experience. The subsequent M2A request authorizes owner-only profiles. Other business features, commits and pushes remain unauthorized. Detailed contracts remain in their owning documents; [roadmap](roadmap.md) maps delivery to milestones.
 
 ## Accepted decisions
 
@@ -73,3 +73,11 @@ The latest M1B request supersedes the broader original M1B roadmap. Implement lo
 M1C adds a frontend public landing and authentication experience polish while retaining the M1B security architecture unchanged. Root stays public for all visitors; existing sessions receive an account-entry link rather than a forced redirect. `/login` keeps its role-based redirect and no public admin choice is exposed.
 
 The explicit M1C request authorizes labelled static product-preview compositions on the public site. These are explanatory illustrations of planned features, not dashboard metrics, personal records or business functionality. Text identity is used because no official university logo asset was available. Legal/contact placeholders remain inactive, and the password-reset control is visibly disabled with Yakında. The direct informational reset route is retained for compatibility. No new API, migration, library dependency, role or portal is introduced. Design evidence and layout differences are recorded in [the M1C design review](design/m1c-public-experience.md).
+
+## M2A execution decisions — 2026-09-25
+
+The explicit M2A request authorizes the first business module: owner-only profiles and their professional history, normalized skills, certifications, preferences and server completion. UserAccount remains separate. No verification, privacy settings, directory or admin inspection is activated.
+
+Use aggregate GET/PUT `/me/profile` with strong ETag/If-Match, including an explicit empty onboarding representation. This replaces the earlier unimplemented separate education/employment route proposal; see [API](api.md) for the single authoritative contract. Preserve the documented `employment_records` table name. Contribution flags live on the profile rather than a separate one-to-one table. Education source is server-owned USER_ENTERED, not institutional verification; department remains bounded self-reported text pending BTÜ reference data in I-02.
+
+No notification workflow is in scope, so the existing minimal audit writer records profile updates transactionally without creating an unused outbox. Supporting outbox delivery stays separately authorized work before a consumer needs events. Existing local-only demo accounts are sufficient; no automatic profile fixture/bootstrap is necessary. [Design evidence](design/m2a-alumni-profile.md) records intentional adjustments from prototype comma fields and contact data to the user's explicit brief.

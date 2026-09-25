@@ -2,9 +2,9 @@
 
 Alumni and career ecosystem for Bursa Technical University.
 
-**M1A technical foundation, M1B local authentication/security and M1C public landing experience are implemented. Alumni business features remain deferred. Production startup is blocked until real ADMIN MFA is delivered.** This is a local development foundation, not a production release.
+**M1A technical foundation, M1B local authentication/security and M1C public landing experience are implemented. M2A owner-only alumni profiles are implemented; other business features remain deferred. Production startup is blocked until real ADMIN MFA is delivered.** This is a local development foundation, not a production release.
 
-One React/TypeScript SPA, one Java 21 Spring Boot modular monolith, PostgreSQL and Flyway. The [Figma Make design](https://www.figma.com/make/7AqVYRogPUjTclUHbML9IW/Finalize-Mezun360-Design?fullscreen=1) remains the UI source of truth; the current interface contains a responsive public landing, login and guarded alumni/admin placeholders. See [M1C verification](docs/m1c-verification.md), [M1C design review](docs/design/m1c-public-experience.md), [M1B verification](docs/m1b-verification.md), [security/runbook](docs/m1b-security.md), [M1A verification](docs/m1a-verification.md) and [design evidence](docs/design/m1a-foundation.md).
+One React/TypeScript SPA, one Java 21 Spring Boot modular monolith, PostgreSQL and Flyway. The [Figma Make design](https://www.figma.com/make/7AqVYRogPUjTclUHbML9IW/Finalize-Mezun360-Design?fullscreen=1) remains the UI source of truth; the current interface contains a responsive public landing, login and an authenticated alumni shell, owner profile and guarded admin placeholder. See [M1C verification](docs/m1c-verification.md), [M1C design review](docs/design/m1c-public-experience.md), [M1B verification](docs/m1b-verification.md), [security/runbook](docs/m1b-security.md), [M1A verification](docs/m1a-verification.md) and [design evidence](docs/design/m1a-foundation.md).
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-On Windows use `mvnw.cmd`. The backend imports `../.env` when launched from `backend/`; OS environment variables override file values. The example enables the `local` profile, which exposes OpenAPI documentation. Without it, API docs are disabled by default. Flyway runs before JPA schema validation. M1B adds identity, minimal audit and JDBC session tables through Flyway; no business tables.
+On Windows use `mvnw.cmd`. The backend imports `../.env` when launched from `backend/`; OS environment variables override file values. The example enables the `local` profile, which exposes OpenAPI documentation. Without it, API docs are disabled by default. Flyway runs before JPA schema validation. M1B adds identity, minimal audit and JDBC sessions; M2A adds owner profile tables through V0004.
 
 ## Local login setup
 
@@ -66,7 +66,7 @@ npm ci
 npm run dev
 ```
 
-Open [the technical page](http://127.0.0.1:5173/__dev/foundation) to check the real API connection, palette and accessible primitives. It is excluded from production JavaScript. Start at [the public landing](http://127.0.0.1:5173/) and choose Giriş Yap after local demo setup above. `/app` and `/admin` are guarded placeholders; future business paths remain absent.
+Open [the technical page](http://127.0.0.1:5173/__dev/foundation) to check the real API connection, palette and accessible primitives. It is excluded from production JavaScript. Start at [the public landing](http://127.0.0.1:5173/) and choose Giriş Yap after local demo setup above. `/app` opens the alumni shell; `/app/profile` reads and edits the current owner’s real persisted profile. Other alumni menu destinations clearly say Yakında; `/admin` remains a guarded placeholder.
 
 | Local URL | Purpose |
 | --- | --- |
@@ -153,7 +153,7 @@ The documentation check includes untracked files, local Markdown links, fenced J
 | [Repository structure](docs/repository-structure.md) | Present files and incremental expansion |
 | [Roadmap](docs/roadmap.md) | M1A/M1B and M2–M6 delivery boundaries |
 
-Local password/session authentication and role enforcement are implemented. Full production ADMIN MFA and operator recovery/provisioning are outstanding release blockers. Alumni verification, opt-in privacy and all business workflows remain later milestones. SSO/OBS, e-Devlet, employers and internal applications remain deferred. No commit, push or deployment is part of this task.
+Local password/session authentication and role enforcement are implemented. Full production ADMIN MFA and operator recovery/provisioning are outstanding release blockers. Alumni verification, opt-in privacy and business workflows beyond owner profiles remain later milestones. SSO/OBS, e-Devlet, employers and internal applications remain deferred. No commit, push or deployment is part of this task.
 
 ## Public experience (M1C)
 
@@ -161,4 +161,10 @@ The public landing stays available without login and even when identity lookup i
 
 Product previews are static, clearly labelled illustrations of planned capabilities, without real people or metric data. They do not implement private dashboards or business APIs. Official logo assets were not available, so the interface uses the authorized text identity. Legal/contact items are visibly marked Yakında; no legal text or contact address was invented.
 
-“Şifremi Unuttum” is disabled and marked Yakında. The direct `/forgot-password` informational fallback remains for existing links. Real token/reset/email workflows and production MFA remain pending. [M1C verification](docs/m1c-verification.md) records responsive/manual checks and security regression results. Do not start M2A automatically.
+“Şifremi Unuttum” is disabled and marked Yakında. The direct `/forgot-password` informational fallback remains for existing links. Real token/reset/email workflows and production MFA remain pending. [M1C verification](docs/m1c-verification.md) records responsive/manual checks and security regression results. M2A is now authorized and implemented; do not start M2B automatically.
+
+## Owner profile (M2A)
+
+After ALUMNI login, open [Profilim](http://127.0.0.1:5173/app/profile). New accounts see “Profilini tamamla”; saving required names creates the profile. Add professional fields, biography, career/education records, skill chips, certifications and community preferences through section dialogs. Refreshing or logging in again reads the same PostgreSQL data. Completion is computed by the backend. There is no automatic profile demo seed; the local manual verification account may contain explicitly synthetic records.
+
+Profiles are owner-only; ADMIN cannot use the alumni owner API. Directory, verification and visibility controls are not implemented. See [M2A verification](docs/m2a-verification.md), [design review](docs/design/m2a-alumni-profile.md), [API](docs/api.md) and [database](docs/database.md). M2B remains separately authorized work.

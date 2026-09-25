@@ -13,7 +13,7 @@ export class ApiError extends Error {
   }
 }
 
-type RequestOptions = { signal?: AbortSignal; headers?: HeadersInit }
+type RequestOptions = { signal?: AbortSignal; headers?: HeadersInit; onResponse?: (response: Response) => void }
 
 function isProblem(value: unknown): value is ApiProblem {
   if (!value || typeof value !== 'object') return false
@@ -62,6 +62,7 @@ export function createApiClient(baseUrl: string, fetcher: typeof fetch = (...arg
       const problem = isProblem(payload) ? payload : undefined
       throw new ApiError(response.status, problem?.code ?? 'HTTP_ERROR', problem)
     }
+    options.onResponse?.(response)
     if (response.status === 204) return undefined as T
     try {
       return await response.json() as T

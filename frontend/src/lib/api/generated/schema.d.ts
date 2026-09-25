@@ -4,6 +4,24 @@
  */
 
 export interface paths {
+    "/api/v1/me/profile": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Read current ALUMNI owner's profile or empty onboarding state */
+        get: operations["getOwnProfile"];
+        /** Atomically replace editable profile and bounded nested records; ALUMNI owner only */
+        put: operations["replaceOwnProfile"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/logout": {
         parameters: {
             query?: never;
@@ -127,6 +145,74 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        CareerInput: {
+            /** Format: uuid */
+            id?: string | null;
+            company: string;
+            position: string;
+            industry?: string | null;
+            city?: string | null;
+            /** Format: date */
+            startDate: string;
+            /** Format: date */
+            endDate?: string | null;
+            currentlyWorking?: boolean;
+            description?: string | null;
+        };
+        CertificationInput: {
+            /** Format: uuid */
+            id?: string | null;
+            name: string;
+            issuer: string;
+            /** Format: int32 */
+            year: number;
+            credentialUrl?: string | null;
+        };
+        ContributionInput: {
+            willingToMentor?: boolean;
+            willingToShareOpportunities?: boolean;
+            willingToSpeakAtEvents?: boolean;
+            willingToSupportUniversityProjects?: boolean;
+        };
+        EducationInput: {
+            /** Format: uuid */
+            id?: string | null;
+            institution: string;
+            department: string;
+            degree: string;
+            /** Format: int32 */
+            startYear: number;
+            /** Format: int32 */
+            graduationYear?: number | null;
+        };
+        ProfileWrite: {
+            firstName: string;
+            lastName: string;
+            department?: string | null;
+            /** Format: int32 */
+            graduationYear?: number | null;
+            city?: string | null;
+            currentCompany?: string | null;
+            currentPosition?: string | null;
+            industry?: string | null;
+            about?: string | null;
+            career: components["schemas"]["CareerInput"][];
+            education: components["schemas"]["EducationInput"][];
+            skills: string[];
+            certifications: components["schemas"]["CertificationInput"][];
+            contribution: components["schemas"]["ContributionInput"];
+        };
+        /** @description Owner-only profile. exists=false has null data/timestamps and completionPercentage=0. Education is user-entered, never institutionally verified. */
+        ProfileResponse: {
+            exists: boolean;
+            data: components["schemas"]["ProfileWrite"] | null;
+            /** Format: int32 */
+            completionPercentage: number;
+            /** Format: date-time */
+            createdAt: string | null;
+            /** Format: date-time */
+            updatedAt: string | null;
+        };
         LoginRequest: {
             /** Format: email */
             email: string;
@@ -198,6 +284,155 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    getOwnProfile: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Owner-only profile; no account/contact/verification fields */
+            200: {
+                headers: {
+                    ETag?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProfileResponse"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
+    replaceOwnProfile: {
+        parameters: {
+            query?: never;
+            header: {
+                /** @description Exact ETag from GET, including the empty onboarding tag for initial creation. */
+                "If-Match": string;
+                "X-CSRF-TOKEN": unknown;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ProfileWrite"];
+            };
+        };
+        responses: {
+            /** @description Saved owner profile */
+            200: {
+                headers: {
+                    ETag?: string;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["ProfileResponse"];
+                };
+            };
+            /** @description Validation failed or version precondition missing/stale. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Validation failed or version precondition missing/stale. */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Validation failed or version precondition missing/stale. */
+            428: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
     logout: {
         parameters: {
             query?: never;

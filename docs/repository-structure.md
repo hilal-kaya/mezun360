@@ -1,6 +1,6 @@
 # Repository structure
 
-Status: M1A/M1B foundations and M1C public experience exist. Future business modules are added incrementally when authorized; empty placeholder module trees are intentionally absent.
+Status: M1A/M1B foundations and M1C public experience exist. M2A adds the alumni/profile module and shell. Further business modules are added incrementally when authorized; empty placeholder module trees are intentionally absent.
 
 ## Current layout
 
@@ -18,7 +18,7 @@ mezun360/
 │   ├── m1a-verification.md / m1b-verification.md / m1b-security.md
 │   ├── m1c-verification.md
 │   └── design/                        # M1A tokens and M1C public review
-├── contracts/openapi/mezun360.yaml       # Implemented health/auth/security contract
+├── contracts/openapi/mezun360.yaml       # Health/auth/security and owner-profile contract
 ├── frontend/
 │   ├── package.json / package-lock.json / .nvmrc / .env.example
 │   ├── index.html / vite.config.ts / tsconfig.json / eslint.config.js
@@ -32,6 +32,7 @@ mezun360/
 │       ├── components/product-identity.tsx # Shared text product identity
 │       ├── components/ui/               # Primitives and dialog behavior test
 │       ├── features/public/             # Landing, navigation, labelled preview illustrations/tests
+│       ├── features/profile/            # Owner API/hooks, profile page, section dialogs and tests
 │       ├── features/auth/               # Login, session identity, UX guards and tests
 │       ├── dev/                         # DEV-only health/palette controls
 │       ├── lib/api/                     # Fetch transport, tests, generated types
@@ -48,12 +49,13 @@ mezun360/
 │       │   │   ├── Mezun360Application.java
 │       │   │   ├── config/              # OpenAPI and Spring Security policy
 │       │   │   ├── identity/            # api/application/domain/infrastructure
+│       │   │   ├── alumni/               # api/application/domain/infrastructure; owner-only
 │       │   │   ├── audit/application/   # Minimal security audit service
 │       │   │   ├── health/              # Controller, service, response DTO
 │       │   │   └── shared/              # API errors, request IDs, exceptions
 │       │   └── resources/
 │       │       ├── application.yml / application-local.yml
-│       │       └── db/migration/               # V0001 foundation; V0002 identity/audit; V0003 sessions
+│       │       └── db/migration/               # V0001 foundation; V0002 identity/audit; V0003 sessions; V0004 profile
 │       └── test/java/tr/edu/btu/mezun360/
 ├── infra/README.md                      # Future deployment responsibilities
 └── tests/e2e/README.md                   # Future Playwright journeys

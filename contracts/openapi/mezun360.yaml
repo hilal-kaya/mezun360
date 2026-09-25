@@ -2,7 +2,7 @@
   "openapi": "3.1.0",
   "info": {
     "title": "BTÜ Mezun360 API",
-    "description": "M1B session authentication foundation. Business APIs and production MFA are not implemented.",
+    "description": "Session authentication and M2A owner-only alumni profile. Production MFA remains pending.",
     "version": "v1"
   },
   "servers": [
@@ -11,6 +11,209 @@
     }
   ],
   "paths": {
+    "/api/v1/me/profile": {
+      "get": {
+        "tags": [
+          "profile-controller"
+        ],
+        "summary": "Read current ALUMNI owner's profile or empty onboarding state",
+        "operationId": "getOwnProfile",
+        "responses": {
+          "200": {
+            "description": "Owner-only profile; no account/contact/verification fields",
+            "headers": {
+              "ETag": {
+                "style": "simple",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; sanitized detail.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required dependency unavailable.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "profile-controller"
+        ],
+        "summary": "Atomically replace editable profile and bounded nested records; ALUMNI owner only",
+        "operationId": "replaceOwnProfile",
+        "parameters": [
+          {
+            "name": "If-Match",
+            "in": "header",
+            "description": "Exact ETag from GET, including the empty onboarding tag for initial creation.",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-CSRF-TOKEN",
+            "in": "header",
+            "required": true,
+            "schema": {}
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileWrite"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Saved owner profile",
+            "headers": {
+              "ETag": {
+                "style": "simple",
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProfileResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed or version precondition missing/stale.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "412": {
+            "description": "Validation failed or version precondition missing/stale.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "428": {
+            "description": "Validation failed or version precondition missing/stale.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Unexpected error; sanitized detail.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Required dependency unavailable.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
+      }
+    },
     "/api/v1/auth/logout": {
       "post": {
         "tags": [
@@ -467,6 +670,342 @@
   },
   "components": {
     "schemas": {
+      "CareerInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "company": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "position": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "industry": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date"
+          },
+          "endDate": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date"
+          },
+          "currentlyWorking": {
+            "type": "boolean"
+          },
+          "description": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "company",
+          "position",
+          "startDate"
+        ]
+      },
+      "CertificationInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "issuer": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "year": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1900
+          },
+          "credentialUrl": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2048,
+            "minLength": 0
+          }
+        },
+        "required": [
+          "issuer",
+          "name",
+          "year"
+        ]
+      },
+      "ContributionInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "willingToMentor": {
+            "type": "boolean"
+          },
+          "willingToShareOpportunities": {
+            "type": "boolean"
+          },
+          "willingToSpeakAtEvents": {
+            "type": "boolean"
+          },
+          "willingToSupportUniversityProjects": {
+            "type": "boolean"
+          }
+        }
+      },
+      "EducationInput": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "uuid"
+          },
+          "institution": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "department": {
+            "type": "string",
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "degree": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "startYear": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 1900
+          },
+          "graduationYear": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "minimum": 1900
+          }
+        },
+        "required": [
+          "degree",
+          "department",
+          "institution",
+          "startYear"
+        ]
+      },
+      "ProfileWrite": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "lastName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "department": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "graduationYear": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "format": "int32",
+            "minimum": 1900
+          },
+          "city": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "currentCompany": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "currentPosition": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 150,
+            "minLength": 0
+          },
+          "industry": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 100,
+            "minLength": 0
+          },
+          "about": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "maxLength": 2000,
+            "minLength": 0
+          },
+          "career": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CareerInput"
+            },
+            "maxItems": 30,
+            "minItems": 0
+          },
+          "education": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EducationInput"
+            },
+            "maxItems": 20,
+            "minItems": 0
+          },
+          "skills": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 60,
+              "minLength": 0
+            },
+            "maxItems": 50,
+            "minItems": 0
+          },
+          "certifications": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CertificationInput"
+            },
+            "maxItems": 30,
+            "minItems": 0
+          },
+          "contribution": {
+            "$ref": "#/components/schemas/ContributionInput"
+          }
+        },
+        "required": [
+          "career",
+          "certifications",
+          "contribution",
+          "education",
+          "firstName",
+          "lastName",
+          "skills"
+        ]
+      },
+      "ProfileResponse": {
+        "type": "object",
+        "description": "Owner-only profile. exists=false has null data/timestamps and completionPercentage=0. Education is user-entered, never institutionally verified.",
+        "properties": {
+          "exists": {
+            "type": "boolean"
+          },
+          "data": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ProfileWrite"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completionPercentage": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 100,
+            "minimum": 0
+          },
+          "createdAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "completionPercentage",
+          "createdAt",
+          "data",
+          "exists",
+          "updatedAt"
+        ]
+      },
       "LoginRequest": {
         "type": "object",
         "additionalProperties": false,

@@ -1,0 +1,47 @@
+.alumni-shell { min-height:100dvh; }
+.alumni-sidebar { display:none; }
+.alumni-workspace { min-width:0; }
+.alumni-header { min-height:88px; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:1rem 1.5rem; background:#fafaf7; border-bottom:1px solid #e9ebef; }
+.alumni-main { padding:1.5rem; max-width:1440px; margin:0 auto; }
+.alumni-nav { display:grid; gap:.35rem; margin:1.75rem 0; }
+.alumni-nav a { min-height:44px; display:flex; align-items:center; gap:.7rem; padding:.65rem .8rem; border-radius:.75rem; font-size:.9rem; color:#4b5563; }
+.alumni-nav a:hover { background:#eceefa; }
+.alumni-nav a.active { color:#233a85; background:#dde7ff; font-weight:600; }
+.nav-soon { margin-left:auto; font-size:.62rem; color:#626776; }
+.alumni-user { display:flex; gap:.65rem; align-items:center; border-top:1px solid #e9ebef; padding-top:1rem; }
+.alumni-initial { background:#ece8fa; color:#233a85; border-radius:.65rem; padding:.5rem .75rem; font-weight:600; }
+.profile-grid { display:grid; gap:1.25rem; align-items:start; }
+.profile-column { display:grid; gap:1.25rem; min-width:0; }
+.profile-card { border:1px solid #e7e9ee; border-radius:1rem; background:white; padding:1.5rem; min-width:0; overflow-wrap:anywhere; box-shadow:0 1px 2px #233a8503; }
+.profile-card h2 { font-size:1rem; }
+.profile-card-title { display:flex; align-items:center; justify-content:space-between; gap:.75rem; margin-bottom:1rem; }
+.profile-card-title button { font-size:.8rem; padding-left:.65rem; padding-right:.65rem; }
+.profile-chip { display:inline-flex; align-items:center; gap:.3rem; color:#233a85; background:#dde7ff; border-radius:.55rem; padding:.35rem .7rem; font-size:.85rem; }
+.profile-timeline { border-left:2px solid #ececf1; margin:.5rem 0 .5rem .35rem; padding-left:1.3rem; display:grid; gap:1.75rem; }
+.profile-timeline li { position:relative; }
+.profile-timeline li::before { content:''; position:absolute; top:.4rem; left:-1.72rem; width:12px; height:12px; border-radius:50%; background:#fff; border:3px solid #cdd7f4; }
+.profile-timeline li:first-child::before { border-color:#233a85; }
+.profile-description { white-space:pre-wrap; color:#4b5563; font-size:.9rem; line-height:1.65; }
+.profile-empty { color:#64748b; font-size:.9rem; padding:.5rem 0; }
+.profile-editor-grid { display:grid; gap:1rem; }
+.profile-field { display:grid; gap:.3rem; min-width:0; }
+.profile-field label { font-size:.875rem; font-weight:500; }
+.profile-field input, .profile-field textarea { width:100%; min-height:44px; border:1px solid #94a3b8; border-radius:.65rem; padding:.55rem .75rem; background:#fafaf7; }
+.profile-field textarea { min-height:116px; resize:vertical; }
+.profile-field [aria-invalid=true] { border-color:#b42318; }
+.profile-field-error { color:#b42318; font-size:.8rem; }
+.profile-toggle { display:flex; align-items:center; gap:.75rem; min-height:44px; font-size:.875rem; cursor:pointer; }
+.profile-toggle input { accent-color:#233a85; width:1.1rem; height:1.1rem; flex-shrink:0; }
+@media (min-width:640px) { .profile-editor-grid { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media (min-width:1024px) {
+  .alumni-sidebar { display:flex; flex-direction:column; position:fixed; inset:0 auto 0 0; width:240px; padding:1.5rem 1rem; background:#f6f6fd; border-right:1px solid #e9ebef; }
+  .alumni-workspace { margin-left:240px; }
+  .alumni-main { padding:2rem 1.75rem; }
+  .profile-grid { grid-template-columns:minmax(250px,300px) minmax(0,1fr); }
+}
+@media (max-width:420px) { .alumni-main { padding:1rem; } .profile-card { padding:1.15rem; } .alumni-header { padding:.75rem; } }
+.profile-card-title button { flex-shrink:0; white-space:nowrap; }
+.profile-card progress { appearance:none; -webkit-appearance:none; background:#dde7ff; border:0; }
+.profile-card progress::-webkit-progress-bar { background:#dde7ff; border-radius:999px; }
+.profile-card progress::-webkit-progress-value { background:#233a85; border-radius:999px; }
+.profile-card progress::-moz-progress-bar { background:#233a85; border-radius:999px; }

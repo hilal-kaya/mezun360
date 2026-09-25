@@ -1,4 +1,4 @@
-// Future destinations only. No business pages or authorization guards are registered in M1A.
+// Destination catalog. M2A registers the alumni shell/profile; other alumni routes are explicit upcoming stubs.
 export const routePaths = {
   public: { home: '/', login: '/login', forgotPassword: '/forgot-password' },
   alumni: {

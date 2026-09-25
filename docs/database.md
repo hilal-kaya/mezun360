@@ -1,6 +1,6 @@
 # Database design and migration strategy
 
-Status: V0001 technical schema remains unchanged. M1B adds [V0002 identity/security audit](../backend/src/main/resources/db/migration/V0002__identity_and_security_audit.sql) and [V0003 JDBC sessions](../backend/src/main/resources/db/migration/V0003__jdbc_sessions.sql). Only user_accounts, audit_events, spring_session, spring_session_attributes and Flyway history currently exist. The entity inventory below is the broader conceptual target; other tables are not implemented. See [M1B security](m1b-security.md) for exact columns, constraints, session compatibility and runtime-role deployment prerequisites.
+Status: V0001 technical schema remains unchanged. M1B adds [V0002 identity/security audit](../backend/src/main/resources/db/migration/V0002__identity_and_security_audit.sql) and [V0003 JDBC sessions](../backend/src/main/resources/db/migration/V0003__jdbc_sessions.sql). M2A adds V0004 and the six owner-profile tables documented below, alongside user_accounts, audit_events, spring_session, spring_session_attributes and Flyway history. The entity inventory below is the broader conceptual target; tables outside the M1/M2A implemented inventories are not implemented. See [M1B security](m1b-security.md) for exact columns, constraints, session compatibility and runtime-role deployment prerequisites.
 
 ## Modeling conventions
 
@@ -143,3 +143,28 @@ Technical session/token/MFA-challenge expiry, worker leases and delivery-secret 
 A verified deletion request orchestrates each module: revoke sessions/tokens; remove directory/mentor discovery; delete or anonymize contact and professional data according to policy; reconcile active commitments; remove queued optional notifications; anonymize required historical reporting. No blanket `ON DELETE CASCADE` across audit or business history. Audit actor/target identifiers are pseudonymous references without cascading user FKs; never store contact values in audit history.
 
 Separate deletion of identifying attributes from approved preservation of transactional evidence. Maintenance uses a narrowly authorized identity and writes an audit record of the processing action without reproducing removed data. Backups and replicas must have documented expiry and restore-time deletion reconciliation. Export bundles, if approved, are private, short-lived and delivered only to a reverified requester; there is no public export URL or general bulk-alumni export in MVP.
+
+## Implemented M2A schema
+
+[V0004](../backend/src/main/resources/db/migration/V0004__owner_alumni_profile.sql) adds six tables. V0001–V0003 are unchanged. Hibernate remains `validate`; migration history owns DDL. No fixture, visibility preference, verification workflow or institutional reference data is seeded.
+
+| Table | Implemented responsibility |
+| --- | --- |
+| `alumni_profiles` | UUID PK, unique/restrictive `user_id` FK to identity; required first/last names, optional department/year/city/company/position/industry/about; four default-false contribution booleans; timestamps and optimistic version |
+| `employment_records` | Profile FK, company/position, optional industry/city/description, start/end dates, current flag, timestamps; uses the established employment name for CareerExperience |
+| `education_records` | Profile FK, institution/department/degree, start/graduation years, timestamps; server-owned `source=USER_ENTERED`, never proof of verification |
+| `skills` | Reusable UUID, display and unique normalized names, timestamps; NFKC + whitespace collapse + Locale.ROOT lowercase normalization |
+| `alumni_profile_skills` | Composite profile/skill PK and FKs; normalized duplicate skills within a submitted profile are rejected |
+| `certifications` | Profile FK, name/issuer/year, optional HTTPS credential URL, timestamps; no file data |
+
+Contribution preferences belong to the profile aggregate, so no redundant one-to-one preference table is created. UserAccount remains authentication-only. Only an active authenticated ALUMNI can create/update a profile through the service; ADMIN is denied. Profile creation is explicit on first valid PUT; GET does not write.
+
+Child profile FKs cascade only if a profile is deliberately removed by a future authorized privacy operation. Owner account FK is RESTRICT. Removing an own user-entered child through profile editing uses orphan removal; shared skills survive and cannot be deleted while referenced. Child indexes begin with profile ID and chronological date/year; the skill reverse index supports FK checks. The join has no independent timestamps/version because it is aggregate membership; its changes advance the profile version and audit entry.
+
+The aggregate is bounded to 30 employment, 20 education, 50 skills and 30 certification records. Maximum names/positions/institutions are 100/150 as specified in the contract; about/description 2,000; skill 60; URL 2,048 characters. Years start at 1900, with a service upper bound of current UTC year + 1 for profile/education and current year for certifications. Employment dates run from 1900 through today; a finished record requires end >= start, and a current record has no end. These are engineering validation limits, not institutional graduation eligibility or retention policy.
+
+Profile writes take a transaction-scoped PostgreSQL advisory lock keyed by the authenticated owner, including initial creation, then compare the strong ETag and use JPA optimistic versioning. Hash collisions can only serialize unrelated writes. Shared skill inserts use a sorted, conflict-safe unique-key upsert. DTO mapping happens inside the transaction with OSIV disabled. No notification/outbox consumer is authorized in this slice; minimal `PROFILE_UPDATED` audit commits atomically with the profile, recording actor/target/correlation IDs without field values.
+
+Upgrade is additive and requires no backfill: existing accounts retain zero profiles. Tests apply M1 through V0003 in a separate PostgreSQL database, retain an identity record through V0004, validate checksums and repeat migration with zero new work. Roll back application code only while keeping the additive schema/data; do not run a destructive down migration. Corrections after application use a new Flyway version. Backup/restore remains an operational release responsibility.
+
+Future M2B adds opt-in visibility and manual institutional verification using forward migrations and separate commands. Any institutionally sourced education must be protected from owner replacement before enabling that source; only USER_ENTERED is currently permitted by the database. No directory or verification status is implemented by this migration.

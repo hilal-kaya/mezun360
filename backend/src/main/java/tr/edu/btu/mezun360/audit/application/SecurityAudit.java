@@ -32,6 +32,15 @@ public class SecurityAudit {
                 """, UUID.randomUUID(), target, java.sql.Timestamp.from(clock.instant()), UUID.fromString(traceId));
     }
 
+    @Transactional
+    public void profileUpdated(UUID owner, UUID profile, String traceId) {
+        jdbc.update("""
+                INSERT INTO mezun360.audit_events
+                    (id, actor_id, actor_type, actor_role, target_id, action, outcome, occurred_at, correlation_id)
+                VALUES (?, ?, 'USER', 'ALUMNI', ?, 'PROFILE_UPDATED', 'SUCCESS', ?, ?)
+                """, UUID.randomUUID(), owner, profile, java.sql.Timestamp.from(clock.instant()), UUID.fromString(traceId));
+    }
+
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void authenticationFailure(String traceId) {
         append(null, null, "LOGIN", "DENIED", traceId);

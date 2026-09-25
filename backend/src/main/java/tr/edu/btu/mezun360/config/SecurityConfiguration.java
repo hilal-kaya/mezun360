@@ -95,7 +95,8 @@ public class SecurityConfiguration {
             a.requestMatchers(HttpMethod.GET, "/api/v1/health", "/api/v1/auth/csrf").permitAll();
             a.requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/logout").permitAll();
             if (policy.isLocal()) a.requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll();
-            a.requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
+            a.requestMatchers("/api/v1/me/profile").hasRole("ALUMNI")
+                .requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
             a.requestMatchers("/api/v1/alumni/security-check").hasRole("ALUMNI");
             a.requestMatchers(HttpMethod.GET, "/api/v1/auth/me").authenticated();
             a.anyRequest().denyAll();

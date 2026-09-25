@@ -4,6 +4,7 @@ import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.info.Info;
 import io.swagger.v3.oas.models.media.Content;
+import io.swagger.v3.oas.models.media.ComposedSchema;
 import io.swagger.v3.oas.models.media.MediaType;
 import io.swagger.v3.oas.models.media.Schema;
 import io.swagger.v3.oas.models.parameters.Parameter;
@@ -20,13 +21,26 @@ public class OpenApiConfiguration {
         return new OpenAPI().components(new Components().addSecuritySchemes("sessionCookie",
                 new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.COOKIE).name(properties.getCookieName())))
                 .info(new Info().title("BTÜ Mezun360 API").version("v1")
-                .description("M1B session authentication foundation. Business APIs and production MFA are not implemented."));
+                .description("Session authentication and M2A owner-only alumni profile. Production MFA remains pending."));
     }
 
     @Bean
     OpenApiCustomizer securityResponses() {
         return api -> api.getPaths().forEach((path, item) -> {
             if (path.equals("/api/v1/health")) return;
+            if (path.equals("/api/v1/me/profile")) {
+                // springdoc's nullable record reference needs an explicit JSON Schema union in OpenAPI 3.1.
+                api.getComponents().getSchemas().get("ProfileResponse").getProperties().put("data",
+                        new ComposedSchema().addAnyOfItem(new Schema<>().$ref("#/components/schemas/ProfileWrite"))
+                                .addAnyOfItem(new Schema<>().types(java.util.Set.of("null"))));
+                var put = item.getPut();
+                for (String code : new String[]{"400", "412", "428"})
+                    put.getResponses().addApiResponse(code, problem("Validation failed or version precondition missing/stale."));
+                put.addParametersItem(new Parameter().name("X-CSRF-TOKEN").in("header").required(true).schema(new Schema<String>().type("string")));
+                put.getParameters().stream().filter(p -> p.getName().equals("If-Match")).forEach(p -> {
+                    p.setRequired(true); p.setDescription("Exact ETag from GET, including the empty onboarding tag for initial creation.");
+                });
+            }
             item.readOperations().forEach(operation -> {
                 operation.getResponses().addApiResponse("403", problem("CSRF token invalid, CORS rejected or access forbidden."));
                 operation.getResponses().addApiResponse("500", problem("Unexpected error; sanitized detail."));
