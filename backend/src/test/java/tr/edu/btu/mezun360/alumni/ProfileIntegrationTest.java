@@ -183,7 +183,7 @@ class ProfileIntegrationTest {
         upgradeJdbc.update("INSERT INTO mezun360.user_accounts (id,email,email_canonical,password_hash,role,status,email_verified_at,created_at,updated_at) VALUES (?,?,?,?, 'ALUMNI','ACTIVE',now(),now(),now())",owner,email,email,hash);
         var before=upgradeJdbc.queryForMap("SELECT * FROM mezun360.user_accounts WHERE id=?",owner);
         var next=Flyway.configure().dataSource(url,DB.getUsername(),DB.getPassword()).schemas("mezun360").defaultSchema("mezun360").load();
-        assertThat(next.migrate().migrationsExecuted).isEqualTo(3); next.validate(); assertThat(next.migrate().migrationsExecuted).isZero(); flyway.validate();
+        assertThat(next.migrate().migrationsExecuted).isEqualTo(4); next.validate(); assertThat(next.migrate().migrationsExecuted).isZero(); flyway.validate();
         assertThat(upgradeJdbc.queryForMap("SELECT * FROM mezun360.user_accounts WHERE id=?",owner)).isEqualTo(before);
         assertThat(upgradeJdbc.queryForObject("SELECT count(*) FROM mezun360.alumni_profiles",Integer.class)).isZero();
     }
