@@ -15,15 +15,76 @@
       "get": {
         "operationId": "searchAlumni",
         "parameters": [
-          { "name": "search", "in": "query", "schema": { "type": "string" } },
-          { "name": "department", "in": "query", "schema": { "type": "string" } },
-          { "name": "year", "in": "query", "schema": { "type": "integer", "format": "int32" } },
-          { "name": "industry", "in": "query", "schema": { "type": "string" } },
-          { "name": "page", "in": "query", "schema": { "type": "integer", "format": "int32", "default": 0 } },
-          { "name": "size", "in": "query", "schema": { "type": "integer", "format": "int32", "default": 20 } }
+          {
+            "name": "search",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "department",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "year",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "industry",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
         ],
-        "responses": {"200": {"description": "OK"}, "401": {"description": "Unauthorized"}, "403": {"description": "Forbidden"}, "500": {"description": "Internal Server Error"}, "503": {"description": "Service Unavailable"}},
-        "security": [{"sessionCookie": []}]
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
       }
     },
     "/api/v1/me/profile": {
@@ -52,6 +113,16 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "403": {
             "description": "CSRF token invalid, CORS rejected or access forbidden.",
             "content": {
@@ -74,16 +145,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -161,6 +222,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "412": {
             "description": "Validation failed or version precondition missing/stale.",
             "content": {
@@ -181,16 +262,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -203,16 +274,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -261,6 +322,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Invalid request, missing resource or business conflict.",
             "content": {
@@ -281,16 +362,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -303,16 +374,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -385,6 +446,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Invalid request, missing resource or business conflict.",
             "content": {
@@ -425,16 +506,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -447,16 +518,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -505,6 +566,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Invalid request, missing resource or business conflict.",
             "content": {
@@ -525,16 +606,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -547,16 +618,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -629,6 +690,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Invalid request, missing resource or business conflict.",
             "content": {
@@ -669,16 +750,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -691,16 +762,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -807,8 +868,38 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid payload, malformed JSON or unknown field.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "403": {
             "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Too many attempts; Retry-After gives seconds to wait.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -829,36 +920,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid payload, malformed JSON or unknown field.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many attempts; Retry-After gives seconds to wait.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -937,6 +998,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Invalid request, missing resource or business conflict.",
             "content": {
@@ -977,16 +1058,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -999,16 +1070,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1043,8 +1104,8 @@
               }
             }
           },
-          "503": {
-            "description": "Service temporarily unavailable",
+          "500": {
+            "description": "Unexpected error",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1053,8 +1114,8 @@
               }
             }
           },
-          "500": {
-            "description": "Unexpected error",
+          "503": {
+            "description": "Service temporarily unavailable",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1084,6 +1145,16 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "403": {
             "description": "CSRF token invalid, CORS rejected or access forbidden.",
             "content": {
@@ -1106,16 +1177,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1211,6 +1272,16 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "403": {
             "description": "CSRF token invalid, CORS rejected or access forbidden.",
             "content": {
@@ -1233,16 +1304,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1322,6 +1383,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Invalid request, missing resource or business conflict.",
             "content": {
@@ -1342,16 +1423,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -1364,16 +1435,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1433,6 +1494,26 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "CSRF token invalid, CORS rejected or access forbidden.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Invalid request, missing resource or business conflict.",
             "content": {
@@ -1453,16 +1534,6 @@
               }
             }
           },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
           "500": {
             "description": "Unexpected error; sanitized detail.",
             "content": {
@@ -1475,16 +1546,6 @@
           },
           "503": {
             "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
             "content": {
               "application/problem+json": {
                 "schema": {
@@ -1519,6 +1580,16 @@
               }
             }
           },
+          "401": {
+            "description": "Authentication required or invalid credentials.",
+            "content": {
+              "application/problem+json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ApiProblem"
+                }
+              }
+            }
+          },
           "403": {
             "description": "CSRF token invalid, CORS rejected or access forbidden.",
             "content": {
@@ -1548,16 +1619,192 @@
                 }
               }
             }
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
+      }
+    },
+    "/api/v1/jobs": {
+      "get": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Search jobs (paginated)",
+        "operationId": "searchJobs",
+        "parameters": [
+          {
+            "name": "location",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "workModel",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           },
           "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Post a new job",
+        "operationId": "createJobPost",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JobPostRequest"
               }
             }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
+      }
+    },
+    "/api/v1/jobs/{id}/bookmarks": {
+      "post": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Bookmark a job",
+        "operationId": "addBookmark",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
+          }
+        },
+        "security": [
+          {
+            "sessionCookie": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "Jobs"
+        ],
+        "summary": "Remove a job bookmark",
+        "operationId": "removeBookmark",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          },
+          "503": {
+            "description": "Service Unavailable"
           }
         },
         "security": [
@@ -2432,6 +2679,41 @@
           "size",
           "totalElements"
         ]
+      },
+      "JobPostRequest": {
+        "type": "object",
+        "required": [
+          "title",
+          "company",
+          "workModel",
+          "description",
+          "applicationUrl"
+        ],
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "company": {
+            "type": "string"
+          },
+          "location": {
+            "type": "string"
+          },
+          "workModel": {
+            "type": "string",
+            "enum": [
+              "REMOTE",
+              "HYBRID",
+              "ONSITE"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "applicationUrl": {
+            "type": "string"
+          }
+        }
       }
     },
     "securitySchemes": {
