@@ -6,6 +6,7 @@ import { LandingPage } from '@/features/public/landing-page'
 import { AlumniLayout, AlumniHome, UpcomingAlumniPage } from '@/layouts/alumni-layout'
 import { ProfilePage } from '@/features/profile/profile-page'
 import { PrivacyPage } from '@/features/privacy-verification/privacy-page'
+import { AlumniNetworkPage } from '@/features/network/network-page'
 import { AdminVerificationsPage } from '@/features/privacy-verification/admin-verifications'
 import { RootLayout } from '@/layouts/root-layout'
 
@@ -23,7 +24,8 @@ export function App() {
             <Route index element={<AlumniHome />} />
             <Route path="profile" element={<ProfilePage />} />
             <Route path="settings" element={<PrivacyPage />} />
-            {['network', 'jobs', 'mentorship', 'events', 'news'].map(path => <Route key={path} path={path} element={<UpcomingAlumniPage />} />)}
+            <Route path="network" element={<AlumniNetworkPage />} />
+            {['jobs', 'mentorship', 'events', 'news'].map(path => <Route key={path} path={path} element={<UpcomingAlumniPage />} />)}
           </Route>
         </Route>
         <Route element={<RootLayout />}>
