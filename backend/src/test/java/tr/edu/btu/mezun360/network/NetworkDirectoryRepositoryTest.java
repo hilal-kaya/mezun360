@@ -56,11 +56,15 @@ class NetworkDirectoryRepositoryTest {
     
     private void insertUserAndProfile(String email, String role, String first, String last, boolean optIn, String visibility, String status) {
         UUID userId = UUID.randomUUID();
-        jdbcTemplate.update("INSERT INTO mezun360.user_accounts (id, email, email_canonical, password_hash, role, created_at, updated_at, version) VALUES (?, ?, ?, 'hash', ?, now(), now(), 0)", userId, email, email.toLowerCase(), role);
+        jdbcTemplate.update("INSERT INTO mezun360.user_accounts (id, email, email_canonical, password_hash, role, created_at, updated_at, version) VALUES (?, ?, ?, '{argon2id}$argon2id$v=19$m=16384,t=2,p=1$c2FsdA$aGFzaA', ?, now(), now(), 0)", userId, email, email.toLowerCase(), role);
         UUID profileId = UUID.randomUUID();
         jdbcTemplate.update("INSERT INTO mezun360.alumni_profiles (id, user_id, first_name, last_name, created_at, updated_at, version, evidence_revision, department, graduation_year, willing_to_mentor, willing_to_share_opportunities, willing_to_speak_at_events, willing_to_support_university_projects) VALUES (?, ?, ?, ?, now(), now(), 0, 1, 'Computer Eng', 2020, false, false, false, false)", profileId, userId, first, last);
         jdbcTemplate.update("INSERT INTO mezun360.alumni_privacy_settings (profile_id, directory_opt_in, profile_visibility, created_at, updated_at, version) VALUES (?, ?, ?, now(), now(), 0)", profileId, optIn, visibility);
-        jdbcTemplate.update("INSERT INTO mezun360.alumni_verification_requests (id, profile_id, evidence_revision, evidence, status, source, submitted_at, created_at, updated_at, version) VALUES (?, ?, 1, '{}'::jsonb, ?, 'MANUAL_ADMIN', now(), now(), now(), 0)", UUID.randomUUID(), profileId, status);
+        if ("PENDING".equals(status)) {
+            jdbcTemplate.update("INSERT INTO mezun360.alumni_verification_requests (id, profile_id, evidence_revision, evidence, status, source, submitted_at, created_at, updated_at, version) VALUES (?, ?, 1, '{}'::jsonb, ?, 'MANUAL_ADMIN', now(), now(), now(), 0)", UUID.randomUUID(), profileId, status);
+        } else {
+            jdbcTemplate.update("INSERT INTO mezun360.alumni_verification_requests (id, profile_id, evidence_revision, evidence, status, source, submitted_at, reviewed_at, reviewed_by, created_at, updated_at, version) VALUES (?, ?, 1, '{}'::jsonb, ?, 'MANUAL_ADMIN', now(), now(), ?, now(), now(), 0)", UUID.randomUUID(), profileId, status, userId);
+        }
     }
     
     @Autowired NetworkDirectoryRepository repository;
