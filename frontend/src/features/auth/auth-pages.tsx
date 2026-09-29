@@ -87,5 +87,5 @@ export function AuthenticatedPlaceholder({ admin = false }: { admin?: boolean })
     } catch (failure) { setError(safeAuthError(failure)) }
     finally { setBusy(false) }
   }
-  return <Card className="space-y-5"><span className="rounded-full bg-pastel-mint px-3 py-1 text-sm">Oturum açık</span><h1>{admin ? 'Mezun360 Yönetim Alanı' : 'Mezun360 Mezun Alanı'}</h1><p className="text-muted-foreground">Giriş başarılı. Bu alanın özellikleri sonraki aşamalarda eklenecek.</p><p>{identity.data?.email}</p>{error && <p role="alert">{error}</p>}<Button variant="outline" onClick={() => void logout()} disabled={busy}><LogOut size={18} aria-hidden="true" />{busy ? 'Çıkış yapılıyor…' : 'Çıkış Yap'}</Button></Card>
+  return <Card className="space-y-5"><span className="rounded-full bg-pastel-mint px-3 py-1 text-sm">Oturum açık</span><h1>{admin ? 'Mezun360 Yönetim Alanı' : 'Mezun360 Mezun Alanı'}</h1><p className="text-muted-foreground">Giriş başarılı. Bu alanın özellikleri sonraki aşamalarda eklenecek.</p>{admin && <Button asChild><Link to="/admin/verifications">Mezuniyet Doğrulamaları</Link></Button>}<p>{identity.data?.email}</p>{error && <p role="alert">{error}</p>}<Button variant="outline" onClick={() => void logout()} disabled={busy}><LogOut size={18} aria-hidden="true" />{busy ? 'Çıkış yapılıyor…' : 'Çıkış Yap'}</Button></Card>
 }

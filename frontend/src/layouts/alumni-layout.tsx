@@ -14,7 +14,7 @@ const navigation = [
   ['/app/profile', 'Profilim', UserRound], ['/app/settings', 'Ayarlar', Settings],
 ] as const
 function AlumniNavigation({ onNavigate }: { onNavigate?: () => void }) {
-  return <nav aria-label="Mezun menüsü" className="alumni-nav">{navigation.map(([path, label, Icon]) => <NavLink key={path} end to={path} onClick={onNavigate} className={({ isActive }) => isActive ? 'active' : ''}><Icon size={18} aria-hidden="true" /><span>{label}</span>{path !== '/app/profile' && path !== '/app' && <span className="nav-soon">Yakında</span>}</NavLink>)}</nav>
+  return <nav aria-label="Mezun menüsü" className="alumni-nav">{navigation.map(([path, label, Icon]) => <NavLink key={path} end to={path} onClick={onNavigate} className={({ isActive }) => isActive ? 'active' : ''}><Icon size={18} aria-hidden="true" /><span>{label}</span>{path !== '/app/profile' && path !== '/app/settings' && path !== '/app' && <span className="nav-soon">Yakında</span>}</NavLink>)}</nav>
 }
 export function AlumniLayout() {
   const identity = useIdentity()
@@ -46,7 +46,7 @@ export function AlumniLayout() {
   </div>
 }
 export function AlumniHome() {
-  return <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-10"><span className="inline-flex rounded-full bg-pastel-mint px-3 py-1 text-sm text-primary">Oturum açık</span><h1 className="mt-5 text-3xl">Mezun360 Mezun Alanı</h1><p className="mt-3 max-w-xl text-muted-foreground">Kariyer yolculuğunu profilinde bir araya getir. Deneyimlerini, eğitimini ve yeteneklerini ekleyerek ilk adımı at.</p><Button asChild className="mt-6"><Link to="/app/profile">Profilime git</Link></Button><p className="mt-8 flex items-center gap-2 text-sm text-muted-foreground"><ShieldCheck size={18} aria-hidden="true" />Profilin bu aşamada yalnızca sana görünür.</p></section>
+  return <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-10"><span className="inline-flex rounded-full bg-pastel-mint px-3 py-1 text-sm text-primary">Oturum açık</span><h1 className="mt-5 text-3xl">Mezun360 Mezun Alanı</h1><p className="mt-3 max-w-xl text-muted-foreground">Kariyer yolculuğunu profilinde bir araya getir. Deneyimlerini, eğitimini ve yeteneklerini ekleyerek ilk adımı at.</p><Button asChild className="mt-6"><Link to="/app/profile">Profilime git</Link></Button><p className="mt-8 flex items-center gap-2 text-sm text-muted-foreground"><ShieldCheck size={18} aria-hidden="true" />Gizlilik tercihlerini Ayarlar’dan yönetebilirsin.</p></section>
 }
 export function UpcomingAlumniPage() {
   const path = useLocation().pathname

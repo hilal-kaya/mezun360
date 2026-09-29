@@ -2,9 +2,9 @@
 
 Alumni and career ecosystem for Bursa Technical University.
 
-**M1A technical foundation, M1B local authentication/security and M1C public landing experience are implemented. M2A owner-only alumni profiles are implemented; other business features remain deferred. Production startup is blocked until real ADMIN MFA is delivered.** This is a local development foundation, not a production release.
+**M1A technical foundation, M1B local authentication/security and M1C public landing experience are implemented. M2A owner-only profiles and M2B privacy/manual alumni verification are implemented; the directory and other business features remain deferred. Production startup is blocked until real ADMIN MFA is delivered.** This is a local development foundation, not a production release.
 
-One React/TypeScript SPA, one Java 21 Spring Boot modular monolith, PostgreSQL and Flyway. The [Figma Make design](https://www.figma.com/make/7AqVYRogPUjTclUHbML9IW/Finalize-Mezun360-Design?fullscreen=1) remains the UI source of truth; the current interface contains a responsive public landing, login and an authenticated alumni shell, owner profile and guarded admin placeholder. See [M1C verification](docs/m1c-verification.md), [M1C design review](docs/design/m1c-public-experience.md), [M1B verification](docs/m1b-verification.md), [security/runbook](docs/m1b-security.md), [M1A verification](docs/m1a-verification.md) and [design evidence](docs/design/m1a-foundation.md).
+One React/TypeScript SPA, one Java 21 Spring Boot modular monolith, PostgreSQL and Flyway. The [Figma Make design](https://www.figma.com/make/7AqVYRogPUjTclUHbML9IW/Finalize-Mezun360-Design?fullscreen=1) remains the UI source of truth; the current interface contains a responsive public landing, login and an authenticated alumni shell, owner profile, privacy settings and a guarded ADMIN verification queue. See [M1C verification](docs/m1c-verification.md), [M1C design review](docs/design/m1c-public-experience.md), [M1B verification](docs/m1b-verification.md), [security/runbook](docs/m1b-security.md), [M1A verification](docs/m1a-verification.md) and [design evidence](docs/design/m1a-foundation.md).
 
 ## Prerequisites
 
@@ -42,7 +42,7 @@ cd backend
 ./mvnw spring-boot:run
 ```
 
-On Windows use `mvnw.cmd`. The backend imports `../.env` when launched from `backend/`; OS environment variables override file values. The example enables the `local` profile, which exposes OpenAPI documentation. Without it, API docs are disabled by default. Flyway runs before JPA schema validation. M1B adds identity, minimal audit and JDBC sessions; M2A adds owner profile tables through V0004.
+On Windows use `mvnw.cmd`. The backend imports `../.env` when launched from `backend/`; OS environment variables override file values. The example enables the `local` profile, which exposes OpenAPI documentation. Without it, API docs are disabled by default. Flyway runs before JPA schema validation. M1B adds identity, minimal audit and JDBC sessions; M2A adds owner profile tables through V0004; M2B adds private defaults and manual verification through V0005–V0006.
 
 ## Local login setup
 
@@ -168,3 +168,9 @@ Product previews are static, clearly labelled illustrations of planned capabilit
 After ALUMNI login, open [Profilim](http://127.0.0.1:5173/app/profile). New accounts see “Profilini tamamla”; saving required names creates the profile. Add professional fields, biography, career/education records, skill chips, certifications and community preferences through section dialogs. Refreshing or logging in again reads the same PostgreSQL data. Completion is computed by the backend. There is no automatic profile demo seed; the local manual verification account may contain explicitly synthetic records.
 
 Profiles are owner-only; ADMIN cannot use the alumni owner API. Directory, verification and visibility controls are not implemented. See [M2A verification](docs/m2a-verification.md), [design review](docs/design/m2a-alumni-profile.md), [API](docs/api.md) and [database](docs/database.md). M2B remains separately authorized work.
+
+## M2B privacy and alumni verification
+
+Use `/app/settings` to save opt-in and visibility, and `/app/profile` to submit education for review and see the result. `/admin/verifications` lists submitted requests for manual review. Existing local synthetic accounts can exercise the flow; no new production fixtures, registration or institutional integration are added. Complete department, graduation year and at least one completed education record before submission. An existing profile is required to save privacy settings.
+
+Contacts stay hidden. Directory opt-in does not create directory access in this milestone. Material education/name/department/graduation changes return the effective verification state to PENDING until the owner submits updated evidence and ADMIN approves it. See [M2B verification and file inventory](docs/m2b-verification.md), [API](docs/api.md), [database](docs/database.md) and [design mapping](docs/design/m2b-privacy-verification.md).

@@ -22,6 +22,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/v1/me/privacy-preferences": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getOwnPrivacy"];
+        put: operations["replaceOwnPrivacy"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/me/verification-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getOwnVerification"];
+        put?: never;
+        post: operations["submitOwnVerification"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/v1/auth/logout": {
         parameters: {
             query?: never;
@@ -50,6 +82,22 @@ export interface paths {
         put?: never;
         /** Authenticate local credentials; CSRF required */
         post: operations["login"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/verification-requests/{id}/decisions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["decideVerification"];
         delete?: never;
         options?: never;
         head?: never;
@@ -116,6 +164,38 @@ export interface paths {
         };
         /** Technical ALUMNI role probe; not a verified-member feature */
         get: operations["checkAlumniAccess"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/verification-requests": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["listVerifications"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/v1/admin/verification-requests/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["getVerificationReview"];
         put?: never;
         post?: never;
         delete?: never;
@@ -213,6 +293,30 @@ export interface components {
             /** Format: date-time */
             updatedAt: string | null;
         };
+        PrivacyWrite: {
+            directoryOptIn: boolean;
+            /** @enum {string} */
+            profileVisibility: "PRIVATE" | "ALUMNI_MEMBERS";
+        };
+        PrivacyResponse: {
+            profileExists: boolean;
+            directoryOptIn: boolean;
+            /** @enum {string} */
+            profileVisibility: "PRIVATE" | "ALUMNI_MEMBERS";
+        };
+        VerificationSubmission: {
+            confirmAccuracy: boolean;
+        };
+        VerificationSummary: {
+            /** @enum {string} */
+            status: "PENDING" | "VERIFIED" | "REJECTED";
+            submitted: boolean;
+            /** Format: date-time */
+            submittedAt: null | string;
+            /** Format: date-time */
+            reviewedAt: null | string;
+            rejectionReason: null | string;
+        };
         LoginRequest: {
             /** Format: email */
             email: string;
@@ -222,6 +326,41 @@ export interface components {
         LoginResponse: {
             authenticated: boolean;
             mfaRequired: boolean;
+        };
+        VerificationDecision: {
+            /** @enum {string} */
+            status: "PENDING" | "VERIFIED" | "REJECTED";
+            rejectionReason?: string;
+        };
+        AdminVerification: {
+            /** Format: uuid */
+            id: string;
+            evidence: components["schemas"]["VerificationEvidence"];
+            /** @enum {string} */
+            status: "PENDING" | "VERIFIED" | "REJECTED";
+            /** Format: date-time */
+            submittedAt: string;
+            /** Format: date-time */
+            reviewedAt: null | string;
+            rejectionReason: null | string;
+            current: boolean;
+        };
+        ClaimedEducation: {
+            institution: string;
+            department: string;
+            degree: string;
+            /** Format: int32 */
+            startYear: number;
+            /** Format: int32 */
+            graduationYear: null | number;
+        };
+        VerificationEvidence: {
+            firstName: string;
+            lastName: string;
+            department: string;
+            /** Format: int32 */
+            graduationYear: number;
+            education: components["schemas"]["ClaimedEducation"][];
         };
         ApiProblem: {
             /** Format: uri */
@@ -274,6 +413,28 @@ export interface components {
         SecurityCheckResponse: {
             /** @enum {string} */
             status: "OK";
+        };
+        Item: {
+            /** Format: uuid */
+            id: string;
+            firstName: string;
+            lastName: string;
+            department: string;
+            /** Format: int32 */
+            graduationYear: number;
+            /** Format: date-time */
+            submittedAt: string;
+            /** @enum {string} */
+            status: "PENDING" | "VERIFIED" | "REJECTED";
+        };
+        VerificationQueue: {
+            items: components["schemas"]["Item"][];
+            /** Format: int32 */
+            page: number;
+            /** Format: int32 */
+            size: number;
+            /** Format: int64 */
+            totalElements: number;
         };
     };
     responses: never;
@@ -433,6 +594,392 @@ export interface operations {
             };
         };
     };
+    getOwnPrivacy: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    ETag?: unknown;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PrivacyResponse"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
+    replaceOwnPrivacy: {
+        parameters: {
+            query?: never;
+            header: {
+                "If-Match": string;
+                "X-CSRF-TOKEN": unknown;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PrivacyWrite"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    ETag?: unknown;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["PrivacyResponse"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Exact resource ETag required; stale precondition. */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Exact resource ETag required; stale precondition. */
+            428: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
+    getOwnVerification: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    ETag?: unknown;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationSummary"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
+    submitOwnVerification: {
+        parameters: {
+            query?: never;
+            header: {
+                "If-Match": string;
+                "X-CSRF-TOKEN": unknown;
+            };
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificationSubmission"];
+            };
+        };
+        responses: {
+            /** @description Submitted minimal current education snapshot */
+            201: {
+                headers: {
+                    ETag?: unknown;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationSummary"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Exact resource ETag required; stale precondition. */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Exact resource ETag required; stale precondition. */
+            428: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
     logout: {
         parameters: {
             query?: never;
@@ -535,6 +1082,117 @@ export interface operations {
             };
             /** @description Too many attempts; Retry-After gives seconds to wait. */
             429: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
+    decideVerification: {
+        parameters: {
+            query?: never;
+            header: {
+                "If-Match": string;
+                "X-CSRF-TOKEN": unknown;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["VerificationDecision"];
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    ETag?: unknown;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AdminVerification"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Exact resource ETag required; stale precondition. */
+            412: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Exact resource ETag required; stale precondition. */
+            428: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -734,6 +1392,179 @@ export interface operations {
             };
             /** @description CSRF token invalid, CORS rejected or access forbidden. */
             403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
+    listVerifications: {
+        parameters: {
+            query?: {
+                status?: "PENDING" | "VERIFIED" | "REJECTED";
+                page?: number;
+                size?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["VerificationQueue"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Unexpected error; sanitized detail. */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Required dependency unavailable. */
+            503: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+        };
+    };
+    getVerificationReview: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    ETag?: unknown;
+                    [name: string]: unknown;
+                };
+                content: {
+                    "*/*": components["schemas"]["AdminVerification"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            400: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Authentication required or invalid credentials. */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description CSRF token invalid, CORS rejected or access forbidden. */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ApiProblem"];
+                };
+            };
+            /** @description Invalid request, missing resource or business conflict. */
+            409: {
                 headers: {
                     [name: string]: unknown;
                 };

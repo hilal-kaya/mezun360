@@ -14,6 +14,7 @@ function setup(options: { data?: ProfileData; loading?: boolean; failure?: boole
     const path = String(url)
     if (path.endsWith('/auth/me')) return new Response(JSON.stringify({ userId: 'owner-1', role: 'ALUMNI', email: 'alumni@example.test', accountStatus: 'ACTIVE' }))
     if (path.endsWith('/auth/csrf')) return new Response(JSON.stringify({ token: 'csrf-test' }))
+    if (path.endsWith('/me/verification-requests')) return new Response(JSON.stringify({ status: 'PENDING', submitted: false }), { headers: { ETag: '"verification-empty"' } })
     if (path.endsWith('/me/profile')) {
       if (options.loading) return new Promise<Response>(() => {})
       if (options.failure) return new Response('{}', { status: 503 })

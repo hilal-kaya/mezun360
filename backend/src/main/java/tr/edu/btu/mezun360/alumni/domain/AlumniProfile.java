@@ -12,6 +12,7 @@ public class AlumniProfile {
     @Column(nullable=false) public Instant updatedAt;
     @Column(nullable=false, unique=true) public UUID userId;
     @Version public long version;
+    public long evidenceRevision;
     public String firstName, lastName, department, city, currentCompany, currentPosition, industry;
     public Integer graduationYear;
     @Column(length=2000) public String about;

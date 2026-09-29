@@ -21,12 +21,24 @@ public class OpenApiConfiguration {
         return new OpenAPI().components(new Components().addSecuritySchemes("sessionCookie",
                 new SecurityScheme().type(SecurityScheme.Type.APIKEY).in(SecurityScheme.In.COOKIE).name(properties.getCookieName())))
                 .info(new Info().title("BTÜ Mezun360 API").version("v1")
-                .description("Session authentication and M2A owner-only alumni profile. Production MFA remains pending."));
+                .description("Session authentication and M2B owner profile, privacy and audited manual verification. Production MFA remains pending."));
     }
 
     @Bean
     OpenApiCustomizer securityResponses() {
-        return api -> api.getPaths().forEach((path, item) -> {
+        return api -> {
+            for(String name : new String[]{"VerificationSummary", "AdminVerification"}) {
+                var schema=api.getComponents().getSchemas().get(name);
+                for(String field : new String[]{"reviewedAt","rejectionReason"}) {
+                    ((Schema<?>)schema.getProperties().get(field)).setTypes(java.util.Set.of("string","null"));
+                }
+            }
+            ((Schema<?>)api.getComponents().getSchemas().get("VerificationSummary").getProperties().get("submittedAt")).setTypes(java.util.Set.of("string","null"));
+            api.getComponents().getSchemas().get("Item").setRequired(java.util.List.of("id","firstName","lastName","department","graduationYear","submittedAt","status"));
+            api.getComponents().getSchemas().get("ClaimedEducation").setRequired(java.util.List.of("institution","department","degree","startYear","graduationYear"));
+            ((Schema<?>)api.getComponents().getSchemas().get("ClaimedEducation").getProperties().get("graduationYear")).setTypes(java.util.Set.of("integer","null"));
+            api.getComponents().getSchemas().get("VerificationSubmission").setRequired(java.util.List.of("confirmAccuracy"));
+            api.getPaths().forEach((path, item) -> {
             if (path.equals("/api/v1/health")) return;
             if (path.equals("/api/v1/me/profile")) {
                 // springdoc's nullable record reference needs an explicit JSON Schema union in OpenAPI 3.1.
@@ -39,6 +51,18 @@ public class OpenApiConfiguration {
                 put.addParametersItem(new Parameter().name("X-CSRF-TOKEN").in("header").required(true).schema(new Schema<String>().type("string")));
                 put.getParameters().stream().filter(p -> p.getName().equals("If-Match")).forEach(p -> {
                     p.setRequired(true); p.setDescription("Exact ETag from GET, including the empty onboarding tag for initial creation.");
+                });
+            }
+            if (path.contains("privacy-preferences") || path.contains("verification-requests")) {
+                item.readOperationsMap().forEach((method, operation) -> {
+                    for(String code : new String[]{"400","404","409"}) operation.getResponses().addApiResponse(code,problem("Invalid request, missing resource or business conflict."));
+                    if(method != io.swagger.v3.oas.models.PathItem.HttpMethod.GET) {
+                        for(String code : new String[]{"412","428"}) operation.getResponses().addApiResponse(code,problem("Exact resource ETag required; stale precondition."));
+                        operation.addParametersItem(new Parameter().name("X-CSRF-TOKEN").in("header").required(true).schema(new Schema<String>().type("string")));
+                        operation.getParameters().stream().filter(p -> p.getName().equals("If-Match")).forEach(p -> p.setRequired(true));
+                    }
+                    if (!path.equals("/api/v1/admin/verification-requests")) operation.getResponses().values().stream().filter(r -> r.getContent()!=null && r.getContent().containsKey("*/*"))
+                        .forEach(r -> r.addHeaderObject("ETag",new io.swagger.v3.oas.models.headers.Header().schema(new Schema<String>().type("string"))));
                 });
             }
             item.readOperations().forEach(operation -> {
@@ -57,6 +81,7 @@ public class OpenApiConfiguration {
                             .schema(new Schema<String>().type("string")));
             });
         });
+        };
     }
 
     private ApiResponse problem(String description) {

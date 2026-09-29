@@ -63,6 +63,7 @@ public class ProfileService {
         checkIds(input.career(), CareerInput::id,p.career.stream().map(c -> c.id).toList(),"career");
         checkIds(input.education(), EducationInput::id,p.education.stream().map(c -> c.id).toList(),"education");
         checkIds(input.certifications(), CertificationInput::id,p.certifications.stream().map(c -> c.id).toList(),"certifications");
+        var previousEvidence=VerificationEvidence.from(p);
         p.firstName=text(input.firstName()); p.lastName=text(input.lastName()); p.department=text(input.department());
         p.graduationYear=input.graduationYear(); p.city=text(input.city()); p.currentCompany=text(input.currentCompany());
         p.currentPosition=text(input.currentPosition()); p.industry=text(input.industry()); p.about=text(input.about());
@@ -101,7 +102,12 @@ public class ProfileService {
             UUID id=jdbc.queryForObject("SELECT id FROM mezun360.skills WHERE normalized_name=?",UUID.class,normalized);
             p.skills.add(em.find(Skill.class,id));
         }
+        if(existing.isPresent() && !previousEvidence.equals(VerificationEvidence.from(p))) p.evidenceRevision++;
         var saved=profiles.saveAndFlush(p);
+        jdbc.update("INSERT INTO mezun360.alumni_privacy_settings (profile_id,created_at,updated_at) VALUES (?, ?, ?) ON CONFLICT (profile_id) DO NOTHING",
+            saved.id,java.sql.Timestamp.from(clock.instant()),java.sql.Timestamp.from(clock.instant()));
+        if(existing.isPresent() && !previousEvidence.equals(VerificationEvidence.from(p)))
+            audit.alumniAction(owner,"ALUMNI",saved.id,"VERIFICATION_EVIDENCE_CHANGED",traceId);
         audit.profileUpdated(owner,saved.id,traceId);
         return result(saved);
     }

@@ -2,7 +2,7 @@
 
 ## Current phase
 
-The user has explicitly authorized **M2A – Alumni Profile**: owner-only professional profile, career/education/skills/certifications/contribution preferences, completion and the alumni shell. Preserve M1A/M1B/M1C security and regressions. No directory, visibility settings, verification workflow, notifications, admin inspection, integrations or other business modules. Do not start M2B, commit or push. Profile writes include transactional minimal audit; outbox remains deferred because no notification/event consumers are authorized.
+The user has explicitly authorized **M2B – Privacy & Alumni Verification** on `codex/m2b-privacy-verification`. Preserve M1A–M2A. Scope: owner privacy preferences, manual ADMIN review, minimal immutable evidence, audit and tests. No directory or other later business modules. After all required validations pass, the user explicitly requests commit `feat: add alumni privacy and verification` and push this branch to origin. Never merge, rebase, amend unrelated commits or force push. Do not start M2C automatically. Notification/outbox consumers remain deferred.
 
 Read [decisions](docs/decisions.md), [requirements](docs/requirements.md), [architecture](docs/architecture.md), [database](docs/database.md), [API](docs/api.md), [repository structure](docs/repository-structure.md) and [roadmap](docs/roadmap.md) before making changes. Keep these documents consistent. The user's finalized decisions supersede the earlier open alternatives; remaining institutional inputs are recorded only in the decision register.
 
@@ -59,4 +59,4 @@ Read [decisions](docs/decisions.md), [requirements](docs/requirements.md), [arch
 - Run the checks relevant to a change and report what ran. For documentation-only work, check links, consistency and whitespace; do not claim application tests passed when no application exists.
 - Update the API contract and documentation alongside behavior changes. Document migration/backfill and rollback considerations in relevant reviews.
 - Preserve unrelated user changes. Never deploy or start a later milestone merely because a roadmap exists.
-- For M2A, do not commit or push. Do not proceed to M2B automatically.
+- Follow the current M2B Git finalization above only after all checks pass; stop and report a push failure without unsafe workarounds.

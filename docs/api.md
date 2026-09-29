@@ -1,6 +1,6 @@
 # API design
 
-Status: M1A health/errors and M1B authentication/security probes are implemented in the [machine-readable contract](../contracts/openapi/mezun360.yaml). M2A implements owner-only GET/PUT profile; its section below supersedes the earlier profile/child-route proposals. Other business inventory remains target-only. Registration, verification/reset delivery and MFA APIs are also unimplemented. [M1B security](m1b-security.md) describes production blockers and the exact local runtime.
+Status: M1A health/errors and M1B authentication/security probes are implemented in the [machine-readable contract](../contracts/openapi/mezun360.yaml). M2A implements owner-only GET/PUT profile; M2B implements privacy preferences and manual alumni verification as specified below. The implemented sections supersede earlier route proposals. Other business inventory remains target-only. Registration, email verification/reset delivery and MFA APIs remain unimplemented. [M1B security](m1b-security.md) describes production blockers and the exact local runtime.
 
 The health service executes `SELECT 1` against PostgreSQL and returns `{status: "UP", service: "mezun360-api"}` or a sanitized `503 SERVICE_UNAVAILABLE`. Every request receives a server-generated `X-Request-ID`; health/errors use `Cache-Control: no-store`. Local OpenAPI JSON/UI is available at `/v3/api-docs` and `/swagger-ui/index.html`; disabled by default outside the local profile. No authentication requirement is implied for M1A readiness.
 
@@ -81,10 +81,10 @@ This is the complete MVP public business-data surface. There are no public job/e
 | `POST /me/education` and `POST /me/employment` | Account, alumni owner | Validated records; server assigns owner |
 | `PUT /me/education/{id}` and `PUT /me/employment/{id}` | Account, alumni owner | Full editable record, `If-Match`; material verified-education changes trigger re-review |
 | `DELETE /me/education/{id}` and `DELETE /me/employment/{id}` | Account, alumni owner | `If-Match`; history/verification rules apply; delete is a service operation |
-| `POST /me/verification-requests` | Account, alumni owner | Selected own education IDs and permitted explanation; `201`; service sets `PENDING`, one submitted pending request; no client-set verification result |
-| `GET /me/verification-requests` | Account, alumni owner | Own review history with safe decision reason; omit internal staff notes |
-| `PUT /me/privacy-preferences` | Account | `profileVisibility` (`PRIVATE`/`ALUMNI_MEMBERS`), default-false `employerVisibilityOptIn`, permitted consent fields and notice version, `If-Match`; server denies employer access throughout MVP |
-| `GET /me/privacy-preferences` | Account | Own preferences, defaults and versions |
+| `POST /me/verification-requests` | Account, alumni owner | M2B: `{confirmAccuracy:true}`, exact own-verification If-Match; server snapshots current evidence; `201`; no client-set result |
+| `GET /me/verification-requests` | Account, alumni owner | M2B: current safe summary and ETag; historical list deferred |
+| `PUT /me/privacy-preferences` | Account, alumni owner | M2B: directoryOptIn and PRIVATE/ALUMNI_MEMBERS only, exact If-Match; consent/employer fields remain future-only |
+| `GET /me/privacy-preferences` | Account, alumni owner | M2B: own preferences, profile existence, private defaults and ETag |
 | `GET /alumni` and `GET /alumni/{id}` | Alumni | Only opted-in `ALUMNI_MEMBERS`, active, VERIFIED professional profiles; no contact fields; known IDs do not bypass private visibility |
 | `POST /me/privacy-requests` | Account | Kind (`ACCESS`, `CORRECTION`, `DELETION`) and bounded explanation; `201`; no immediate destructive operation |
 | `GET /me/privacy-requests` and `GET /me/privacy-requests/{id}` | Account, owner | Own request status and safe outcome; never unrestricted data export |
@@ -229,3 +229,19 @@ Bean Validation plus service rules produce the existing RFC 9457 `VALIDATION_FAI
 Completion is calculated on every response, not stored: 20 points each for (1) first/last name + department + graduation year + city, (2) nonblank about, (3) at least one employment record, (4) at least one education record, (5) at least one skill. Empty profile scores zero. Current company/position, certifications and contribution choices do not independently add or subtract points. The percentage is an onboarding aid, never evidence of verification or authority.
 
 The reviewed [OpenAPI contract](../contracts/openapi/mezun360.yaml) and generated frontend schema contain these DTOs and operations. Existing identity/security contract drift tests now also cover profile schemas/routes. All other business tables/routes in this document remain target scope unless explicitly marked implemented.
+
+## Implemented M2B API contract
+
+Base `/api/v1`. The [OpenAPI contract](../contracts/openapi/mezun360.yaml) and generated frontend types cover these runtime routes. Account must be current ACTIVE ALUMNI for own onboarding/privacy/verification; institutional VERIFIED is not required to perform onboarding. Guest reads return 401, ALUMNI admin access 403 and ADMIN own-alumni access 403. All writes require the session CSRF token. Client-supplied userId, role, status/source/reviewer and other unknown payload fields are rejected; owner is always resolved from the security context.
+
+| Operation | Request / result |
+| --- | --- |
+| GET `/me/privacy-preferences` | `{profileExists,directoryOptIn,profileVisibility}`; no profile gives false/false/PRIVATE, no writes. Strong ETag and no-store. |
+| PUT `/me/privacy-preferences` | Exactly required boolean directoryOptIn and enum profileVisibility. 200 saved representation/new ETag; 409 PROFILE_REQUIRED if no profile. Two preferences are independent and both must permit future discovery. |
+| GET `/me/verification-requests` | `{status,submitted,submittedAt,reviewedAt,rejectionReason}` for current evidence revision, ETag/no-store. Null timestamps/reason for unsubmitted onboarding. No reviewer ID, audit, internal note or evidence in the owner summary. |
+| POST `/me/verification-requests` | `{confirmAccuracy:true}`, If-Match from preceding own GET, 201 current summary/new ETag. 409 PROFILE_REQUIRED, EDUCATION_REQUIRED or INVALID_TRANSITION. Rejected can resubmit; submitted PENDING/VERIFIED cannot duplicate. |
+| GET `/admin/verification-requests` | ADMIN only. status PENDING (default)/VERIFIED/REJECTED, page 0–10000 (default 0), size 1–50 (default 20). `{items,page,size,totalElements}`, ordered submission time then UUID; current evidence revisions only. Each item: id/name/department/graduationYear/submittedAt/status. no-store; no queue ETag. |
+| GET `/admin/verification-requests/{id}` | Minimal immutable evidence, status, dates, safe reason and `current` indicator. ETag includes request version and current profile evidence revision; no-store. No self-review. Historical superseded details show current=false and permit no decision. |
+| POST `/admin/verification-requests/{id}/decisions` | `{status:VERIFIED|REJECTED,rejectionReason?}`, exact review If-Match, 200 result/new ETag. Only PENDING current evidence; 409 EVIDENCE_CHANGED/INVALID_TRANSITION/ACCOUNT_INELIGIBLE. Ret reason required, plain text 10–500; VERIFIED reason absent. No role changes. |
+
+Privacy, submission and decision writes return 428 PRECONDITION_REQUIRED for missing exact If-Match, 412 VERSION_CONFLICT for stale/wildcard tags; current business eligibility is checked as well. Invalid payload/query/path returns 400 RFC 9457; missing review returns 404; dependency/audit failures fail closed with sanitized 5xx. Errors never echo personal submitted values. Queues and review reads audit disclosed target IDs; decisions audit VERIFY/REJECT in the same transaction. Existing `/me/profile` DTO stays unchanged; privacy/status use separate endpoints and cache entries. No peer profile, directory, contact, employer, export or role-management endpoint is activated.

@@ -39,6 +39,8 @@ export function useSaveProfile() {
       if (cache.getQueryData<Identity>(identityKey)?.userId !== owner) return
       await cache.cancelQueries({ queryKey: profileKey(owner) })
       cache.setQueryData(profileKey(owner), result)
+      await cache.invalidateQueries({ queryKey: ['verification', owner] })
+      await cache.invalidateQueries({ queryKey: ['privacy', owner] })
     },
     onError: error => {
       if (error instanceof ApiError && error.status === 401) {
