@@ -94,11 +94,11 @@ public class SecurityConfiguration {
         http.authorizeHttpRequests(a -> {
             a.requestMatchers(HttpMethod.GET, "/api/v1/health", "/api/v1/auth/csrf").permitAll();
             a.requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/logout").permitAll();
-            if (policy.isLocal()) a.requestMatchers("/v3/api-docs/**", "/swagger-ui/**").permitAll();
+            if (policy.isLocal()) a.requestMatchers("/v3/api-docs/**", "/v3/api-docs.yaml", "/swagger-ui/**").permitAll();
             a.requestMatchers("/api/v1/me/profile", "/api/v1/me/privacy-preferences", "/api/v1/me/verification-requests").hasRole("ALUMNI")
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
             a.requestMatchers("/api/v1/alumni/security-check").hasRole("ALUMNI");
-            a.requestMatchers("/api/v1/network/**", "/api/v1/jobs/**").hasAnyRole("ALUMNI", "ADMIN");
+            a.requestMatchers("/api/v1/network/**", "/api/v1/jobs/**", "/api/v1/mentorship/**").hasAnyRole("ALUMNI", "ADMIN");
             a.requestMatchers(HttpMethod.GET, "/api/v1/auth/me").authenticated();
             a.anyRequest().denyAll();
         });
