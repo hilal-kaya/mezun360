@@ -9,6 +9,7 @@ import { PrivacyPage } from '@/features/privacy-verification/privacy-page'
 import { AlumniNetworkPage } from '@/features/network/network-page'
 import { AdminVerificationsPage } from '@/features/privacy-verification/admin-verifications'
 import { RootLayout } from '@/layouts/root-layout'
+import { Jobs } from '@/features/jobs/routes/Jobs'
 
 const DevelopmentFoundation = import.meta.env.DEV
   ? lazy(() => import('@/dev/foundation-page'))
@@ -25,7 +26,8 @@ export function App() {
             <Route path="profile" element={<ProfilePage />} />
             <Route path="settings" element={<PrivacyPage />} />
             <Route path="network" element={<AlumniNetworkPage />} />
-            {['jobs', 'mentorship', 'events', 'news'].map(path => <Route key={path} path={path} element={<UpcomingAlumniPage />} />)}
+            <Route path="jobs" element={<Jobs />} />
+            {['mentorship', 'events', 'news'].map(path => <Route key={path} path={path} element={<UpcomingAlumniPage />} />)}
           </Route>
         </Route>
         <Route element={<RootLayout />}>

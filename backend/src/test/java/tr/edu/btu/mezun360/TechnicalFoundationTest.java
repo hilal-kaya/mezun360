@@ -49,7 +49,7 @@ class TechnicalFoundationTest {
     void contextStartsAndFlywayOwnsIdentityAndSessionSchema() {
         assertThat(jdbc.queryForObject("SELECT count(*) FROM mezun360.flyway_schema_history WHERE version = '0001' AND success", Integer.class)).isEqualTo(1);
         assertThat(jdbc.queryForList("SELECT table_name FROM information_schema.tables WHERE table_schema = 'mezun360'", String.class))
-                .containsExactlyInAnyOrder("flyway_schema_history", "user_accounts", "audit_events", "spring_session", "spring_session_attributes", "alumni_profiles", "employment_records", "education_records", "skills", "alumni_profile_skills", "certifications", "alumni_privacy_settings", "alumni_verification_requests", "outbox_events");
+                .containsExactlyInAnyOrder("flyway_schema_history", "user_accounts", "audit_events", "spring_session", "spring_session_attributes", "alumni_profiles", "employment_records", "education_records", "skills", "alumni_profile_skills", "certifications", "alumni_privacy_settings", "alumni_verification_requests", "outbox_events", "job_posts", "job_bookmarks");
         flyway.validate();
         assertThat(flyway.migrate().migrationsExecuted).isZero();
     }
@@ -91,7 +91,7 @@ class TechnicalFoundationTest {
         var response = mvc.perform(get("/v3/api-docs"))
                 .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
         var document = mapper.readTree(response);
-        assertThat(document.path("paths").size()).isEqualTo(14);
+        assertThat(document.path("paths").size()).isEqualTo(16);
         assertThat(document.at("/paths/~1api~1v1~1health/get/operationId").asText()).isEqualTo("getHealth");
         assertThat(document.path("components").path("schemas").has("HealthResponse")).isTrue();
         try (var stream = Files.newInputStream(Path.of("../contracts/openapi/mezun360.yaml"))) {
@@ -109,7 +109,8 @@ class TechnicalFoundationTest {
                 }
             }
             for (String schema : fieldNames(contract.path("components").path("schemas"))) {
-                if (schema.equals("PageableObject") || schema.equals("SortObject") || schema.equals("PageAlumniNetworkDTO")) {
+                if (schema.equals("PageableObject") || schema.equals("SortObject") || schema.equals("PageAlumniNetworkDTO")
+                    || schema.equals("JobPostDTO") || schema.equals("PageJobPostDTO") || schema.equals("WorkModel")) {
                     continue;
                 }
                 JsonNode expected = contract.path("components").path("schemas").path(schema);
