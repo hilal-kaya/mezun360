@@ -180,7 +180,7 @@ class PrivacyVerificationIntegrationTest {
         String hash=jdbc.queryForObject("SELECT password_hash FROM mezun360.user_accounts WHERE id=?",String.class,owner);
         db.update("INSERT INTO mezun360.user_accounts(id,email,email_canonical,password_hash,role,status,email_verified_at,created_at,updated_at) VALUES(?,?,?,?,'ALUMNI','ACTIVE',now(),now(),now())",owner,email,email,hash);
         UUID profile=UUID.randomUUID();db.update("INSERT INTO mezun360.alumni_profiles(id,user_id,first_name,last_name,created_at,updated_at) VALUES(?,?,'Deniz','Örnek',now(),now())",profile,owner);
-        var next=Flyway.configure().dataSource(url,DB.getUsername(),DB.getPassword()).schemas("mezun360").defaultSchema("mezun360").load();assertThat(next.migrate().migrationsExecuted).isEqualTo(3);next.validate();assertThat(next.migrate().migrationsExecuted).isZero();
+        var next=Flyway.configure().dataSource(url,DB.getUsername(),DB.getPassword()).schemas("mezun360").defaultSchema("mezun360").load();assertThat(next.migrate().migrationsExecuted).isEqualTo(5);next.validate();assertThat(next.migrate().migrationsExecuted).isZero();
         var defaults=db.queryForMap("SELECT directory_opt_in,profile_visibility FROM mezun360.alumni_privacy_settings WHERE profile_id=?",profile);
         assertThat(defaults).containsEntry("directory_opt_in",false).containsEntry("profile_visibility","PRIVATE");
         assertThat(db.queryForObject("SELECT count(*) FROM mezun360.alumni_verification_requests",Integer.class)).isZero();

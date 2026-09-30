@@ -1,2727 +1,2310 @@
-{
-  "openapi": "3.1.0",
-  "info": {
-    "title": "BTÜ Mezun360 API",
-    "description": "Session authentication and M2B owner profile, privacy and audited manual verification. Production MFA remains pending.",
-    "version": "v1"
-  },
-  "servers": [
-    {
-      "url": "/"
-    }
-  ],
-  "paths": {
-    "/api/v1/network/alumni": {
-      "get": {
-        "operationId": "searchAlumni",
-        "parameters": [
-          {
-            "name": "search",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "department",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "year",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "industry",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 20
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/me/profile": {
-      "get": {
-        "tags": [
-          "profile-controller"
-        ],
-        "summary": "Read current ALUMNI owner's profile or empty onboarding state",
-        "operationId": "getOwnProfile",
-        "responses": {
-          "200": {
-            "description": "Owner-only profile; no account/contact/verification fields",
-            "headers": {
-              "ETag": {
-                "style": "simple",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProfileResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "profile-controller"
-        ],
-        "summary": "Atomically replace editable profile and bounded nested records; ALUMNI owner only",
-        "operationId": "replaceOwnProfile",
-        "parameters": [
-          {
-            "name": "If-Match",
-            "in": "header",
-            "description": "Exact ETag from GET, including the empty onboarding tag for initial creation.",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-CSRF-TOKEN",
-            "in": "header",
-            "required": true,
-            "schema": {}
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ProfileWrite"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "Saved owner profile",
-            "headers": {
-              "ETag": {
-                "style": "simple",
-                "schema": {
-                  "type": "string"
-                }
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProfileResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Validation failed or version precondition missing/stale.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "412": {
-            "description": "Validation failed or version precondition missing/stale.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "428": {
-            "description": "Validation failed or version precondition missing/stale.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/me/privacy-preferences": {
-      "get": {
-        "tags": [
-          "privacy-controller"
-        ],
-        "operationId": "getOwnPrivacy",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "ETag": {
-                "schema": {}
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/PrivacyResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      },
-      "put": {
-        "tags": [
-          "privacy-controller"
-        ],
-        "operationId": "replaceOwnPrivacy",
-        "parameters": [
-          {
-            "name": "If-Match",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-CSRF-TOKEN",
-            "in": "header",
-            "required": true,
-            "schema": {}
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/PrivacyWrite"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "ETag": {
-                "schema": {}
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/PrivacyResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "412": {
-            "description": "Exact resource ETag required; stale precondition.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "428": {
-            "description": "Exact resource ETag required; stale precondition.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/me/verification-requests": {
-      "get": {
-        "tags": [
-          "verification-controller"
-        ],
-        "operationId": "getOwnVerification",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "ETag": {
-                "schema": {}
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerificationSummary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "verification-controller"
-        ],
-        "operationId": "submitOwnVerification",
-        "parameters": [
-          {
-            "name": "If-Match",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-CSRF-TOKEN",
-            "in": "header",
-            "required": true,
-            "schema": {}
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificationSubmission"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "201": {
-            "description": "Submitted minimal current education snapshot",
-            "headers": {
-              "ETag": {
-                "schema": {}
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerificationSummary"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "412": {
-            "description": "Exact resource ETag required; stale precondition.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "428": {
-            "description": "Exact resource ETag required; stale precondition.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/auth/logout": {
-      "post": {
-        "tags": [
-          "auth-controller"
-        ],
-        "summary": "Invalidate the full or pending session; CSRF required",
-        "operationId": "logout",
-        "parameters": [
-          {
-            "name": "X-CSRF-TOKEN",
-            "in": "header",
-            "description": "Masked token from GET /auth/csrf, bound to the accompanying session cookie.",
-            "required": true,
-            "schema": {}
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/auth/login": {
-      "post": {
-        "tags": [
-          "auth-controller"
-        ],
-        "summary": "Authenticate local credentials; CSRF required",
-        "operationId": "login",
-        "parameters": [
-          {
-            "name": "X-CSRF-TOKEN",
-            "in": "header",
-            "description": "Masked token from GET /auth/csrf, bound to the accompanying session cookie.",
-            "required": true,
-            "schema": {}
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/LoginRequest"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/LoginResponse"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid payload, malformed JSON or unknown field.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "429": {
-            "description": "Too many attempts; Retry-After gives seconds to wait.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/admin/verification-requests/{id}/decisions": {
-      "post": {
-        "tags": [
-          "admin-verification-controller"
-        ],
-        "operationId": "decideVerification",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          },
-          {
-            "name": "If-Match",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-CSRF-TOKEN",
-            "in": "header",
-            "required": true,
-            "schema": {}
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/VerificationDecision"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "ETag": {
-                "schema": {}
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminVerification"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "412": {
-            "description": "Exact resource ETag required; stale precondition.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "428": {
-            "description": "Exact resource ETag required; stale precondition.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/health": {
-      "get": {
-        "tags": [
-          "health-controller"
-        ],
-        "summary": "Check API and database readiness",
-        "operationId": "getHealth",
-        "responses": {
-          "200": {
-            "description": "API and database are ready",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/HealthResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Service temporarily unavailable",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/auth/me": {
-      "get": {
-        "tags": [
-          "auth-controller"
-        ],
-        "summary": "Get the authenticated account",
-        "operationId": "getCurrentAccount",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrentAccountResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/auth/csrf": {
-      "get": {
-        "tags": [
-          "auth-controller"
-        ],
-        "summary": "Get a masked session-bound CSRF token",
-        "operationId": "getCsrf",
-        "parameters": [
-          {
-            "name": "csrf",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/CsrfToken"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/CsrfResponse"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/alumni/security-check": {
-      "get": {
-        "tags": [
-          "security-check-controller"
-        ],
-        "summary": "Technical ALUMNI role probe; not a verified-member feature",
-        "operationId": "checkAlumniAccess",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SecurityCheckResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/admin/verification-requests": {
-      "get": {
-        "tags": [
-          "admin-verification-controller"
-        ],
-        "operationId": "listVerifications",
-        "parameters": [
-          {
-            "name": "status",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "default": "PENDING",
-              "enum": [
-                "PENDING",
-                "VERIFIED",
-                "REJECTED"
-              ]
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 20
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/VerificationQueue"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/admin/verification-requests/{id}": {
-      "get": {
-        "tags": [
-          "admin-verification-controller"
-        ],
-        "operationId": "getVerificationReview",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "headers": {
-              "ETag": {
-                "schema": {}
-              }
-            },
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/AdminVerification"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "409": {
-            "description": "Invalid request, missing resource or business conflict.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/admin/security-check": {
-      "get": {
-        "tags": [
-          "security-check-controller"
-        ],
-        "summary": "Technical ADMIN authorization probe",
-        "operationId": "checkAdminAccess",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/SecurityCheckResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Authentication required or invalid credentials.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "CSRF token invalid, CORS rejected or access forbidden.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Unexpected error; sanitized detail.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          },
-          "503": {
-            "description": "Required dependency unavailable.",
-            "content": {
-              "application/problem+json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ApiProblem"
-                }
-              }
-            }
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/jobs": {
-      "get": {
-        "tags": [
-          "Jobs"
-        ],
-        "summary": "Search jobs (paginated)",
-        "operationId": "searchJobs",
-        "parameters": [
-          {
-            "name": "location",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "workModel",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 0
-            }
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32",
-              "default": 20
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      },
-      "post": {
-        "tags": [
-          "Jobs"
-        ],
-        "summary": "Post a new job",
-        "operationId": "createJobPost",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/JobPostRequest"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Created"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    },
-    "/api/v1/jobs/{id}/bookmarks": {
-      "post": {
-        "tags": [
-          "Jobs"
-        ],
-        "summary": "Bookmark a job",
-        "operationId": "addBookmark",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      },
-      "delete": {
-        "tags": [
-          "Jobs"
-        ],
-        "summary": "Remove a job bookmark",
-        "operationId": "removeBookmark",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "format": "uuid"
-            }
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "No Content"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "500": {
-            "description": "Internal Server Error"
-          },
-          "503": {
-            "description": "Service Unavailable"
-          }
-        },
-        "security": [
-          {
-            "sessionCookie": []
-          }
-        ]
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "CareerInput": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "uuid"
-          },
-          "company": {
-            "type": "string",
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "position": {
-            "type": "string",
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "industry": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 100,
-            "minLength": 0
-          },
-          "city": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 100,
-            "minLength": 0
-          },
-          "startDate": {
-            "type": "string",
-            "format": "date"
-          },
-          "endDate": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date"
-          },
-          "currentlyWorking": {
-            "type": "boolean"
-          },
-          "description": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 2000,
-            "minLength": 0
-          }
-        },
-        "required": [
-          "company",
-          "position",
-          "startDate"
-        ]
-      },
-      "CertificationInput": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "issuer": {
-            "type": "string",
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "year": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 1900
-          },
-          "credentialUrl": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 2048,
-            "minLength": 0
-          }
-        },
-        "required": [
-          "issuer",
-          "name",
-          "year"
-        ]
-      },
-      "ContributionInput": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "willingToMentor": {
-            "type": "boolean"
-          },
-          "willingToShareOpportunities": {
-            "type": "boolean"
-          },
-          "willingToSpeakAtEvents": {
-            "type": "boolean"
-          },
-          "willingToSupportUniversityProjects": {
-            "type": "boolean"
-          }
-        }
-      },
-      "EducationInput": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "uuid"
-          },
-          "institution": {
-            "type": "string",
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "department": {
-            "type": "string",
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "degree": {
-            "type": "string",
-            "maxLength": 100,
-            "minLength": 0
-          },
-          "startYear": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 1900
-          },
-          "graduationYear": {
-            "type": [
-              "integer",
-              "null"
-            ],
-            "format": "int32",
-            "minimum": 1900
-          }
-        },
-        "required": [
-          "degree",
-          "department",
-          "institution",
-          "startYear"
-        ]
-      },
-      "ProfileWrite": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "firstName": {
-            "type": "string",
-            "maxLength": 100,
-            "minLength": 0
-          },
-          "lastName": {
-            "type": "string",
-            "maxLength": 100,
-            "minLength": 0
-          },
-          "department": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "graduationYear": {
-            "type": [
-              "integer",
-              "null"
-            ],
-            "format": "int32",
-            "minimum": 1900
-          },
-          "city": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 100,
-            "minLength": 0
-          },
-          "currentCompany": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "currentPosition": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 150,
-            "minLength": 0
-          },
-          "industry": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 100,
-            "minLength": 0
-          },
-          "about": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "maxLength": 2000,
-            "minLength": 0
-          },
-          "career": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CareerInput"
-            },
-            "maxItems": 30,
-            "minItems": 0
-          },
-          "education": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/EducationInput"
-            },
-            "maxItems": 20,
-            "minItems": 0
-          },
-          "skills": {
-            "type": "array",
-            "items": {
-              "type": "string",
-              "maxLength": 60,
-              "minLength": 0
-            },
-            "maxItems": 50,
-            "minItems": 0
-          },
-          "certifications": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CertificationInput"
-            },
-            "maxItems": 30,
-            "minItems": 0
-          },
-          "contribution": {
-            "$ref": "#/components/schemas/ContributionInput"
-          }
-        },
-        "required": [
-          "career",
-          "certifications",
-          "contribution",
-          "education",
-          "firstName",
-          "lastName",
-          "skills"
-        ]
-      },
-      "ProfileResponse": {
-        "type": "object",
-        "description": "Owner-only profile. exists=false has null data/timestamps and completionPercentage=0. Education is user-entered, never institutionally verified.",
-        "properties": {
-          "exists": {
-            "type": "boolean"
-          },
-          "data": {
-            "anyOf": [
-              {
-                "$ref": "#/components/schemas/ProfileWrite"
-              },
-              {
-                "type": "null"
-              }
-            ]
-          },
-          "completionPercentage": {
-            "type": "integer",
-            "format": "int32",
-            "maximum": 100,
-            "minimum": 0
-          },
-          "createdAt": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time"
-          },
-          "updatedAt": {
-            "type": [
-              "string",
-              "null"
-            ],
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "completionPercentage",
-          "createdAt",
-          "data",
-          "exists",
-          "updatedAt"
-        ]
-      },
-      "PrivacyWrite": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "directoryOptIn": {
-            "type": "boolean"
-          },
-          "profileVisibility": {
-            "type": "string",
-            "enum": [
-              "PRIVATE",
-              "ALUMNI_MEMBERS"
-            ]
-          }
-        },
-        "required": [
-          "directoryOptIn",
-          "profileVisibility"
-        ]
-      },
-      "PrivacyResponse": {
-        "type": "object",
-        "properties": {
-          "profileExists": {
-            "type": "boolean"
-          },
-          "directoryOptIn": {
-            "type": "boolean"
-          },
-          "profileVisibility": {
-            "type": "string",
-            "enum": [
-              "PRIVATE",
-              "ALUMNI_MEMBERS"
-            ]
-          }
-        },
-        "required": [
-          "directoryOptIn",
-          "profileExists",
-          "profileVisibility"
-        ]
-      },
-      "VerificationSubmission": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "confirmAccuracy": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "confirmAccuracy"
-        ]
-      },
-      "VerificationSummary": {
-        "type": "object",
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "VERIFIED",
-              "REJECTED"
-            ]
-          },
-          "submitted": {
-            "type": "boolean"
-          },
-          "submittedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "reviewedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "rejectionReason": {
-            "type": [
-              "null",
-              "string"
-            ]
-          }
-        },
-        "required": [
-          "rejectionReason",
-          "reviewedAt",
-          "status",
-          "submitted",
-          "submittedAt"
-        ]
-      },
-      "LoginRequest": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "email": {
-            "type": "string",
-            "format": "email",
-            "maxLength": 254,
-            "minLength": 0,
-            "pattern": "[\\x21-\\x7E]+"
-          },
-          "password": {
-            "type": "string",
-            "format": "password",
-            "maxLength": 128,
-            "minLength": 0,
-            "writeOnly": true
-          }
-        },
-        "required": [
-          "email",
-          "password"
-        ]
-      },
-      "LoginResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "authenticated": {
-            "type": "boolean"
-          },
-          "mfaRequired": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "authenticated",
-          "mfaRequired"
-        ]
-      },
-      "VerificationDecision": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "VERIFIED",
-              "REJECTED"
-            ]
-          },
-          "rejectionReason": {
-            "type": "string",
-            "maxLength": 500,
-            "minLength": 0
-          }
-        },
-        "required": [
-          "status"
-        ]
-      },
-      "AdminVerification": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "evidence": {
-            "$ref": "#/components/schemas/VerificationEvidence"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "VERIFIED",
-              "REJECTED"
-            ]
-          },
-          "submittedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "reviewedAt": {
-            "type": [
-              "null",
-              "string"
-            ],
-            "format": "date-time"
-          },
-          "rejectionReason": {
-            "type": [
-              "null",
-              "string"
-            ]
-          },
-          "current": {
-            "type": "boolean"
-          }
-        },
-        "required": [
-          "current",
-          "evidence",
-          "id",
-          "rejectionReason",
-          "reviewedAt",
-          "status",
-          "submittedAt"
-        ]
-      },
-      "ClaimedEducation": {
-        "type": "object",
-        "properties": {
-          "institution": {
-            "type": "string"
-          },
-          "department": {
-            "type": "string"
-          },
-          "degree": {
-            "type": "string"
-          },
-          "startYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "graduationYear": {
-            "type": [
-              "null",
-              "integer"
-            ],
-            "format": "int32"
-          }
-        },
-        "required": [
-          "degree",
-          "department",
-          "graduationYear",
-          "institution",
-          "startYear"
-        ]
-      },
-      "VerificationEvidence": {
-        "type": "object",
-        "properties": {
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "department": {
-            "type": "string"
-          },
-          "graduationYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "education": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/ClaimedEducation"
-            }
-          }
-        },
-        "required": [
-          "department",
-          "education",
-          "firstName",
-          "graduationYear",
-          "lastName"
-        ]
-      },
-      "ApiProblem": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "type": {
-            "type": "string",
-            "format": "uri"
-          },
-          "title": {
-            "type": "string"
-          },
-          "status": {
-            "type": "integer",
-            "format": "int32",
-            "maximum": 599,
-            "minimum": 400
-          },
-          "detail": {
-            "type": "string"
-          },
-          "instance": {
-            "type": "string",
-            "format": "uri-reference"
-          },
-          "code": {
-            "type": "string"
-          },
-          "traceId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "errors": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/FieldViolation"
-            }
-          }
-        },
-        "required": [
-          "code",
-          "detail",
-          "instance",
-          "status",
-          "title",
-          "traceId",
-          "type"
-        ]
-      },
-      "FieldViolation": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "field": {
-            "type": "string"
-          },
-          "code": {
-            "type": "string"
-          },
-          "message": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "code",
-          "field",
-          "message"
-        ]
-      },
-      "HealthResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "UP"
-            ]
-          },
-          "service": {
-            "type": "string",
-            "enum": [
-              "mezun360-api"
-            ]
-          }
-        },
-        "required": [
-          "service",
-          "status"
-        ]
-      },
-      "CurrentAccountResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "userId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "email": {
-            "type": "string",
-            "format": "email"
-          },
-          "role": {
-            "type": "string",
-            "enum": [
-              "ALUMNI",
-              "ADMIN"
-            ]
-          },
-          "accountStatus": {
-            "type": "string",
-            "enum": [
-              "PENDING_EMAIL",
-              "ACTIVE",
-              "SUSPENDED",
-              "DEACTIVATED"
-            ]
-          },
-          "mfaSatisfied": {
-            "type": "boolean"
-          },
-          "absoluteExpiresAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        },
-        "required": [
-          "absoluteExpiresAt",
-          "accountStatus",
-          "email",
-          "mfaSatisfied",
-          "role",
-          "userId"
-        ]
-      },
-      "CsrfToken": {
-        "type": "object",
-        "properties": {
-          "parameterName": {
-            "type": "string"
-          },
-          "token": {
-            "type": "string"
-          },
-          "headerName": {
-            "type": "string"
-          }
-        }
-      },
-      "CsrfResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "token": {
-            "type": "string"
-          },
-          "headerName": {
-            "type": "string",
-            "enum": [
-              "X-CSRF-TOKEN"
-            ]
-          }
-        },
-        "required": [
-          "headerName",
-          "token"
-        ]
-      },
-      "SecurityCheckResponse": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "status": {
-            "type": "string",
-            "enum": [
-              "OK"
-            ]
-          }
-        },
-        "required": [
-          "status"
-        ]
-      },
-      "Item": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "department": {
-            "type": "string"
-          },
-          "graduationYear": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "submittedAt": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "status": {
-            "type": "string",
-            "enum": [
-              "PENDING",
-              "VERIFIED",
-              "REJECTED"
-            ]
-          }
-        },
-        "required": [
-          "department",
-          "firstName",
-          "graduationYear",
-          "id",
-          "lastName",
-          "status",
-          "submittedAt"
-        ]
-      },
-      "VerificationQueue": {
-        "type": "object",
-        "properties": {
-          "items": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Item"
-            }
-          },
-          "page": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          }
-        },
-        "required": [
-          "items",
-          "page",
-          "size",
-          "totalElements"
-        ]
-      },
-      "JobPostRequest": {
-        "type": "object",
-        "required": [
-          "title",
-          "company",
-          "workModel",
-          "description",
-          "applicationUrl"
-        ],
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "company": {
-            "type": "string"
-          },
-          "location": {
-            "type": "string"
-          },
-          "workModel": {
-            "type": "string",
-            "enum": [
-              "REMOTE",
-              "HYBRID",
-              "ONSITE"
-            ]
-          },
-          "description": {
-            "type": "string"
-          },
-          "applicationUrl": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "securitySchemes": {
-      "sessionCookie": {
-        "type": "apiKey",
-        "name": "mezun360-session",
-        "in": "cookie"
-      }
-    }
-  }
-}
+openapi: 3.1.0
+info:
+  title: BTÃ Mezun360 API
+  description: "Session authentication and M2B owner profile, privacy and audited\
+    \ manual verification. Production MFA remains pending."
+  version: v1
+servers:
+- url: http://localhost
+  description: Generated server url
+tags:
+- name: Jobs
+  description: Alumni Job Board API
+- name: Mentorship
+  description: Alumni Mentorship API
+paths:
+  /api/v1/me/profile:
+    get:
+      tags:
+      - profile-controller
+      summary: Read current ALUMNI owner's profile or empty onboarding state
+      operationId: getOwnProfile
+      responses:
+        "200":
+          description: Owner-only profile; no account/contact/verification fields
+          headers:
+            ETag:
+              style: simple
+              schema:
+                type: string
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProfileResponse"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+    put:
+      tags:
+      - profile-controller
+      summary: Atomically replace editable profile and bounded nested records; ALUMNI
+        owner only
+      operationId: replaceOwnProfile
+      parameters:
+      - name: If-Match
+        in: header
+        description: "Exact ETag from GET, including the empty onboarding tag for\
+          \ initial creation."
+        required: true
+        schema:
+          type: string
+      - name: X-CSRF-TOKEN
+        in: header
+        required: true
+        schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ProfileWrite"
+        required: true
+      responses:
+        "200":
+          description: Saved owner profile
+          headers:
+            ETag:
+              style: simple
+              schema:
+                type: string
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/ProfileResponse"
+        "400":
+          description: Validation failed or version precondition missing/stale.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "412":
+          description: Validation failed or version precondition missing/stale.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "428":
+          description: Validation failed or version precondition missing/stale.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/me/privacy-preferences:
+    get:
+      tags:
+      - privacy-controller
+      operationId: getOwnPrivacy
+      responses:
+        "200":
+          description: OK
+          headers:
+            ETag:
+              schema: {}
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PrivacyResponse"
+        "400":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "404":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "409":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+    put:
+      tags:
+      - privacy-controller
+      operationId: replaceOwnPrivacy
+      parameters:
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: X-CSRF-TOKEN
+        in: header
+        required: true
+        schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrivacyWrite"
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            ETag:
+              schema: {}
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PrivacyResponse"
+        "400":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "404":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "409":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "412":
+          description: Exact resource ETag required; stale precondition.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "428":
+          description: Exact resource ETag required; stale precondition.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/mentorship/requests:
+    post:
+      tags:
+      - Mentorship
+      summary: Send a mentorship request
+      operationId: createRequest
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateMentorshipRequestDTO"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MentorshipRequestDTO"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/me/verification-requests:
+    get:
+      tags:
+      - verification-controller
+      operationId: getOwnVerification
+      responses:
+        "200":
+          description: OK
+          headers:
+            ETag:
+              schema: {}
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VerificationSummary"
+        "400":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "404":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "409":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+    post:
+      tags:
+      - verification-controller
+      operationId: submitOwnVerification
+      parameters:
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: X-CSRF-TOKEN
+        in: header
+        required: true
+        schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerificationSubmission"
+        required: true
+      responses:
+        "201":
+          description: Submitted minimal current education snapshot
+          headers:
+            ETag:
+              schema: {}
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VerificationSummary"
+        "400":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "404":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "409":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "412":
+          description: Exact resource ETag required; stale precondition.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "428":
+          description: Exact resource ETag required; stale precondition.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/jobs:
+    get:
+      tags:
+      - Jobs
+      summary: Search jobs (paginated)
+      operationId: searchJobs
+      parameters:
+      - name: location
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: workModel
+        in: query
+        required: false
+        schema:
+          type: string
+          enum:
+          - REMOTE
+          - HYBRID
+          - ONSITE
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageJobPostDTO"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+    post:
+      tags:
+      - Jobs
+      summary: Post a new job
+      operationId: createJobPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/JobPostRequest"
+        required: true
+      responses:
+        "201":
+          description: Created
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/JobPostDTO"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/jobs/{id}/bookmarks:
+    post:
+      tags:
+      - Jobs
+      summary: Bookmark a job
+      operationId: addBookmark
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+    delete:
+      tags:
+      - Jobs
+      summary: Remove a job bookmark
+      operationId: removeBookmark
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/auth/logout:
+    post:
+      tags:
+      - auth-controller
+      summary: Invalidate the full or pending session; CSRF required
+      operationId: logout
+      parameters:
+      - name: X-CSRF-TOKEN
+        in: header
+        description: "Masked token from GET /auth/csrf, bound to the accompanying\
+          \ session cookie."
+        required: true
+        schema: {}
+      responses:
+        "204":
+          description: No Content
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+  /api/v1/auth/login:
+    post:
+      tags:
+      - auth-controller
+      summary: Authenticate local credentials; CSRF required
+      operationId: login
+      parameters:
+      - name: X-CSRF-TOKEN
+        in: header
+        description: "Masked token from GET /auth/csrf, bound to the accompanying\
+          \ session cookie."
+        required: true
+        schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "400":
+          description: "Invalid payload, malformed JSON or unknown field."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "429":
+          description: Too many attempts; Retry-After gives seconds to wait.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+  /api/v1/admin/verification-requests/{id}/decisions:
+    post:
+      tags:
+      - admin-verification-controller
+      operationId: decideVerification
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      - name: If-Match
+        in: header
+        required: true
+        schema:
+          type: string
+      - name: X-CSRF-TOKEN
+        in: header
+        required: true
+        schema: {}
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/VerificationDecision"
+        required: true
+      responses:
+        "200":
+          description: OK
+          headers:
+            ETag:
+              schema: {}
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AdminVerification"
+        "400":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "404":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "409":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "412":
+          description: Exact resource ETag required; stale precondition.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "428":
+          description: Exact resource ETag required; stale precondition.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/mentorship/requests/{id}/status:
+    patch:
+      tags:
+      - Mentorship
+      summary: Accept or reject a mentorship request
+      operationId: updateRequestStatus
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMentorshipStatusDTO"
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/MentorshipRequestDTO"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/network/alumni:
+    get:
+      tags:
+      - Network
+      summary: Search verified alumni directory
+      operationId: searchAlumni
+      parameters:
+      - name: search
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: department
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: year
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+      - name: industry
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageAlumniNetworkDTO"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/mentorship/requests/outgoing:
+    get:
+      tags:
+      - Mentorship
+      summary: Get outgoing mentorship requests
+      operationId: getOutgoingRequests
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageMentorshipRequestDTO"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/mentorship/requests/incoming:
+    get:
+      tags:
+      - Mentorship
+      summary: Get incoming mentorship requests
+      operationId: getIncomingRequests
+      parameters:
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/PageMentorshipRequestDTO"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/health:
+    get:
+      tags:
+      - health-controller
+      summary: Check API and database readiness
+      operationId: getHealth
+      responses:
+        "200":
+          description: API and database are ready
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+        "503":
+          description: Service temporarily unavailable
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+  /api/v1/auth/me:
+    get:
+      tags:
+      - auth-controller
+      summary: Get the authenticated account
+      operationId: getCurrentAccount
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CurrentAccountResponse"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/auth/csrf:
+    get:
+      tags:
+      - auth-controller
+      summary: Get a masked session-bound CSRF token
+      operationId: getCsrf
+      parameters:
+      - name: csrf
+        in: query
+        required: true
+        schema:
+          $ref: "#/components/schemas/CsrfToken"
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/CsrfResponse"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+  /api/v1/alumni/security-check:
+    get:
+      tags:
+      - security-check-controller
+      summary: Technical ALUMNI role probe; not a verified-member feature
+      operationId: checkAlumniAccess
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SecurityCheckResponse"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/admin/verification-requests:
+    get:
+      tags:
+      - admin-verification-controller
+      operationId: listVerifications
+      parameters:
+      - name: status
+        in: query
+        required: false
+        schema:
+          type: string
+          default: PENDING
+          enum:
+          - PENDING
+          - VERIFIED
+          - REJECTED
+      - name: page
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 0
+      - name: size
+        in: query
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 20
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/VerificationQueue"
+        "400":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "404":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "409":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/admin/verification-requests/{id}:
+    get:
+      tags:
+      - admin-verification-controller
+      operationId: getVerificationReview
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+      responses:
+        "200":
+          description: OK
+          headers:
+            ETag:
+              schema: {}
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/AdminVerification"
+        "400":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "404":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "409":
+          description: "Invalid request, missing resource or business conflict."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+  /api/v1/admin/security-check:
+    get:
+      tags:
+      - security-check-controller
+      summary: Technical ADMIN authorization probe
+      operationId: checkAdminAccess
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: "#/components/schemas/SecurityCheckResponse"
+        "403":
+          description: "CSRF token invalid, CORS rejected or access forbidden."
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "500":
+          description: Unexpected error; sanitized detail.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "503":
+          description: Required dependency unavailable.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+        "401":
+          description: Authentication required or invalid credentials.
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/ApiProblem"
+      security:
+      - sessionCookie: []
+components:
+  schemas:
+    CareerInput:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type:
+          - string
+          - "null"
+          format: uuid
+        company:
+          type: string
+          maxLength: 150
+          minLength: 0
+        position:
+          type: string
+          maxLength: 150
+          minLength: 0
+        industry:
+          type:
+          - string
+          - "null"
+          maxLength: 100
+          minLength: 0
+        city:
+          type:
+          - string
+          - "null"
+          maxLength: 100
+          minLength: 0
+        startDate:
+          type: string
+          format: date
+        endDate:
+          type:
+          - string
+          - "null"
+          format: date
+        currentlyWorking:
+          type: boolean
+        description:
+          type:
+          - string
+          - "null"
+          maxLength: 2000
+          minLength: 0
+      required:
+      - company
+      - position
+      - startDate
+    CertificationInput:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type:
+          - string
+          - "null"
+          format: uuid
+        name:
+          type: string
+          maxLength: 150
+          minLength: 0
+        issuer:
+          type: string
+          maxLength: 150
+          minLength: 0
+        year:
+          type: integer
+          format: int32
+          minimum: 1900
+        credentialUrl:
+          type:
+          - string
+          - "null"
+          maxLength: 2048
+          minLength: 0
+      required:
+      - issuer
+      - name
+      - year
+    ContributionInput:
+      type: object
+      additionalProperties: false
+      properties:
+        willingToMentor:
+          type: boolean
+        willingToShareOpportunities:
+          type: boolean
+        willingToSpeakAtEvents:
+          type: boolean
+        willingToSupportUniversityProjects:
+          type: boolean
+    EducationInput:
+      type: object
+      additionalProperties: false
+      properties:
+        id:
+          type:
+          - string
+          - "null"
+          format: uuid
+        institution:
+          type: string
+          maxLength: 150
+          minLength: 0
+        department:
+          type: string
+          maxLength: 150
+          minLength: 0
+        degree:
+          type: string
+          maxLength: 100
+          minLength: 0
+        startYear:
+          type: integer
+          format: int32
+          minimum: 1900
+        graduationYear:
+          type:
+          - integer
+          - "null"
+          format: int32
+          minimum: 1900
+      required:
+      - degree
+      - department
+      - institution
+      - startYear
+    ProfileWrite:
+      type: object
+      additionalProperties: false
+      properties:
+        firstName:
+          type: string
+          maxLength: 100
+          minLength: 0
+        lastName:
+          type: string
+          maxLength: 100
+          minLength: 0
+        department:
+          type:
+          - string
+          - "null"
+          maxLength: 150
+          minLength: 0
+        graduationYear:
+          type:
+          - integer
+          - "null"
+          format: int32
+          minimum: 1900
+        city:
+          type:
+          - string
+          - "null"
+          maxLength: 100
+          minLength: 0
+        currentCompany:
+          type:
+          - string
+          - "null"
+          maxLength: 150
+          minLength: 0
+        currentPosition:
+          type:
+          - string
+          - "null"
+          maxLength: 150
+          minLength: 0
+        industry:
+          type:
+          - string
+          - "null"
+          maxLength: 100
+          minLength: 0
+        about:
+          type:
+          - string
+          - "null"
+          maxLength: 2000
+          minLength: 0
+        career:
+          type: array
+          items:
+            $ref: "#/components/schemas/CareerInput"
+          maxItems: 30
+          minItems: 0
+        education:
+          type: array
+          items:
+            $ref: "#/components/schemas/EducationInput"
+          maxItems: 20
+          minItems: 0
+        skills:
+          type: array
+          items:
+            type: string
+            maxLength: 60
+            minLength: 0
+          maxItems: 50
+          minItems: 0
+        certifications:
+          type: array
+          items:
+            $ref: "#/components/schemas/CertificationInput"
+          maxItems: 30
+          minItems: 0
+        contribution:
+          $ref: "#/components/schemas/ContributionInput"
+      required:
+      - career
+      - certifications
+      - contribution
+      - education
+      - firstName
+      - lastName
+      - skills
+    ProfileResponse:
+      type: object
+      description: "Owner-only profile. exists=false has null data/timestamps and\
+        \ completionPercentage=0. Education is user-entered, never institutionally\
+        \ verified."
+      properties:
+        exists:
+          type: boolean
+        data:
+          anyOf:
+          - $ref: "#/components/schemas/ProfileWrite"
+          - type: "null"
+        completionPercentage:
+          type: integer
+          format: int32
+          maximum: 100
+          minimum: 0
+        createdAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        updatedAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+      required:
+      - completionPercentage
+      - createdAt
+      - data
+      - exists
+      - updatedAt
+    PrivacyWrite:
+      type: object
+      additionalProperties: false
+      properties:
+        directoryOptIn:
+          type: boolean
+        profileVisibility:
+          type: string
+          enum:
+          - PRIVATE
+          - ALUMNI_MEMBERS
+      required:
+      - directoryOptIn
+      - profileVisibility
+    PrivacyResponse:
+      type: object
+      properties:
+        profileExists:
+          type: boolean
+        directoryOptIn:
+          type: boolean
+        profileVisibility:
+          type: string
+          enum:
+          - PRIVATE
+          - ALUMNI_MEMBERS
+      required:
+      - directoryOptIn
+      - profileExists
+      - profileVisibility
+    CreateMentorshipRequestDTO:
+      type: object
+      properties:
+        mentorId:
+          type: string
+          format: uuid
+        message:
+          type: string
+          maxLength: 1000
+          minLength: 10
+      required:
+      - mentorId
+      - message
+    MentorshipRequestDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mentorId:
+          type: string
+          format: uuid
+        menteeId:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum:
+          - PENDING
+          - ACCEPTED
+          - REJECTED
+          - COMPLETED
+          - CANCELLED
+        message:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+    VerificationSubmission:
+      type: object
+      additionalProperties: false
+      properties:
+        confirmAccuracy:
+          type: boolean
+      required:
+      - confirmAccuracy
+    VerificationSummary:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - PENDING
+          - VERIFIED
+          - REJECTED
+        submitted:
+          type: boolean
+        submittedAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        reviewedAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        rejectionReason:
+          type:
+          - string
+          - "null"
+      required:
+      - rejectionReason
+      - reviewedAt
+      - status
+      - submitted
+      - submittedAt
+    JobPostRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+        company:
+          type: string
+          minLength: 1
+        location:
+          type: string
+        workModel:
+          type: string
+          enum:
+          - REMOTE
+          - HYBRID
+          - ONSITE
+        description:
+          type: string
+          minLength: 1
+        applicationUrl:
+          type: string
+          minLength: 1
+      required:
+      - applicationUrl
+      - company
+      - description
+      - title
+      - workModel
+    JobPostDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        company:
+          type: string
+        location:
+          type: string
+        workModel:
+          type: string
+          enum:
+          - REMOTE
+          - HYBRID
+          - ONSITE
+        description:
+          type: string
+        applicationUrl:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        bookmarked:
+          type: boolean
+    LoginRequest:
+      type: object
+      additionalProperties: false
+      properties:
+        email:
+          type: string
+          format: email
+          maxLength: 254
+          minLength: 0
+          pattern: "[\\x21-\\x7E]+"
+        password:
+          type: string
+          format: password
+          maxLength: 128
+          minLength: 0
+          writeOnly: true
+      required:
+      - email
+      - password
+    LoginResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        authenticated:
+          type: boolean
+        mfaRequired:
+          type: boolean
+      required:
+      - authenticated
+      - mfaRequired
+    VerificationDecision:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - PENDING
+          - VERIFIED
+          - REJECTED
+        rejectionReason:
+          type: string
+          maxLength: 500
+          minLength: 0
+      required:
+      - status
+    AdminVerification:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        evidence:
+          $ref: "#/components/schemas/VerificationEvidence"
+        status:
+          type: string
+          enum:
+          - PENDING
+          - VERIFIED
+          - REJECTED
+        submittedAt:
+          type: string
+          format: date-time
+        reviewedAt:
+          type:
+          - string
+          - "null"
+          format: date-time
+        rejectionReason:
+          type:
+          - string
+          - "null"
+        current:
+          type: boolean
+      required:
+      - current
+      - evidence
+      - id
+      - rejectionReason
+      - reviewedAt
+      - status
+      - submittedAt
+    ClaimedEducation:
+      type: object
+      properties:
+        institution:
+          type: string
+        department:
+          type: string
+        degree:
+          type: string
+        startYear:
+          type: integer
+          format: int32
+        graduationYear:
+          type:
+          - integer
+          - "null"
+          format: int32
+      required:
+      - degree
+      - department
+      - graduationYear
+      - institution
+      - startYear
+    VerificationEvidence:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        department:
+          type: string
+        graduationYear:
+          type: integer
+          format: int32
+        education:
+          type: array
+          items:
+            $ref: "#/components/schemas/ClaimedEducation"
+      required:
+      - department
+      - education
+      - firstName
+      - graduationYear
+      - lastName
+    UpdateMentorshipStatusDTO:
+      type: object
+      properties:
+        status:
+          type: string
+          enum:
+          - PENDING
+          - ACCEPTED
+          - REJECTED
+          - COMPLETED
+          - CANCELLED
+      required:
+      - status
+    AlumniNetworkDTO:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        department:
+          type: string
+        graduationYear:
+          type: integer
+          format: int32
+        currentCompany:
+          type: string
+        currentPosition:
+          type: string
+        industry:
+          type: string
+        city:
+          type: string
+    PageAlumniNetworkDTO:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/AlumniNetworkDTO"
+        number:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        paged:
+          type: boolean
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        unpaged:
+          type: boolean
+        offset:
+          type: integer
+          format: int64
+    SortObject:
+      type: object
+      properties:
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean
+        empty:
+          type: boolean
+    PageMentorshipRequestDTO:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/MentorshipRequestDTO"
+        number:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    PageJobPostDTO:
+      type: object
+      properties:
+        totalElements:
+          type: integer
+          format: int64
+        totalPages:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        numberOfElements:
+          type: integer
+          format: int32
+        pageable:
+          $ref: "#/components/schemas/PageableObject"
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: "#/components/schemas/JobPostDTO"
+        number:
+          type: integer
+          format: int32
+        empty:
+          type: boolean
+    ApiProblem:
+      type: object
+      additionalProperties: false
+      properties:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+          maximum: 599
+          minimum: 400
+        detail:
+          type: string
+        instance:
+          type: string
+          format: uri-reference
+        code:
+          type: string
+        traceId:
+          type: string
+          format: uuid
+        errors:
+          type: array
+          items:
+            $ref: "#/components/schemas/FieldViolation"
+      required:
+      - code
+      - detail
+      - instance
+      - status
+      - title
+      - traceId
+      - type
+    FieldViolation:
+      type: object
+      additionalProperties: false
+      properties:
+        field:
+          type: string
+        code:
+          type: string
+        message:
+          type: string
+      required:
+      - code
+      - field
+      - message
+    HealthResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - UP
+        service:
+          type: string
+          enum:
+          - mezun360-api
+      required:
+      - service
+      - status
+    CurrentAccountResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        userId:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        role:
+          type: string
+          enum:
+          - ALUMNI
+          - ADMIN
+        accountStatus:
+          type: string
+          enum:
+          - PENDING_EMAIL
+          - ACTIVE
+          - SUSPENDED
+          - DEACTIVATED
+        mfaSatisfied:
+          type: boolean
+        absoluteExpiresAt:
+          type: string
+          format: date-time
+      required:
+      - absoluteExpiresAt
+      - accountStatus
+      - email
+      - mfaSatisfied
+      - role
+      - userId
+    CsrfToken:
+      type: object
+      properties:
+        parameterName:
+          type: string
+        token:
+          type: string
+        headerName:
+          type: string
+    CsrfResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        token:
+          type: string
+        headerName:
+          type: string
+          enum:
+          - X-CSRF-TOKEN
+      required:
+      - headerName
+      - token
+    SecurityCheckResponse:
+      type: object
+      additionalProperties: false
+      properties:
+        status:
+          type: string
+          enum:
+          - OK
+      required:
+      - status
+    Item:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        department:
+          type: string
+        graduationYear:
+          type: integer
+          format: int32
+        submittedAt:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum:
+          - PENDING
+          - VERIFIED
+          - REJECTED
+      required:
+      - department
+      - firstName
+      - graduationYear
+      - id
+      - lastName
+      - status
+      - submittedAt
+    VerificationQueue:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Item"
+        page:
+          type: integer
+          format: int32
+        size:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+      required:
+      - items
+      - page
+      - size
+      - totalElements
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      name: mezun360-session
+      in: cookie
