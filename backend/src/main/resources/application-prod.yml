@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+server:
+  address: 0.0.0.0
+  port: 8080
+
+mezun360:
+  security:
+    allowed-origins: ${CORS_ALLOWED_ORIGINS}
