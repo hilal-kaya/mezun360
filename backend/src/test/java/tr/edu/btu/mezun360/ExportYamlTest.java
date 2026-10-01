@@ -35,7 +35,7 @@ class ExportYamlTest {
     @Test
     void exportYaml() throws Exception {
         var response = mvc.perform(get("/v3/api-docs.yaml"))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8);
         Files.writeString(Path.of("../contracts/openapi/mezun360.yaml"), response);
     }
 }

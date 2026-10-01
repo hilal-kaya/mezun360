@@ -9,3 +9,15 @@ mezun360:
     cookie-secure: ${SESSION_COOKIE_SECURE:false}
     cookie-name: ${SESSION_COOKIE_NAME:mezun360-session}
     admin-mfa-required: ${ADMIN_MFA_REQUIRED:false}
+spring:
+  mail:
+    host: localhost
+    port: 3025
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  thymeleaf:
+    cache: false
