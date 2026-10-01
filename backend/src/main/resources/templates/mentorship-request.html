@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Yeni Mentörlük Talebi</title>
+</head>
+<body style="margin: 0; padding: 0; background-color: #FAFAF7; font-family: Helvetica, Arial, sans-serif; color: #333333;">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #FAFAF7; padding: 20px;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 6px rgba(0,0,0,0.05);">
+                    <!-- Header -->
+                    <tr>
+                        <td style="background-color: #233A85; padding: 30px; text-align: center;">
+                            <h1 style="color: #ffffff; margin: 0; font-size: 24px; font-weight: bold;">BTÜ Mezun360</h1>
+                        </td>
+                    </tr>
+                    <!-- Body -->
+                    <tr>
+                        <td style="padding: 40px 30px;">
+                            <h2 style="margin-top: 0; color: #233A85; font-size: 20px;">Yeni Mentörlük Talebi</h2>
+                            <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">Merhaba <span th:text="${mentorName}">Mentör</span>,</p>
+                            <p style="font-size: 16px; line-height: 1.5; margin-bottom: 20px;">
+                                <strong><span th:text="${menteeName}">Mentee</span></strong> size yeni bir mentörlük talebi gönderdi.
+                            </p>
+                            <div style="background-color: #FAFAF7; border-left: 4px solid #233A85; padding: 15px; margin-bottom: 30px; font-style: italic; color: #555555;">
+                                "<span th:text="${message}">Talebin mesajı burada yer alacak.</span>"
+                            </div>
+                            <table cellpadding="0" cellspacing="0" border="0" width="100%">
+                                <tr>
+                                    <td align="center">
+                                        <a th:href="${actionUrl}" style="display: inline-block; padding: 14px 28px; background-color: #233A85; color: #ffffff; text-decoration: none; font-size: 16px; font-weight: bold; border-radius: 6px;">Talebi Görüntüle</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #DDE7FF; padding: 20px; text-align: center; font-size: 12px; color: #233A85;">
+                            <p style="margin: 0 0 10px 0;">&copy; 2026 BTÜ Mezun360. Tüm hakları saklıdır.</p>
+                            <p style="margin: 0;">
+                                <a th:href="${unsubscribeUrl}" style="color: #233A85; text-decoration: underline;">Bildirim Tercihlerini Yönet / Abonelikten Çık</a>
+                            </p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

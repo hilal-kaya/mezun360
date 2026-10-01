@@ -1,6 +1,6 @@
 openapi: 3.1.0
 info:
-  title: BTÃ Mezun360 API
+  title: BTÜ Mezun360 API
   description: "Session authentication and M2B owner profile, privacy and audited\
     \ manual verification. Production MFA remains pending."
   version: v1
@@ -1759,18 +1759,18 @@ components:
           type: boolean
         submittedAt:
           type:
-          - string
           - "null"
+          - string
           format: date-time
         reviewedAt:
           type:
-          - string
           - "null"
+          - string
           format: date-time
         rejectionReason:
           type:
-          - string
           - "null"
+          - string
       required:
       - rejectionReason
       - reviewedAt
@@ -1898,13 +1898,13 @@ components:
           format: date-time
         reviewedAt:
           type:
-          - string
           - "null"
+          - string
           format: date-time
         rejectionReason:
           type:
-          - string
           - "null"
+          - string
         current:
           type: boolean
       required:
@@ -1929,8 +1929,8 @@ components:
           format: int32
         graduationYear:
           type:
-          - integer
           - "null"
+          - integer
           format: int32
       required:
       - degree
@@ -2005,12 +2005,12 @@ components:
         totalPages:
           type: integer
           format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
         first:
           type: boolean
         last:
           type: boolean
-        sort:
-          $ref: "#/components/schemas/SortObject"
         numberOfElements:
           type: integer
           format: int32
@@ -2031,18 +2031,18 @@ components:
     PageableObject:
       type: object
       properties:
-        sort:
-          $ref: "#/components/schemas/SortObject"
         paged:
           type: boolean
-        pageNumber:
-          type: integer
-          format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
+        unpaged:
+          type: boolean
         pageSize:
           type: integer
           format: int32
-        unpaged:
-          type: boolean
+        pageNumber:
+          type: integer
+          format: int32
         offset:
           type: integer
           format: int64
@@ -2064,12 +2064,12 @@ components:
         totalPages:
           type: integer
           format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
         first:
           type: boolean
         last:
           type: boolean
-        sort:
-          $ref: "#/components/schemas/SortObject"
         numberOfElements:
           type: integer
           format: int32
@@ -2096,12 +2096,12 @@ components:
         totalPages:
           type: integer
           format: int32
+        sort:
+          $ref: "#/components/schemas/SortObject"
         first:
           type: boolean
         last:
           type: boolean
-        sort:
-          $ref: "#/components/schemas/SortObject"
         numberOfElements:
           type: integer
           format: int32

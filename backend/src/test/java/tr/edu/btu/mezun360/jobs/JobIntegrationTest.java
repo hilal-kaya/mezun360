@@ -68,8 +68,9 @@ class JobIntegrationTest {
         return mapper.readTree(send("GET", "/api/v1/auth/csrf", null, null).body()).path("token").asText();
     }
 
+    private record LoginRequest(String email, String password) {}
+
     void login(String email, String password) throws Exception {
-        record LoginRequest(String email, String password) {}
         var response = send("POST", "/api/v1/auth/login", mapper.writeValueAsString(new LoginRequest(email, password)), csrf());
         assertThat(response.statusCode()).isEqualTo(200);
     }

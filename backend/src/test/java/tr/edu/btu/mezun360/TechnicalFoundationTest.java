@@ -89,7 +89,7 @@ class TechnicalFoundationTest {
     @Test
     void openApiMatchesImplementedFoundationOperations() throws Exception {
         var response = mvc.perform(get("/v3/api-docs"))
-                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString();
+                .andExpect(status().isOk()).andReturn().getResponse().getContentAsString(java.nio.charset.StandardCharsets.UTF_8);
         var document = mapper.readTree(response);
         assertThat(document.path("paths").size()).isEqualTo(20);
         assertThat(document.at("/paths/~1api~1v1~1health/get/operationId").asText()).isEqualTo("getHealth");

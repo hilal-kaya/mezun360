@@ -98,7 +98,7 @@ public class JobService {
         );
         job = jobPostRepository.save(job);
         
-        return new JobPostDTO(
+        JobPostDTO dto = new JobPostDTO(
             job.getId(),
             job.getTitle(),
             job.getCompany(),
@@ -109,6 +109,21 @@ public class JobService {
             job.getCreatedAt(),
             false
         );
+
+        try {
+            com.fasterxml.jackson.databind.ObjectMapper mapper = new com.fasterxml.jackson.databind.ObjectMapper();
+            mapper.registerModule(new com.fasterxml.jackson.datatype.jsr310.JavaTimeModule());
+            String payload = mapper.writeValueAsString(dto);
+            jdbcTemplate.update(
+                "INSERT INTO mezun360.outbox_events (id, type, aggregate_id, occurred_at, correlation_id, payload, status, retry_count, created_at, updated_at, version) " +
+                "VALUES (?, ?, ?, now(), ?, ?::jsonb, 'PENDING', 0, now(), now(), 0)",
+                UUID.randomUUID(), "NEW_JOB_POST", job.getId(), UUID.randomUUID(), payload
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create outbox event", e);
+        }
+
+        return dto;
     }
 
     @Transactional
