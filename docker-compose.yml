@@ -1,0 +1,53 @@
+services:
+  postgres:
+    image: postgres:17.9-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-mezun360}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-mezun360_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-mezun360}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - mezun360-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-mezun360} -d ${POSTGRES_DB:-mezun360}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-mezun360}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-mezun360}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-mezun360_secret}
+      CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost}
+      SMTP_HOST: ${SMTP_HOST:-localhost}
+      SMTP_PORT: ${SMTP_PORT:-25}
+      SMTP_USERNAME: ${SMTP_USERNAME:-}
+      SMTP_PASSWORD: ${SMTP_PASSWORD:-}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - mezun360-network
+
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "80:80"
+    networks:
+      - mezun360-network
+
+volumes:
+  postgres_data:
+
+networks:
+  mezun360-network:
