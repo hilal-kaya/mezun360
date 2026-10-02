@@ -1,31 +1,34 @@
 package tr.edu.btu.mezun360.jobs.domain;
 
 import jakarta.persistence.*;
-import tr.edu.btu.mezun360.identity.domain.UserAccount;
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.DynamicUpdate;
+import tr.edu.btu.mezun360.identity.domain.UserAccount;
 
 @Entity
 @Table(name = "job_posts", schema = "mezun360")
+@DynamicUpdate
 public class JobPost {
 
     @Id
+    @Column(name = "id")
     private UUID id;
 
-    @Column(nullable = false)
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(nullable = false)
+    @Column(name = "company", nullable = false)
     private String company;
 
-    @Column
+    @Column(name = "location")
     private String location;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "work_model", nullable = false)
     private WorkModel workModel;
 
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
 
     @Column(name = "application_url", nullable = false, length = 1024)
@@ -41,9 +44,7 @@ public class JobPost {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected JobPost() {
-        // JPA
-    }
+    protected JobPost() {}
 
     public JobPost(UUID id, String title, String company, String location, WorkModel workModel, String description, String applicationUrl, UserAccount postedBy) {
         this.id = id != null ? id : UUID.randomUUID();
@@ -58,7 +59,19 @@ public class JobPost {
         this.updatedAt = this.createdAt;
     }
 
-    // Getters
+    public JobPost(UUID id, String title, String company, String location, WorkModel workModel, String description, String applicationUrl, UserAccount postedBy, Instant createdAt) {
+        this.id = id;
+        this.title = title;
+        this.company = company;
+        this.location = location;
+        this.workModel = workModel;
+        this.description = description;
+        this.applicationUrl = applicationUrl;
+        this.postedBy = postedBy;
+        this.createdAt = createdAt;
+        this.updatedAt = createdAt;
+    }
+
     public UUID getId() { return id; }
     public String getTitle() { return title; }
     public String getCompany() { return company; }
