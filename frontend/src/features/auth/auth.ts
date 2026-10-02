@@ -23,6 +23,9 @@ export function safeAuthError(error: unknown) {
     if (error.status === 401) return 'E-posta veya parola hatalı. Lütfen tekrar deneyin.'
     if (error.status === 429) return 'Çok fazla giriş denemesi yapıldı. Birkaç dakika sonra tekrar deneyin.'
     if (error.code === 'CSRF_INVALID') return 'Oturum güvenlik bilgisi yenilendi. Lütfen tekrar deneyin.'
+    if (error.status === 0) return 'Sunucuya ulaşılamadı. Lütfen bağlantınızı kontrol edin.'
+    if (error.message) return `API Hatası: ${error.message}`
   }
+  if (error instanceof Error && error.message) return error.message;
   return 'Şu anda işlem tamamlanamıyor. Lütfen tekrar deneyin.'
 }
