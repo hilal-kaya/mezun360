@@ -31,19 +31,23 @@ public class DataSeeder implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
-        String email = "admin@example.test";
+        seedUser("admin@example.test", "admin", Role.ADMIN);
+        seedUser("alumni@example.test", "alumni", Role.ALUMNI);
+    }
+
+    private void seedUser(String email, String password, Role role) {
         String canonical = EmailCanonicalizer.canonicalize(email);
         var existing = accounts.findByEmailCanonical(canonical);
-        String hash = passwordEncoder.encode("admin");
+        String hash = passwordEncoder.encode(password);
         if (existing.isEmpty()) {
-            UserAccount admin = UserAccount.development(
+            UserAccount account = UserAccount.development(
                 email, 
                 canonical, 
                 hash, 
-                Role.ADMIN, 
+                role, 
                 clock.instant()
             );
-            accounts.save(admin);
+            accounts.save(account);
         } else {
             // Overwrite password directly via native query to avoid foreign key constraints
             jdbcTemplate.update("UPDATE mezun360.user_accounts SET password_hash = ? WHERE email_canonical = ?", hash, canonical);
