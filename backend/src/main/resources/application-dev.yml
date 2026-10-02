@@ -1,0 +1,33 @@
+spring:
+  mail:
+    host: localhost
+    port: 3025
+    properties:
+      mail:
+        smtp:
+          auth: false
+          starttls:
+            enable: false
+  thymeleaf:
+    cache: false
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+
+server:
+  address: 0.0.0.0
+  port: 8080
+
+springdoc:
+  api-docs:
+    enabled: ${OPENAPI_ENABLED:true}
+  swagger-ui:
+    enabled: ${OPENAPI_ENABLED:true}
+
+mezun360:
+  security:
+    cookie-secure: ${SESSION_COOKIE_SECURE:false}
+    cookie-name: ${SESSION_COOKIE_NAME:mezun360-session}
+    admin-mfa-required: ${ADMIN_MFA_REQUIRED:false}
+    allowed-origins: http://localhost,http://localhost:3000
