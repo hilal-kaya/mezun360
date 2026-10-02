@@ -22,7 +22,8 @@ services:
       context: ./backend
     environment:
       SPRING_PROFILES_ACTIVE: prod
-      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB:-mezun360}
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mezun360
+      DB_URL: jdbc:postgresql://postgres:5432/mezun360
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-mezun360}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-mezun360_secret}
       CORS_ALLOWED_ORIGINS: ${CORS_ALLOWED_ORIGINS:-http://localhost:3000,http://localhost}
