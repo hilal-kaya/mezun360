@@ -46,6 +46,8 @@ services:
       - "80:80"
     networks:
       - mezun360-network
+    depends_on:
+      - backend
 
 volumes:
   postgres_data:
