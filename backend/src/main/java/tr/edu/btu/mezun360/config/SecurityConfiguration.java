@@ -98,7 +98,7 @@ public class SecurityConfiguration {
             a.requestMatchers("/api/v1/me/profile", "/api/v1/me/privacy-preferences", "/api/v1/me/verification-requests").hasRole("ALUMNI")
                 .requestMatchers("/api/v1/admin/**").hasRole("ADMIN");
             a.requestMatchers("/api/v1/alumni/security-check").hasRole("ALUMNI");
-            a.requestMatchers("/api/v1/network/**", "/api/v1/jobs/**", "/api/v1/mentorship/**").hasAnyRole("ALUMNI", "ADMIN");
+            a.requestMatchers("/api/v1/network/**", "/api/v1/jobs/**", "/api/v1/mentorship/**", "/api/v1/mentors/**").hasAnyRole("ALUMNI", "ADMIN");
             a.requestMatchers(HttpMethod.GET, "/api/v1/auth/me").authenticated();
             a.anyRequest().denyAll();
         });
