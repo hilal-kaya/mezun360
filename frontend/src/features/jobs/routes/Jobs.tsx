@@ -24,10 +24,10 @@ export function Jobs() {
         <div>
           <h1 className="text-3xl font-bold text-[#233A85] flex items-center">
             <Briefcase className="mr-3 h-8 w-8" />
-            Alumni Job Board
+            İş & Staj İlanları
           </h1>
           <p className="text-muted-foreground mt-2">
-            Discover opportunities shared by the BTÜ alumni community.
+            BTÜ mezun ağı tarafından paylaşılan fırsatları keşfedin.
           </p>
         </div>
         <PostJobModal />
@@ -54,15 +54,15 @@ export function Jobs() {
 
           {isError && (
             <div className="bg-red-50 text-red-600 p-6 rounded-lg text-center">
-              Failed to load jobs. Please try again later.
+              İlanlar yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.
             </div>
           )}
 
           {data?.content.length === 0 && (
             <div className="bg-gray-50 p-12 rounded-lg text-center border border-dashed border-gray-200">
               <Briefcase className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-              <h3 className="text-lg font-medium text-gray-900">No jobs found</h3>
-              <p className="text-gray-500 mt-2">Try adjusting your filters or be the first to post a new opportunity.</p>
+              <h3 className="text-lg font-medium text-gray-900">İlan bulunamadı</h3>
+              <p className="text-gray-500 mt-2">Filtreleri değiştirmeyi veya yeni bir ilan eklemeyi deneyin.</p>
             </div>
           )}
 
