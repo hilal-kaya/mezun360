@@ -52,14 +52,14 @@ export function JobCard({ job }: JobCardProps) {
           )}
           <Badge className="bg-gray-100 text-gray-800 border border-gray-200">
             <Clock className="h-3 w-3 mr-1" />
-            {job.workModel}
+            {job.workModel === 'REMOTE' ? 'Uzaktan' : job.workModel === 'HYBRID' ? 'Hibrit' : 'Ofisten'}
           </Badge>
         </div>
         <p className="text-sm text-gray-600 line-clamp-3 whitespace-pre-line">{job.description}</p>
       </div>
       <div className="mt-4 flex items-center pt-0">
         <Button asChild className="w-full bg-[#233A85] text-white hover:bg-[#1a2b63]">
-          <a href={job.applicationUrl} target="_blank" rel="noopener noreferrer">Apply Now</a>
+          <a href={job.applicationUrl} target="_blank" rel="noopener noreferrer">İncele / Başvur</a>
         </Button>
       </div>
     </Card>
