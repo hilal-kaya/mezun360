@@ -2,7 +2,7 @@
 
 ## Current phase
 
-The user has explicitly authorized **M3 – Career & Job Postings**. Preserve M1A–M2B. Scope: Job Postings, Employer integration prep, automated deployments. After all required validations pass, the user explicitly requests commit `feat: add job postings` and push this branch to origin. Never merge, rebase, amend unrelated commits or force push.
+The user has explicitly authorized **M4 – Mentorship**. Preserve M1A–M3. Scope: Mentorship Module, mentor profiles, matching, mock data. After all required validations pass, the user explicitly requests commit `feat: build mentorship module, update M4 auth and automate deployment` and push this branch to origin. Never merge, rebase, amend unrelated commits or force push.
 
 Read [decisions](docs/decisions.md), [requirements](docs/requirements.md), [architecture](docs/architecture.md), [database](docs/database.md), [API](docs/api.md), [repository structure](docs/repository-structure.md) and [roadmap](docs/roadmap.md) before making changes. Keep these documents consistent. The user's finalized decisions supersede the earlier open alternatives; remaining institutional inputs are recorded only in the decision register.
 

@@ -1,16 +1,15 @@
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { useCreateMentorshipRequest } from '../api/mentorshipApi'
-import type { AlumniNetworkDTO } from '@/features/network/network-api'
 
-export function RequestModal({ mentor, onClose }: { mentor: AlumniNetworkDTO, onClose: () => void }) {
+export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: string, mentorName: string, onClose: () => void }) {
   const [message, setMessage] = useState('')
   const mutation = useCreateMentorshipRequest()
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     if (!message.trim()) return
-    mutation.mutate({ mentorId: mentor.id, message }, {
+    mutation.mutate({ mentorId: mentorId, message }, {
       onSuccess: () => {
         onClose()
       }
@@ -21,7 +20,7 @@ export function RequestModal({ mentor, onClose }: { mentor: AlumniNetworkDTO, on
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-pastel-blue">
         <h2 className="text-xl font-bold text-btu-navy font-barlow mb-4">
-          Mentörlük Talebi: {mentor.firstName} {mentor.lastName}
+          Mentörlük Talebi: {mentorName}
         </h2>
         
         {mutation.isError && (
