@@ -21,7 +21,7 @@ services:
     build:
       context: ./backend
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mezun360
       DB_URL: jdbc:postgresql://postgres:5432/mezun360
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-mezun360}

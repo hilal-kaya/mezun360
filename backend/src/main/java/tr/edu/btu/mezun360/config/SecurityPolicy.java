@@ -14,9 +14,12 @@ public class SecurityPolicy {
 
     public SecurityPolicy(SecurityProperties properties, Environment environment, AdminMfaBoundary mfa) {
         String[] profiles = environment.getActiveProfiles();
-        local = profiles.length == 1 && profiles[0].equals("local");
+        local = profiles.length == 1 && (profiles[0].equals("local") || profiles[0].equals("dev"));
         if (Arrays.asList(profiles).contains("local") && !local) {
             throw new IllegalStateException("The local profile must not be combined with another environment.");
+        }
+        if (Arrays.asList(profiles).contains("dev") && !local) {
+            throw new IllegalStateException("The dev profile must not be combined with another environment.");
         }
         validate(properties, local, mfa.productionReady());
     }
