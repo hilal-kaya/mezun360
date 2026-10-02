@@ -18,7 +18,7 @@ public class JobBookmarkId implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof JobBookmarkId)) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         JobBookmarkId that = (JobBookmarkId) o;
         return Objects.equals(jobId, that.jobId) && Objects.equals(userId, that.userId);
     }
