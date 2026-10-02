@@ -147,7 +147,7 @@ public class MentorshipService {
                 request.getMenteeId(),
                 request.getStatus(),
                 request.getMessage(),
-                request.getCreatedAt()
+                request.getCreatedAt().atZone(java.time.ZoneId.of("UTC"))
         );
     }
 }

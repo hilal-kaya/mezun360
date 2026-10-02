@@ -1,21 +1,21 @@
 import { useState } from 'react'
 import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAlumniNetwork } from '@/features/network/network-api'
-import type { AlumniNetworkDTO } from '@/features/network/network-api'
-import { useIncomingRequests, useOutgoingRequests } from './api/mentorshipApi'
+import { useIncomingRequests, useOutgoingRequests, useMentors } from './api/mentorshipApi'
+import type { MentorResponse } from './api/mentorshipApi'
 import { MentorCard } from './components/MentorCard'
 import { RequestModal } from './components/RequestModal'
 import { MentorshipRequestsList } from './components/MentorshipRequestsList'
 
 export function MentorshipPage() {
   const [activeTab, setActiveTab] = useState<'find' | 'incoming' | 'outgoing'>('find')
-  const [search, setSearch] = useState('')
+  const [expertiseSearch, setExpertiseSearch] = useState('')
+  const [expertiseFilter, setExpertiseFilter] = useState('')
   const [page, setPage] = useState(0)
-  const [selectedMentor, setSelectedMentor] = useState<AlumniNetworkDTO | null>(null)
+  const [selectedMentor, setSelectedMentor] = useState<MentorResponse | null>(null)
 
   // Mentors query
-  const queryMentors = useAlumniNetwork({ search, page })
+  const queryMentors = useMentors(expertiseFilter, page)
   
   // Requests queries
   const queryIncoming = useIncomingRequests(0)
@@ -24,7 +24,7 @@ export function MentorshipPage() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
     setPage(0)
-    queryMentors.refetch()
+    setExpertiseFilter(expertiseSearch)
   }
 
   return (
@@ -62,9 +62,9 @@ export function MentorshipPage() {
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
               <input 
                 type="text" 
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="İsim ile mentör ara..." 
+                value={expertiseSearch}
+                onChange={e => setExpertiseSearch(e.target.value)}
+                placeholder="Uzmanlık alanına göre ara..." 
                 className="w-full rounded-lg border bg-gray-50 p-2 pl-9 focus:border-btu-navy focus:ring-1 focus:ring-btu-navy outline-none" 
               />
             </div>
@@ -81,15 +81,15 @@ export function MentorshipPage() {
             <>
               {queryMentors.data.content.length === 0 ? (
                 <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
-                  Arama kriterlerinize uygun mezun bulunamadı.
+                  Uygun mentör bulunamadı.
                 </div>
               ) : (
                 <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                  {queryMentors.data.content.map(alumni => (
+                  {queryMentors.data.content.map(mentor => (
                     <MentorCard 
-                      key={alumni.id} 
-                      mentor={alumni} 
-                      onRequest={() => setSelectedMentor(alumni)} 
+                      key={mentor.id} 
+                      mentor={mentor} 
+                      onRequest={() => setSelectedMentor(mentor)} 
                     />
                   ))}
                 </ul>
@@ -124,7 +124,7 @@ export function MentorshipPage() {
       )}
 
       {selectedMentor && (
-        <RequestModal mentor={selectedMentor} onClose={() => setSelectedMentor(null)} />
+        <RequestModal mentorId={selectedMentor.userId} mentorName={selectedMentor.firstName + ' ' + selectedMentor.lastName} onClose={() => setSelectedMentor(null)} />
       )}
     </div>
   )

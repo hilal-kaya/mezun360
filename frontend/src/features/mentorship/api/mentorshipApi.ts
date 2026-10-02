@@ -46,3 +46,24 @@ export function useUpdateMentorshipStatus() {
     }
   })
 }
+
+export interface MentorResponse {
+  id: string;
+  userId: string;
+  firstName: string;
+  lastName: string;
+  title: string;
+  company: string;
+  expertise: string[];
+}
+
+export function useMentors(expertise?: string, page = 0) {
+  return useQuery({
+    queryKey: ['mentors', expertise, page],
+    queryFn: async ({ signal }) => {
+      const qs = expertise ? `?expertise=${encodeURIComponent(expertise)}&page=${page}` : `?page=${page}`;
+      return await api.get<Page<MentorResponse>>(`/mentors${qs}`, { signal })
+    },
+    staleTime: 60 * 1000
+  })
+}
