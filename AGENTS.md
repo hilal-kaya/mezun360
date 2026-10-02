@@ -2,7 +2,7 @@
 
 ## Current phase
 
-The user has explicitly authorized **M2B – Privacy & Alumni Verification** on `codex/m2b-privacy-verification`. Preserve M1A–M2A. Scope: owner privacy preferences, manual ADMIN review, minimal immutable evidence, audit and tests. No directory or other later business modules. After all required validations pass, the user explicitly requests commit `feat: add alumni privacy and verification` and push this branch to origin. Never merge, rebase, amend unrelated commits or force push. Do not start M2C automatically. Notification/outbox consumers remain deferred.
+The user has explicitly authorized **M3 – Career & Job Postings**. Preserve M1A–M2B. Scope: Job Postings, Employer integration prep, automated deployments. After all required validations pass, the user explicitly requests commit `feat: add job postings` and push this branch to origin. Never merge, rebase, amend unrelated commits or force push.
 
 Read [decisions](docs/decisions.md), [requirements](docs/requirements.md), [architecture](docs/architecture.md), [database](docs/database.md), [API](docs/api.md), [repository structure](docs/repository-structure.md) and [roadmap](docs/roadmap.md) before making changes. Keep these documents consistent. The user's finalized decisions supersede the earlier open alternatives; remaining institutional inputs are recorded only in the decision register.
 
