@@ -16,16 +16,23 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
     })
   }
 
+  let errorMessage = (mutation.error as any)?.problem?.detail || (mutation.error as any)?.message || "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+  if (errorMessage === "You cannot mentor yourself.") {
+    errorMessage = "Kendinize mentörlük talebi gönderemezsiniz."
+  } else if (errorMessage === "An active mentorship request already exists.") {
+    errorMessage = "Zaten aktif bir mentörlük talebiniz bulunuyor."
+  }
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-pastel-blue">
-        <h2 className="text-xl font-bold text-btu-navy font-barlow mb-4">
+        <h2 className="text-xl font-bold text-primary font-barlow mb-4">
           Mentörlük Talebi: {mentorName}
         </h2>
         
         {mutation.isError && (
           <div className="mb-4 rounded bg-red-50 p-3 text-sm text-red-700">
-            {(mutation.error as any)?.problem?.detail || (mutation.error as any)?.message || "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."}
+            {errorMessage}
           </div>
         )}
 
@@ -35,7 +42,7 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
               Kendinizi tanıtın ve neden mentörlük almak istediğinizi açıklayın
             </label>
             <textarea
-              className="w-full h-32 rounded-lg border border-gray-300 p-3 focus:border-btu-navy focus:ring-1 focus:ring-btu-navy outline-none resize-none"
+              className="w-full h-32 rounded-lg border border-gray-300 p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
               placeholder="Merhaba, ben..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
@@ -48,7 +55,7 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
             <Button type="button" variant="outline" onClick={onClose} disabled={mutation.isPending}>
               İptal
             </Button>
-            <Button type="submit" disabled={mutation.isPending || !message.trim()} className="bg-btu-navy text-white hover:bg-btu-navy/90">
+            <Button type="submit" disabled={mutation.isPending || !message.trim()} className="bg-primary text-white hover:bg-primary/90">
               {mutation.isPending ? 'Gönderiliyor...' : 'Gönder'}
             </Button>
           </div>
