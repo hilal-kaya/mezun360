@@ -66,21 +66,28 @@ export function EventCard({ event }: EventCardProps) {
 
       <div className="pt-4 border-t border-gray-100 mt-auto flex flex-col gap-2">
         {toggleAttendance.isError && (
-          <div className="text-xs text-red-600">
+          <div className="text-xs text-red-600 p-2 bg-red-50 rounded">
             {(toggleAttendance.error as any)?.problem?.detail || "İşlem başarısız"}
+          </div>
+        )}
+        {toggleAttendance.isSuccess && (
+          <div className="text-xs text-emerald-600 p-2 bg-emerald-50 rounded">
+            {event.isUserAttending ? "Etkinliğe başarıyla katıldınız." : "Katılımınız başarıyla iptal edildi."}
           </div>
         )}
         <Button 
           onClick={handleToggle}
-          disabled={toggleAttendance.isPending || (isFull && !event.isUserAttending)}
+          disabled={toggleAttendance.isPending || (isFull && !event.isUserAttending) || new Date(event.eventDate).getTime() < Date.now()}
           variant={event.isUserAttending ? "outline" : "default"}
           className={`w-full ${!event.isUserAttending ? 'bg-btu-navy hover:bg-btu-navy/90 text-white' : 'text-red-600 border-red-200 hover:bg-red-50'}`}
         >
           {toggleAttendance.isPending 
             ? 'İşleniyor...' 
-            : event.isUserAttending 
-              ? 'Katılımı İptal Et' 
-              : 'Katıl'}
+            : new Date(event.eventDate).getTime() < Date.now()
+              ? 'Etkinlik Sona Erdi'
+              : event.isUserAttending 
+                ? 'Katılımı İptal Et' 
+                : 'Katıl'}
         </Button>
       </div>
     </div>
