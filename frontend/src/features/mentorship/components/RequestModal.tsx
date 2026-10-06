@@ -17,7 +17,11 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
   }
 
   let errorMessage = (mutation.error as any)?.problem?.detail || (mutation.error as any)?.message || "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."
-  if (errorMessage === "You cannot mentor yourself.") {
+  const problemCode = (mutation.error as any)?.problem?.code;
+
+  if (problemCode === "VALIDATION_FAILED" || errorMessage === "One or more fields are invalid.") {
+    errorMessage = "Lütfen geçerli ve yeterli uzunlukta bir açıklama giriniz (En az 10 karakter)."
+  } else if (errorMessage === "You cannot mentor yourself.") {
     errorMessage = "Kendinize mentörlük talebi gönderemezsiniz."
   } else if (errorMessage === "An active mentorship request already exists.") {
     errorMessage = "Zaten aktif bir mentörlük talebiniz bulunuyor."
