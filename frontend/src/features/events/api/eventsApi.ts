@@ -38,8 +38,25 @@ export function useToggleAttendance() {
         throw error;
       }
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['events'] })
+    onSuccess: (_, eventId) => {
+      queryClient.setQueriesData({ queryKey: ['events'] }, (oldData: any) => {
+        if (!oldData || !oldData.content) return oldData;
+        return {
+          ...oldData,
+          content: oldData.content.map((event: EventDTO) => {
+            if (event.id === eventId) {
+              const wasAttending = event.isUserAttending;
+              return {
+                ...event,
+                isUserAttending: !wasAttending,
+                currentAttendees: wasAttending ? event.currentAttendees - 1 : event.currentAttendees + 1
+              };
+            }
+            return event;
+          })
+        };
+      });
+      queryClient.invalidateQueries({ queryKey: ['events'] });
     }
   })
 }

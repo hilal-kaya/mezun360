@@ -45,20 +45,20 @@ export function EventCard({ event }: EventCardProps) {
           )}
         </div>
         
-        <h3 className="text-xl font-bold text-btu-navy font-barlow mb-2">{event.title}</h3>
+        <h3 className="text-xl font-bold text-primary font-barlow mb-2">{event.title}</h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{event.description}</p>
         
         <div className="space-y-2 mb-6">
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Calendar className="w-4 h-4 text-btu-navy" />
+            <Calendar className="w-4 h-4 text-primary" />
             <span>{dateStr}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <MapPin className="w-4 h-4 text-btu-navy" />
+            <MapPin className="w-4 h-4 text-primary" />
             <span>{event.location}</span>
           </div>
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Users className="w-4 h-4 text-btu-navy" />
+            <Users className="w-4 h-4 text-primary" />
             <span>{event.currentAttendees} {event.capacity ? `/ ${event.capacity}` : ''} Katılımcı</span>
           </div>
         </div>
@@ -79,7 +79,7 @@ export function EventCard({ event }: EventCardProps) {
           onClick={handleToggle}
           disabled={toggleAttendance.isPending || (isFull && !event.isUserAttending) || new Date(event.eventDate).getTime() < Date.now()}
           variant={event.isUserAttending ? "outline" : "default"}
-          className={`w-full ${!event.isUserAttending ? 'bg-btu-navy hover:bg-btu-navy/90 text-white' : 'text-red-600 border-red-200 hover:bg-red-50'}`}
+          className={`w-full ${!event.isUserAttending ? 'bg-primary hover:bg-primary/90 text-white' : 'text-red-600 border-red-200 hover:bg-red-50'}`}
         >
           {toggleAttendance.isPending 
             ? 'İşleniyor...' 

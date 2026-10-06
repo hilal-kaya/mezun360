@@ -32,6 +32,6 @@ public class EventController {
     public ResponseEntity<Void> toggleAttendance(@PathVariable UUID id) {
         UUID currentUserId = currentAccountService.current().userId();
         eventService.toggleAttendance(id, currentUserId);
-        return ResponseEntity.ok().build();
+        return ResponseEntity.noContent().build();
     }
 }

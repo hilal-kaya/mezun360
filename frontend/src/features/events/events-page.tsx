@@ -28,7 +28,7 @@ export function EventsPage() {
     <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
       <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-btu-navy font-barlow flex items-center gap-3">
+          <h1 className="text-3xl font-bold text-primary font-barlow flex items-center gap-3">
             <CalendarDays className="w-8 h-8 text-pastel-blue" />
             Etkinlikler
           </h1>
@@ -43,14 +43,14 @@ export function EventsPage() {
           <div className="flex gap-2 w-full md:w-auto">
             <Button
               variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
-              className={activeTab === 'upcoming' ? 'bg-btu-navy text-white hover:bg-btu-navy/90' : 'text-gray-600'}
+              className={activeTab === 'upcoming' ? 'bg-primary text-white hover:bg-primary/90' : 'text-gray-600'}
               onClick={() => { setActiveTab('upcoming'); setPage(0); }}
             >
               Yaklaşanlar
             </Button>
             <Button
               variant={activeTab === 'past' ? 'default' : 'ghost'}
-              className={activeTab === 'past' ? 'bg-btu-navy text-white hover:bg-btu-navy/90' : 'text-gray-600'}
+              className={activeTab === 'past' ? 'bg-primary text-white hover:bg-primary/90' : 'text-gray-600'}
               onClick={() => { setActiveTab('past'); setPage(0); }}
             >
               Geçmiş Etkinlikler
