@@ -61,8 +61,13 @@ export function useMentors(expertise?: string, page = 0) {
   return useQuery({
     queryKey: ['mentors', expertise, page],
     queryFn: async ({ signal }) => {
-      const qs = expertise ? `?expertise=${encodeURIComponent(expertise)}&page=${page}` : `?page=${page}`;
-      return await api.get<Page<MentorResponse>>(`/mentors${qs}`, { signal })
+      try {
+        const qs = expertise ? `?expertise=${encodeURIComponent(expertise)}&page=${page}` : `?page=${page}`;
+        return await api.get<Page<MentorResponse>>(`/mentors${qs}`, { signal })
+      } catch (error: any) {
+        console.error("Mentor fetch error:", error.response || error);
+        throw error;
+      }
     },
     staleTime: 60 * 1000
   })

@@ -19,6 +19,6 @@ public class MentorController {
     public Page<MentorResponse> listMentors(
             @RequestParam(required = false) String expertise,
             Pageable pageable) {
-        return mentorSearchService.searchMentors(expertise, pageable).map(MentorResponse::from);
+        return mentorSearchService.searchMentors(expertise, pageable);
     }
 }

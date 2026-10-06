@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tr.edu.btu.mezun360.alumni.domain.AlumniProfile;
 import tr.edu.btu.mezun360.alumni.infrastructure.AlumniProfileRepository;
+import tr.edu.btu.mezun360.mentorship.api.MentorResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,7 +19,7 @@ public class MentorSearchService {
         this.profileRepository = profileRepository;
     }
 
-    public Page<AlumniProfile> searchMentors(String expertise, Pageable pageable) {
+    public Page<MentorResponse> searchMentors(String expertise, Pageable pageable) {
         Specification<AlumniProfile> spec = (root, query, cb) -> cb.isTrue(root.get("willingToMentor"));
 
         if (expertise != null && !expertise.isBlank()) {
@@ -28,6 +29,6 @@ public class MentorSearchService {
             });
         }
 
-        return profileRepository.findAll(spec, pageable);
+        return profileRepository.findAll(spec, pageable).map(MentorResponse::from);
     }
 }
