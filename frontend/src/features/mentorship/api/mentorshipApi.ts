@@ -27,7 +27,12 @@ export function useCreateMentorshipRequest() {
   const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (dto: CreateMentorshipRequestDTO) => {
-      return await api.post<MentorshipRequestDTO>('/mentorship/requests', dto)
+      try {
+        return await api.post<MentorshipRequestDTO>('/mentorship/requests', dto)
+      } catch (error: any) {
+        console.error("Mentorship request submission error:", error.problem || error.response || error);
+        throw error;
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['mentorship-requests'] })

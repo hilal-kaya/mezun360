@@ -25,7 +25,7 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
         
         {mutation.isError && (
           <div className="mb-4 rounded bg-red-50 p-3 text-sm text-red-700">
-            Bir hata oluştu. Aktif bir talebiniz olabilir veya yetkiniz yok.
+            {(mutation.error as any)?.problem?.detail || (mutation.error as any)?.message || "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."}
           </div>
         )}
 

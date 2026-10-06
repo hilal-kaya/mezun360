@@ -111,6 +111,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return problem(HttpStatus.valueOf(ex.status), ex.code, "The request could not be processed.", ex.errors, new HttpHeaders(), request);
     }
 
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    ResponseEntity<Object> badRequest(RuntimeException ex, HttpServletRequest request) {
+        return problem(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", ex.getMessage(), List.of(), new HttpHeaders(), request);
+    }
+
     @ExceptionHandler(Exception.class)
     ResponseEntity<Object> unexpected(Exception ex, HttpServletRequest request) {
         // No request body, exception message, SQL or credentials in diagnostic output.
