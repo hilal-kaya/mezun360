@@ -47,6 +47,7 @@ public class DataSeeder implements CommandLineRunner {
         seedUser("alumni@example.test", "alumni", Role.ALUMNI);
         seedJobs(admin);
         seedMentors();
+        seedEvents();
     }
 
     private UserAccount seedUser(String email, String password, Role role) {
@@ -135,5 +136,23 @@ public class DataSeeder implements CommandLineRunner {
             // Add privacy settings
             jdbcTemplate.update("INSERT INTO mezun360.alumni_privacy_settings (profile_id, show_contact_info, directory_opt_in, allow_messages, version) VALUES (?, false, true, true, 0)", profile.id);
         }
+    }
+    private void seedEvents() {
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM mezun360.events", Integer.class);
+        if (count != null && count > 0) return;
+
+        java.sql.Timestamp now = java.sql.Timestamp.from(clock.instant());
+        java.sql.Timestamp future1 = java.sql.Timestamp.from(clock.instant().plus(java.time.Duration.ofDays(10)));
+        java.sql.Timestamp future2 = java.sql.Timestamp.from(clock.instant().plus(java.time.Duration.ofDays(20)));
+        java.sql.Timestamp past1 = java.sql.Timestamp.from(clock.instant().minus(java.time.Duration.ofDays(15)));
+
+        jdbcTemplate.update("INSERT INTO mezun360.events (id, title, description, event_date, location, is_online, capacity, created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+            UUID.randomUUID(), "BTÜ Bilişim Zirvesi 2026", "BTÜ öğrencileri ve mezunlarını bilişim sektörü liderleriyle buluşturan büyük zirve.", future1, "Mimar Sinan Yerleşkesi - Turkuaz Salon", false, 300, now, now);
+
+        jdbcTemplate.update("INSERT INTO mezun360.events (id, title, description, event_date, location, is_online, capacity, created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+            UUID.randomUUID(), "Yazılım Mimari Atölyesi", "Mikroservisler ve dağıtık sistemler üzerine derinlemesine teknik atölye.", future2, "Online (Zoom)", true, 100, now, now);
+
+        jdbcTemplate.update("INSERT INTO mezun360.events (id, title, description, event_date, location, is_online, capacity, created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+            UUID.randomUUID(), "Geleneksel Mezun Buluşması", "Yıllık mezuniyet sonrası buluşma etkinliğimiz. Eski arkadaşlarınızla hasret giderin.", past1, "Yıldırım Yerleşkesi - Açık Alan", false, 500, now, now);
     }
 }
