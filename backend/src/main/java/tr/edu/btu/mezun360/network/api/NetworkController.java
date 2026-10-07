@@ -52,4 +52,11 @@ public class NetworkController {
     public void sendConnectionRequest(@PathVariable UUID receiverId) {
         networkService.sendConnectionRequest(currentAccountService.current().userId(), receiverId);
     }
+
+    @DeleteMapping("/connections/{receiverId}")
+    @ResponseStatus(org.springframework.http.HttpStatus.NO_CONTENT)
+    @Operation(summary = "Cancel a pending connection request", security = @SecurityRequirement(name = "sessionCookie"))
+    public void cancelConnectionRequest(@PathVariable UUID receiverId) {
+        networkService.cancelConnectionRequest(currentAccountService.current().userId(), receiverId);
+    }
 }

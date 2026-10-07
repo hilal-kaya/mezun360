@@ -49,3 +49,11 @@ export function useConnectMutation() {
     },
   })
 }
+
+export function useCancelConnectionMutation() {
+  return useMutation({
+    mutationFn: async (receiverId: string) => {
+      return await api.delete(`/network/connections/${receiverId}`)
+    },
+  })
+}

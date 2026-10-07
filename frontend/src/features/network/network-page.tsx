@@ -1,32 +1,44 @@
 import { useState } from 'react'
 import { Search, Briefcase, GraduationCap, MapPin, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useAlumniNetwork, useConnectMutation, type AlumniNetworkDTO } from './network-api'
+import { useAlumniNetwork, useConnectMutation, useCancelConnectionMutation, type AlumniNetworkDTO } from './network-api'
 
 function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
   const [status, setStatus] = useState<string>(alumni.connectionStatus || 'NONE')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  const [isHovered, setIsHovered] = useState(false)
   
   const connectMutation = useConnectMutation()
+  const cancelMutation = useCancelConnectionMutation()
 
-  const handleConnect = async () => {
+  const handleAction = async () => {
     setErrorMsg(null)
     try {
-      await connectMutation.mutateAsync(alumni.id)
-      setStatus('PENDING')
+      if (status === 'PENDING') {
+        await cancelMutation.mutateAsync(alumni.id)
+        setStatus('NONE')
+      } else {
+        await connectMutation.mutateAsync(alumni.id)
+        setStatus('PENDING')
+      }
     } catch (error: any) {
       if (error?.problem?.detail) {
         setErrorMsg(error.problem.detail)
       } else if (error?.message) {
         setErrorMsg(error.message === 'API request failed.' ? 'Bir hata oluştu, lütfen tekrar deneyin.' : error.message)
       } else {
-        setErrorMsg('Bağlantı isteği gönderilirken bir hata oluştu.')
+        setErrorMsg('İşlem sırasında bir hata oluştu.')
       }
     }
   }
 
-  const isSentOrConnected = status === 'PENDING' || status === 'ACCEPTED'
-  const buttonText = status === 'ACCEPTED' ? 'Bağlantılı' : (status === 'PENDING' ? 'İstek Gönderildi' : 'Bağlantı Kur')
+  const isPending = status === 'PENDING'
+  const isAccepted = status === 'ACCEPTED'
+  const isActionLoading = connectMutation.isPending || cancelMutation.isPending
+  
+  let buttonText = 'Bağlantı Kur'
+  if (isAccepted) buttonText = 'Bağlantılı'
+  else if (isPending) buttonText = isHovered ? 'İptal Et' : 'İstek Gönderildi'
 
   return (
     <li className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
@@ -70,14 +82,16 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
           </div>
         )}
         <Button 
-          variant={isSentOrConnected ? "outline" : "default"}
-          className={`w-full ${isSentOrConnected ? 'text-gray-500 border-gray-200' : 'bg-primary text-white hover:bg-primary/90'}`}
-          disabled={isSentOrConnected || connectMutation.isPending}
-          onClick={handleConnect}
+          variant={(isPending || isAccepted) ? "outline" : "default"}
+          className={`w-full ${(isPending || isAccepted) ? 'text-gray-500 border-gray-200' + (isPending && isHovered ? ' hover:text-red-600 hover:border-red-600 hover:bg-red-50' : '') : 'bg-primary text-white hover:bg-primary/90'}`}
+          disabled={isAccepted || isActionLoading}
+          onClick={handleAction}
+          onMouseEnter={() => setIsHovered(true)}
+          onMouseLeave={() => setIsHovered(false)}
         >
-          {connectMutation.isPending ? 'Gönderiliyor...' : isSentOrConnected ? buttonText : (
+          {isActionLoading ? 'İşleniyor...' : (
             <>
-              <UserPlus size={16} className="mr-2" />
+              {(!isPending && !isAccepted) && <UserPlus size={16} className="mr-2" />}
               {buttonText}
             </>
           )}

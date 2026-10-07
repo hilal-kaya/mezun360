@@ -44,4 +44,16 @@ public class NetworkService {
 
         connectionRepository.save(request);
     }
+
+    @Transactional
+    public void cancelConnectionRequest(UUID senderUserId, UUID receiverProfileId) {
+        ConnectionRequest request = connectionRepository.findBySenderIdAndReceiverId(senderUserId, receiverProfileId)
+            .orElseThrow(() -> new IllegalArgumentException("İptal edilecek bir bağlantı isteği bulunamadı."));
+
+        if (request.status != ConnectionStatus.PENDING) {
+            throw new IllegalStateException("Sadece bekleyen istekleri iptal edebilirsiniz.");
+        }
+
+        connectionRepository.delete(request);
+    }
 }

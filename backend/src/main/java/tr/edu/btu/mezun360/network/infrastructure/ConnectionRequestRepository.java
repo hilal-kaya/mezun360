@@ -7,4 +7,5 @@ import tr.edu.btu.mezun360.network.domain.ConnectionRequest;
 
 public interface ConnectionRequestRepository extends JpaRepository<ConnectionRequest, UUID> {
     boolean existsBySenderIdAndReceiverId(UUID senderId, UUID receiverId);
+    Optional<ConnectionRequest> findBySenderIdAndReceiverId(UUID senderId, UUID receiverId);
 }
