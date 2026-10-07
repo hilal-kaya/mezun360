@@ -1,4 +1,5 @@
 import { Calendar, User } from 'lucide-react'
+import { Link } from 'react-router-dom'
 import type { NewsArticleDTO } from '../types'
 
 interface NewsCardProps {
@@ -47,9 +48,9 @@ export function NewsCard({ article }: NewsCardProps) {
             )}
           </div>
           
-          <button className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
+          <Link to={`/app/news/${article.id}`} className="text-sm font-medium text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
             Devamını Oku <span aria-hidden="true">&rarr;</span>
-          </button>
+          </Link>
         </div>
       </div>
     </div>

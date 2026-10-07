@@ -26,3 +26,18 @@ export function useNews(page = 0) {
     staleTime: 60 * 1000
   })
 }
+
+export function useNewsArticle(id: string) {
+  return useQuery({
+    queryKey: ['news', id],
+    queryFn: async () => {
+      try {
+        return await api.get<NewsArticleDTO>(`/news/${id}`);
+      } catch (error: any) {
+        console.error("News fetch error:", error.problem || error.response || error);
+        throw error;
+      }
+    },
+    staleTime: 60 * 1000
+  })
+}

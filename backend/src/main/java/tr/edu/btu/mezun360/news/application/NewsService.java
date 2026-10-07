@@ -25,6 +25,13 @@ public class NewsService {
                 .map(this::toDTO);
     }
 
+    @Transactional(readOnly = true)
+    public NewsArticleDTO getNewsById(java.util.UUID id) {
+        return newsArticleRepository.findById(id)
+                .map(this::toDTO)
+                .orElseThrow(() -> new tr.edu.btu.mezun360.shared.exception.ResourceNotFoundException());
+    }
+
     private NewsArticleDTO toDTO(NewsArticle article) {
         return new NewsArticleDTO(
                 article.getId(),
