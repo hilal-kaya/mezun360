@@ -14,7 +14,7 @@ const navigation = [
   ['/app/profile', 'Profilim', UserRound], ['/app/settings', 'Ayarlar', Settings],
 ] as const
 function AlumniNavigation({ onNavigate }: { onNavigate?: () => void }) {
-  return <nav aria-label="Mezun menüsü" className="alumni-nav">{navigation.map(([path, label, Icon]) => <NavLink key={path} end to={path} onClick={onNavigate} className={({ isActive }) => isActive ? 'active' : ''}><Icon size={18} aria-hidden="true" /><span>{label}</span>{path !== '/app/profile' && path !== '/app/settings' && path !== '/app' && <span className="nav-soon">Yakında</span>}</NavLink>)}</nav>
+  return <nav aria-label="Mezun menüsü" className="alumni-nav">{navigation.map(([path, label, Icon]) => <NavLink key={path} end to={path} onClick={onNavigate} className={({ isActive }) => isActive ? 'active' : ''}><Icon size={18} aria-hidden="true" /><span>{label}</span></NavLink>)}</nav>
 }
 export function AlumniLayout() {
   const identity = useIdentity()

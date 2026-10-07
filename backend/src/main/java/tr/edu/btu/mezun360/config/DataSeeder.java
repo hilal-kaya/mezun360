@@ -48,6 +48,7 @@ public class DataSeeder implements CommandLineRunner {
         seedJobs(admin);
         seedMentors();
         seedEvents();
+        seedNews();
     }
 
     private UserAccount seedUser(String email, String password, Role role) {
@@ -154,5 +155,36 @@ public class DataSeeder implements CommandLineRunner {
 
         jdbcTemplate.update("INSERT INTO mezun360.events (id, title, description, event_date, location, is_online, capacity, created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
             UUID.randomUUID(), "Geleneksel Mezun Buluşması", "Yıllık mezuniyet sonrası buluşma etkinliğimiz. Eski arkadaşlarınızla hasret giderin.", past1, "Yıldırım Yerleşkesi - Açık Alan", false, 500, now, now);
+    }
+    
+    private void seedNews() {
+        Integer count = jdbcTemplate.queryForObject("SELECT COUNT(*) FROM mezun360.news_articles", Integer.class);
+        if (count != null && count > 0) return;
+
+        java.sql.Timestamp now = java.sql.Timestamp.from(clock.instant());
+        java.sql.Timestamp past1 = java.sql.Timestamp.from(clock.instant().minus(java.time.Duration.ofDays(2)));
+        java.sql.Timestamp past2 = java.sql.Timestamp.from(clock.instant().minus(java.time.Duration.ofDays(5)));
+        java.sql.Timestamp past3 = java.sql.Timestamp.from(clock.instant().minus(java.time.Duration.ofDays(10)));
+
+        jdbcTemplate.update("INSERT INTO mezun360.news_articles (id, title, summary, content, publish_date, image_url, author, created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+            UUID.randomUUID(), 
+            "BTÜ'den Yeni Yapay Zeka Laboratuvarı", 
+            "Üniversitemiz, yapay zeka araştırmalarını desteklemek amacıyla yeni ve modern donanımlara sahip bir laboratuvar açtı.", 
+            "BTÜ, teknolojiye yaptığı yatırımlara bir yenisini daha ekledi. Mimar Sinan Yerleşkesi'nde faaliyete geçen Yapay Zeka Laboratuvarı, hem akademisyenlere hem de lisans ve lisansüstü öğrencilere ileri düzey araştırmalar yapma imkanı sunacak. Merkezde 40 adet yüksek performanslı GPU sunucusu yer alıyor.", 
+            past1, "https://via.placeholder.com/800x400.png?text=Yapay+Zeka+Lab", "BTÜ İletişim Koordinatörlüğü", now, now);
+
+        jdbcTemplate.update("INSERT INTO mezun360.news_articles (id, title, summary, content, publish_date, image_url, author, created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+            UUID.randomUUID(), 
+            "Mezunlarımızdan Global Başarı", 
+            "Bilgisayar Mühendisliği 2021 mezunlarımızdan oluşan bir takım, global bir hackathon'da birinci oldu.", 
+            "Uluslararası çapta düzenlenen ve 50'den fazla ülkeden 200'ü aşkın takımın katıldığı \"Tech for Good\" hackathon'unda mezunlarımız Ahmet Yılmaz ve Elif Kaya büyük bir başarıya imza atarak birinci oldu. Geliştirdikleri çevre dostu optimizasyon algoritması sayesinde, lojistik süreçlerdeki karbon salınımını %20 oranında azaltmayı başardılar.", 
+            past2, "https://via.placeholder.com/800x400.png?text=Global+Hackathon", "Mezunlar Derneği", now, now);
+
+        jdbcTemplate.update("INSERT INTO mezun360.news_articles (id, title, summary, content, publish_date, image_url, author, created_at, updated_at, version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0)",
+            UUID.randomUUID(), 
+            "Yeni Dönem Kayıtları Başlıyor", 
+            "2026-2027 Güz dönemi ders kayıt süreçleri hakkında bilinmesi gereken önemli tarihler yayınlandı.", 
+            "Öğrenci İşleri Daire Başkanlığı tarafından yapılan açıklamaya göre, güz dönemi ders kayıtları 15 Eylül tarihinde başlayacak. Ders seçimleri Öğrenci Bilgi Sistemi (ÖBS) üzerinden gerçekleştirilecek olup, danışman onayları 20 Eylül'e kadar tamamlanmalıdır. Tüm öğrencilerimize yeni dönemde başarılar dileriz.", 
+            past3, "https://via.placeholder.com/800x400.png?text=Ders+Kayitlari", "Öğrenci İşleri", now, now);
     }
 }

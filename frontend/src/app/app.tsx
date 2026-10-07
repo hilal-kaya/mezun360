@@ -3,7 +3,7 @@ import { Link, Route, Routes } from 'react-router-dom'
 import { AuthGuard, LoginPage, ForgotPasswordPage, AuthenticatedPlaceholder } from '@/features/auth/auth-pages'
 import { Loading } from '@/components/ui/loading'
 import { LandingPage } from '@/features/public/landing-page'
-import { AlumniLayout, AlumniHome, UpcomingAlumniPage } from '@/layouts/alumni-layout'
+import { AlumniLayout, AlumniHome } from '@/layouts/alumni-layout'
 import { ProfilePage } from '@/features/profile/profile-page'
 import { PrivacyPage } from '@/features/privacy-verification/privacy-page'
 import { AlumniNetworkPage } from '@/features/network/network-page'
@@ -12,6 +12,7 @@ import { RootLayout } from '@/layouts/root-layout'
 import { Jobs } from '@/features/jobs/routes/Jobs'
 import { MentorshipPage } from '@/features/mentorship/mentorship-page'
 import { EventsPage } from '@/features/events/events-page'
+import { NewsPage } from '@/features/news/news-page'
 
 const DevelopmentFoundation = import.meta.env.DEV
   ? lazy(() => import('@/dev/foundation-page'))
@@ -31,7 +32,7 @@ export function App() {
             <Route path="jobs" element={<Jobs />} />
             <Route path="mentorship" element={<MentorshipPage />} />
             <Route path="events" element={<EventsPage />} />
-            {['news'].map(path => <Route key={path} path={path} element={<UpcomingAlumniPage />} />)}
+            <Route path="news" element={<NewsPage />} />
           </Route>
         </Route>
         <Route element={<RootLayout />}>
