@@ -7,13 +7,17 @@ import { PostJobModal } from '../components/PostJobModal';
 import { Briefcase } from 'lucide-react';
 
 export function Jobs() {
+  const [search, setSearch] = useState('');
   const [location, setLocation] = useState('');
+  const [jobType, setJobType] = useState('ALL');
   const [workModel, setWorkModel] = useState('ALL');
   
   const { data, isLoading, isError } = useQuery({
-    queryKey: ['jobs', location, workModel],
+    queryKey: ['jobs', search, location, jobType, workModel],
     queryFn: () => searchJobs({ 
+      search: search || undefined,
       location: location || undefined, 
+      jobType: jobType === 'ALL' ? undefined : jobType,
       workModel: workModel === 'ALL' ? undefined : workModel 
     })
   });
@@ -37,8 +41,12 @@ export function Jobs() {
         <aside className="lg:col-span-1">
           <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-100 sticky top-24">
             <JobFilterSidebar 
+              search={search}
+              setSearch={setSearch}
               location={location} 
               setLocation={setLocation} 
+              jobType={jobType}
+              setJobType={setJobType}
               workModel={workModel} 
               setWorkModel={setWorkModel} 
             />

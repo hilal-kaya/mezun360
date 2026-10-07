@@ -1,5 +1,6 @@
 import { api } from '@/lib/api';
 
+export type JobType = 'FULL_TIME' | 'PART_TIME' | 'INTERNSHIP' | 'CONTRACT' | 'FREELANCE';
 export type WorkModel = 'REMOTE' | 'HYBRID' | 'ONSITE';
 
 export interface JobPostDTO {
@@ -7,6 +8,7 @@ export interface JobPostDTO {
   title: string;
   company: string;
   location?: string;
+  jobType: JobType;
   workModel: WorkModel;
   description: string;
   applicationUrl: string;
@@ -18,6 +20,7 @@ export interface JobPostRequest {
   title: string;
   company: string;
   location?: string;
+  jobType: JobType;
   workModel: WorkModel;
   description: string;
   applicationUrl: string;
@@ -31,9 +34,11 @@ export interface Page<T> {
   size: number;
 }
 
-export async function searchJobs(params: { location?: string; workModel?: string; page?: number; size?: number }): Promise<Page<JobPostDTO>> {
+export async function searchJobs(params: { search?: string; location?: string; jobType?: string; workModel?: string; page?: number; size?: number }): Promise<Page<JobPostDTO>> {
   const query = new URLSearchParams();
+  if (params.search) query.append('search', params.search);
   if (params.location) query.append('location', params.location);
+  if (params.jobType) query.append('jobType', params.jobType);
   if (params.workModel) query.append('workModel', params.workModel);
   if (params.page !== undefined) query.append('page', params.page.toString());
   if (params.size !== undefined) query.append('size', params.size.toString());

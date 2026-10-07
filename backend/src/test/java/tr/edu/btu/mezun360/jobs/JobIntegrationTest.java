@@ -101,7 +101,7 @@ class JobIntegrationTest {
         var getRes = send("GET", "/api/v1/jobs", null, null);
         assertThat(getRes.statusCode()).isEqualTo(403);
 
-        JobPostRequest req = new JobPostRequest("Dev", "Tech", "Remote", WorkModel.REMOTE, "Desc", "url");
+        JobPostRequest req = new JobPostRequest("Dev", "Tech", "Remote", tr.edu.btu.mezun360.jobs.domain.JobType.FULL_TIME, WorkModel.REMOTE, "Desc", "url");
         var postRes = send("POST", "/api/v1/jobs", mapper.writeValueAsString(req), csrfToken);
         assertThat(postRes.statusCode()).isEqualTo(403);
     }
@@ -112,9 +112,9 @@ class JobIntegrationTest {
         login("verified@test.com", "Synthetic-M2A-test-password-472!");
         String csrfToken = csrf();
 
-        JobPostRequest req = new JobPostRequest("Dev", "Tech", "Istanbul", WorkModel.HYBRID, "Desc", "url");
-        var postRes = send("POST", "/api/v1/jobs", mapper.writeValueAsString(req), csrfToken);
-        assertThat(postRes.statusCode()).isEqualTo(201);
+        JobPostRequest req2 = new JobPostRequest("Dev", "Tech", "Istanbul", tr.edu.btu.mezun360.jobs.domain.JobType.FULL_TIME, WorkModel.HYBRID, "Desc", "url");
+        var postRes2 = send("POST", "/api/v1/jobs", mapper.writeValueAsString(req2), csrfToken);
+        assertThat(postRes2.statusCode()).isEqualTo(201);
         
         var getRes = send("GET", "/api/v1/jobs?workModel=HYBRID", null, null);
         assertThat(getRes.statusCode()).isEqualTo(200);

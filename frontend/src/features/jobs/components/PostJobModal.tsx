@@ -13,6 +13,7 @@ export function PostJobModal() {
   const [form, setForm] = useState({
     title: '',
     company: '',
+    jobType: 'FULL_TIME',
     workModel: 'REMOTE',
     location: '',
     applicationUrl: '',
@@ -27,6 +28,7 @@ export function PostJobModal() {
       setForm({
         title: '',
         company: '',
+        jobType: 'FULL_TIME',
         workModel: 'REMOTE',
         location: '',
         applicationUrl: '',
@@ -58,12 +60,26 @@ export function PostJobModal() {
               <label htmlFor="company" className="block text-sm font-medium">Şirket</label>
               <Input id="company" required minLength={2} value={form.company} onChange={e => setForm({...form, company: e.target.value})} />
             </div>
+            <div className="space-y-2">
+              <label htmlFor="jobType" className="block text-sm font-medium">İlan Türü</label>
+              <select 
+                id="jobType"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                value={form.jobType} onChange={e => setForm({...form, jobType: e.target.value})}
+              >
+                <option value="FULL_TIME">Tam Zamanlı</option>
+                <option value="PART_TIME">Yarı Zamanlı</option>
+                <option value="INTERNSHIP">Staj</option>
+                <option value="CONTRACT">Sözleşmeli</option>
+                <option value="FREELANCE">Serbest (Freelance)</option>
+              </select>
+            </div>
             
             <div className="space-y-2">
               <label htmlFor="workModel" className="block text-sm font-medium">Çalışma Şekli</label>
               <select 
                 id="workModel"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                 value={form.workModel} onChange={e => setForm({...form, workModel: e.target.value})}
               >
                 <option value="REMOTE">Uzaktan</option>

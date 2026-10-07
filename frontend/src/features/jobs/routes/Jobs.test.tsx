@@ -25,7 +25,7 @@ describe('Jobs Page', () => {
       </QueryClientProvider>
     );
 
-    expect(screen.getByText('Alumni Job Board')).toBeInTheDocument();
+    expect(screen.getByText('İş & Staj İlanları')).toBeInTheDocument();
   });
 
   it('renders empty state when no jobs', async () => {
@@ -40,7 +40,7 @@ describe('Jobs Page', () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText('No jobs found')).toBeInTheDocument();
+      expect(screen.getByText('İlan bulunamadı')).toBeInTheDocument();
     });
   });
 
@@ -48,7 +48,7 @@ describe('Jobs Page', () => {
     vi.mocked(jobsApi.searchJobs).mockResolvedValue({
       content: [
         {
-          id: '1', title: 'Software Engineer', company: 'Google', location: 'Istanbul',
+          id: '1', title: 'Software Engineer', company: 'Google', location: 'Istanbul', jobType: 'FULL_TIME',
           workModel: 'REMOTE', description: 'Desc', applicationUrl: 'url', createdAt: '2023-01-01', bookmarked: false
         }
       ], 

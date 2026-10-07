@@ -50,6 +50,10 @@ export function JobCard({ job }: JobCardProps) {
               {job.location}
             </Badge>
           )}
+          <Badge className="bg-[#DDE7FF] text-[#233A85]">
+            <Building2 className="h-3 w-3 mr-1" />
+            {job.jobType === 'FULL_TIME' ? 'Tam Zamanlı' : job.jobType === 'PART_TIME' ? 'Yarı Zamanlı' : job.jobType === 'INTERNSHIP' ? 'Staj' : job.jobType === 'CONTRACT' ? 'Sözleşmeli' : 'Serbest'}
+          </Badge>
           <Badge className="bg-gray-100 text-gray-800 border border-gray-200">
             <Clock className="h-3 w-3 mr-1" />
             {job.workModel === 'REMOTE' ? 'Uzaktan' : job.workModel === 'HYBRID' ? 'Hibrit' : 'Ofisten'}

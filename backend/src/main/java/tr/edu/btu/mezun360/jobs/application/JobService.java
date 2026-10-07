@@ -54,12 +54,24 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
-    public Page<JobPostDTO> searchJobs(String location, WorkModel workModel, UUID currentUserId, Pageable pageable) {
+    public Page<JobPostDTO> searchJobs(String search, String location, tr.edu.btu.mezun360.jobs.domain.JobType jobType, WorkModel workModel, UUID currentUserId, Pageable pageable) {
         enforceVerifiedAlumniOrAdmin(currentUserId);
         
         Specification<JobPost> spec = Specification.where(null);
+        if (search != null && !search.isBlank()) {
+            String searchLower = "%" + search.toLowerCase() + "%";
+            spec = spec.and((root, query, cb) -> 
+                cb.or(
+                    cb.like(cb.lower(root.get("title")), searchLower),
+                    cb.like(cb.lower(root.get("company")), searchLower)
+                )
+            );
+        }
         if (location != null && !location.isBlank()) {
             spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("location")), "%" + location.toLowerCase() + "%"));
+        }
+        if (jobType != null) {
+            spec = spec.and((root, query, cb) -> cb.equal(root.get("jobType"), jobType));
         }
         if (workModel != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("workModel"), workModel));
@@ -72,6 +84,7 @@ public class JobService {
                 job.getTitle(),
                 job.getCompany(),
                 job.getLocation(),
+                job.getJobType(),
                 job.getWorkModel(),
                 job.getDescription(),
                 job.getApplicationUrl(),
@@ -91,6 +104,7 @@ public class JobService {
             request.title(),
             request.company(),
             request.location(),
+            request.jobType(),
             request.workModel(),
             request.description(),
             request.applicationUrl(),
@@ -103,6 +117,7 @@ public class JobService {
             job.getTitle(),
             job.getCompany(),
             job.getLocation(),
+            job.getJobType(),
             job.getWorkModel(),
             job.getDescription(),
             job.getApplicationUrl(),

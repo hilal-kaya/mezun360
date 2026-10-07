@@ -25,6 +25,10 @@ public class JobPost {
     private String location;
 
     @Enumerated(EnumType.STRING)
+    @Column(name = "job_type", nullable = false)
+    private JobType jobType;
+
+    @Enumerated(EnumType.STRING)
     @Column(name = "work_model", nullable = false)
     private WorkModel workModel;
 
@@ -46,11 +50,12 @@ public class JobPost {
 
     protected JobPost() {}
 
-    public JobPost(UUID id, String title, String company, String location, WorkModel workModel, String description, String applicationUrl, UserAccount postedBy) {
+    public JobPost(UUID id, String title, String company, String location, JobType jobType, WorkModel workModel, String description, String applicationUrl, UserAccount postedBy) {
         this.id = id != null ? id : UUID.randomUUID();
         this.title = title;
         this.company = company;
         this.location = location;
+        this.jobType = jobType != null ? jobType : JobType.FULL_TIME;
         this.workModel = workModel;
         this.description = description;
         this.applicationUrl = applicationUrl;
@@ -59,11 +64,12 @@ public class JobPost {
         this.updatedAt = this.createdAt;
     }
 
-    public JobPost(UUID id, String title, String company, String location, WorkModel workModel, String description, String applicationUrl, UserAccount postedBy, Instant createdAt) {
+    public JobPost(UUID id, String title, String company, String location, JobType jobType, WorkModel workModel, String description, String applicationUrl, UserAccount postedBy, Instant createdAt) {
         this.id = id;
         this.title = title;
         this.company = company;
         this.location = location;
+        this.jobType = jobType != null ? jobType : JobType.FULL_TIME;
         this.workModel = workModel;
         this.description = description;
         this.applicationUrl = applicationUrl;
@@ -76,6 +82,7 @@ public class JobPost {
     public String getTitle() { return title; }
     public String getCompany() { return company; }
     public String getLocation() { return location; }
+    public JobType getJobType() { return jobType; }
     public WorkModel getWorkModel() { return workModel; }
     public String getDescription() { return description; }
     public String getApplicationUrl() { return applicationUrl; }
