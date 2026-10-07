@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from '@tanstack/react-query'
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 
 export interface AlumniNetworkDTO {
@@ -24,9 +24,11 @@ export interface Page<T> {
   }
 }
 
+export const NETWORK_QUERY_KEY = 'network'
+
 export function useAlumniNetwork(params: { search?: string; department?: string; year?: number; industry?: string; page?: number }) {
   return useQuery({
-    queryKey: ['network', params],
+    queryKey: [NETWORK_QUERY_KEY, params],
     queryFn: async ({ signal }) => {
       const searchParams = new URLSearchParams()
       if (params.search) searchParams.set('search', params.search)
@@ -38,22 +40,30 @@ export function useAlumniNetwork(params: { search?: string; department?: string;
       const queryStr = searchParams.toString()
       return await api.get<Page<AlumniNetworkDTO>>(`/network/alumni${queryStr ? '?' + queryStr : ''}`, { signal })
     },
-    staleTime: 5 * 60 * 1000
+    staleTime: 0,
   })
 }
 
 export function useConnectMutation() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (receiverId: string) => {
       return await api.post(`/network/connections/${receiverId}`)
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: [NETWORK_QUERY_KEY] })
     },
   })
 }
 
 export function useCancelConnectionMutation() {
+  const queryClient = useQueryClient()
   return useMutation({
     mutationFn: async (receiverId: string) => {
       return await api.delete(`/network/connections/${receiverId}`)
+    },
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: [NETWORK_QUERY_KEY] })
     },
   })
 }

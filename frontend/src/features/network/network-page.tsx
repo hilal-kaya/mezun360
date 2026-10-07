@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Search, Briefcase, GraduationCap, MapPin, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useAlumniNetwork, useConnectMutation, useCancelConnectionMutation, type AlumniNetworkDTO } from './network-api'
@@ -7,21 +7,28 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
   const [status, setStatus] = useState<string>(alumni.connectionStatus || 'NONE')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [isHovered, setIsHovered] = useState(false)
-  
+
+  // Sync local state whenever server data changes (e.g. after query invalidation)
+  useEffect(() => {
+    setStatus(alumni.connectionStatus || 'NONE')
+  }, [alumni.connectionStatus])
+
   const connectMutation = useConnectMutation()
   const cancelMutation = useCancelConnectionMutation()
 
   const handleAction = async () => {
     setErrorMsg(null)
+    const prevStatus = status
     try {
-      if (status === 'PENDING') {
+      if (prevStatus === 'PENDING') {
+        setStatus('NONE') // optimistic
         await cancelMutation.mutateAsync(alumni.id)
-        setStatus('NONE')
       } else {
+        setStatus('PENDING') // optimistic
         await connectMutation.mutateAsync(alumni.id)
-        setStatus('PENDING')
       }
     } catch (error: any) {
+      setStatus(prevStatus) // revert on failure
       if (error?.problem?.detail) {
         setErrorMsg(error.problem.detail)
       } else if (error?.message) {
@@ -35,10 +42,18 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
   const isPending = status === 'PENDING'
   const isAccepted = status === 'ACCEPTED'
   const isActionLoading = connectMutation.isPending || cancelMutation.isPending
-  
-  let buttonText = 'Bağlantı Kur'
-  if (isAccepted) buttonText = 'Bağlantılı'
-  else if (isPending) buttonText = isHovered ? 'İptal Et' : 'İstek Gönderildi'
+
+  const buttonLabel = isAccepted
+    ? 'Bağlantılı'
+    : isPending
+    ? (isHovered ? 'İptal Et' : 'İstek Gönderildi')
+    : 'Bağlantı Kur'
+
+  const buttonClass = isAccepted
+    ? 'w-full text-gray-500 border-gray-200 cursor-default'
+    : isPending
+    ? 'w-full text-gray-500 border-gray-200 hover:text-red-600 hover:border-red-400 hover:bg-red-50 transition-colors'
+    : 'w-full bg-primary text-white hover:bg-primary/90'
 
   return (
     <li className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
@@ -52,7 +67,7 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
             <p className="text-xs text-muted-foreground">{alumni.department ?? 'Bölüm belirtilmemiş'}</p>
           </div>
         </div>
-        
+
         <div className="mt-4 space-y-2 text-sm text-gray-600">
           {alumni.currentPosition && (
             <div className="flex items-start gap-2">
@@ -81,9 +96,9 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
             {errorMsg}
           </div>
         )}
-        <Button 
-          variant={(isPending || isAccepted) ? "outline" : "default"}
-          className={`w-full ${(isPending || isAccepted) ? 'text-gray-500 border-gray-200' + (isPending && isHovered ? ' hover:text-red-600 hover:border-red-600 hover:bg-red-50' : '') : 'bg-primary text-white hover:bg-primary/90'}`}
+        <Button
+          variant={(isPending || isAccepted) ? 'outline' : 'default'}
+          className={buttonClass}
           disabled={isAccepted || isActionLoading}
           onClick={handleAction}
           onMouseEnter={() => setIsHovered(true)}
@@ -91,8 +106,8 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
         >
           {isActionLoading ? 'İşleniyor...' : (
             <>
-              {(!isPending && !isAccepted) && <UserPlus size={16} className="mr-2" />}
-              {buttonText}
+              {!isPending && !isAccepted && <UserPlus size={16} className="mr-2" />}
+              {buttonLabel}
             </>
           )}
         </Button>
