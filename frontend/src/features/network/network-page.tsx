@@ -49,12 +49,6 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
     ? (isHovered ? 'İptal Et' : 'İstek Gönderildi')
     : 'Bağlantı Kur'
 
-  const buttonClass = isAccepted
-    ? 'w-full text-gray-500 border-gray-200 cursor-default'
-    : isPending
-    ? 'w-full text-gray-500 border-gray-200 hover:text-red-600 hover:border-red-400 hover:bg-red-50 transition-colors'
-    : 'w-full bg-primary text-white hover:bg-primary/90'
-
   return (
     <li className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
       <div>
@@ -96,13 +90,19 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
             {errorMsg}
           </div>
         )}
-        <Button
-          variant={(isPending || isAccepted) ? 'outline' : 'default'}
-          className={buttonClass}
+        <button
+          type="button"
           disabled={isAccepted || isActionLoading}
           onClick={handleAction}
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
+          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 ${
+            isAccepted
+              ? 'bg-gray-100 text-gray-500 border border-gray-200 cursor-default'
+              : isPending
+              ? 'border border-gray-300 bg-white text-gray-600 hover:text-red-600 hover:border-red-400 hover:bg-red-50'
+              : 'bg-primary text-white hover:bg-primary/90'
+          } w-full`}
         >
           {isActionLoading ? 'İşleniyor...' : (
             <>
@@ -110,7 +110,7 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
               {buttonLabel}
             </>
           )}
-        </Button>
+        </button>
       </div>
     </li>
   )
