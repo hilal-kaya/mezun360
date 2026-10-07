@@ -71,7 +71,7 @@ class NetworkDirectoryRepositoryTest {
 
     @Test
     void searchDirectory_ReturnsOnlyVerifiedAndOptedInAlumni() {
-        var result = repository.searchDirectory(null, null, null, null, org.springframework.data.domain.PageRequest.of(0, 10));
+        var result = repository.searchDirectory(UUID.randomUUID(), null, null, null, null, org.springframework.data.domain.PageRequest.of(0, 10));
         assertThat(result.getContent()).hasSize(2);
         assertThat(result.getContent()).extracting("firstName").containsExactlyInAnyOrder("Test", "Ahmet");
     }

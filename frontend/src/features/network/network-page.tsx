@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button'
 import { useAlumniNetwork, useConnectMutation, type AlumniNetworkDTO } from './network-api'
 
 function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
-  const [requestSent, setRequestSent] = useState(false)
+  const [status, setStatus] = useState<string>(alumni.connectionStatus || 'NONE')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   
   const connectMutation = useConnectMutation()
@@ -13,17 +13,20 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
     setErrorMsg(null)
     try {
       await connectMutation.mutateAsync(alumni.id)
-      setRequestSent(true)
+      setStatus('PENDING')
     } catch (error: any) {
       if (error?.problem?.detail) {
         setErrorMsg(error.problem.detail)
       } else if (error?.message) {
-        setErrorMsg(error.message)
+        setErrorMsg(error.message === 'API request failed.' ? 'Bir hata oluştu, lütfen tekrar deneyin.' : error.message)
       } else {
         setErrorMsg('Bağlantı isteği gönderilirken bir hata oluştu.')
       }
     }
   }
+
+  const isSentOrConnected = status === 'PENDING' || status === 'ACCEPTED'
+  const buttonText = status === 'ACCEPTED' ? 'Bağlantılı' : (status === 'PENDING' ? 'İstek Gönderildi' : 'Bağlantı Kur')
 
   return (
     <li className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
@@ -67,15 +70,15 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
           </div>
         )}
         <Button 
-          variant={requestSent ? "outline" : "default"}
-          className={`w-full ${requestSent ? 'text-gray-500 border-gray-200' : 'bg-primary text-white hover:bg-primary/90'}`}
-          disabled={requestSent || connectMutation.isPending}
+          variant={isSentOrConnected ? "outline" : "default"}
+          className={`w-full ${isSentOrConnected ? 'text-gray-500 border-gray-200' : 'bg-primary text-white hover:bg-primary/90'}`}
+          disabled={isSentOrConnected || connectMutation.isPending}
           onClick={handleConnect}
         >
-          {connectMutation.isPending ? 'Gönderiliyor...' : requestSent ? 'İstek Gönderildi' : (
+          {connectMutation.isPending ? 'Gönderiliyor...' : isSentOrConnected ? buttonText : (
             <>
               <UserPlus size={16} className="mr-2" />
-              Bağlantı Kur
+              {buttonText}
             </>
           )}
         </Button>

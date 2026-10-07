@@ -11,6 +11,7 @@ export interface AlumniNetworkDTO {
   currentPosition: string | null
   industry: string | null
   city: string | null
+  connectionStatus: string
 }
 
 export interface Page<T> {

@@ -11,5 +11,6 @@ public record AlumniNetworkDTO(
     String currentCompany,
     String currentPosition,
     String industry,
-    String city
+    String city,
+    String connectionStatus
 ) {}

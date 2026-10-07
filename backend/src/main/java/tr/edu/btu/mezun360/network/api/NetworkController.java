@@ -38,6 +38,7 @@ public class NetworkController {
         @RequestParam(required = false, defaultValue = "20") int size
     ) {
         return repository.searchDirectory(
+            currentAccountService.current().userId(),
             search != null && !search.isBlank() ? search : null,
             department != null && !department.isBlank() ? department : null,
             year,
