@@ -3,13 +3,14 @@ package tr.edu.btu.mezun360.network.api;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import java.util.UUID;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import tr.edu.btu.mezun360.network.infrastructure.NetworkDirectoryRepository;
+import tr.edu.btu.mezun360.network.application.NetworkService;
+
+import tr.edu.btu.mezun360.identity.application.CurrentAccountService;
 
 @RestController
 @RequestMapping("/api/v1/network")
@@ -17,9 +18,13 @@ import tr.edu.btu.mezun360.network.infrastructure.NetworkDirectoryRepository;
 public class NetworkController {
 
     private final NetworkDirectoryRepository repository;
+    private final NetworkService networkService;
+    private final CurrentAccountService currentAccountService;
 
-    public NetworkController(NetworkDirectoryRepository repository) {
+    public NetworkController(NetworkDirectoryRepository repository, NetworkService networkService, CurrentAccountService currentAccountService) {
         this.repository = repository;
+        this.networkService = networkService;
+        this.currentAccountService = currentAccountService;
     }
 
     @GetMapping("/alumni")
@@ -39,5 +44,11 @@ public class NetworkController {
             industry != null && !industry.isBlank() ? industry : null,
             org.springframework.data.domain.PageRequest.of(page, size)
         );
+    }
+
+    @PostMapping("/connections/{receiverId}")
+    @Operation(summary = "Send a connection request to an alumni profile", security = @SecurityRequirement(name = "sessionCookie"))
+    public void sendConnectionRequest(@PathVariable UUID receiverId) {
+        networkService.sendConnectionRequest(currentAccountService.current().userId(), receiverId);
     }
 }

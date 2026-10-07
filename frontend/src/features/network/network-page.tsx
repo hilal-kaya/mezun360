@@ -1,7 +1,88 @@
 import { useState } from 'react'
-import { useAlumniNetwork } from './network-api'
+import { Search, Briefcase, GraduationCap, MapPin, UserPlus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Search, Briefcase, GraduationCap, MapPin } from 'lucide-react'
+import { useAlumniNetwork, useConnectMutation, type AlumniNetworkDTO } from './network-api'
+
+function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
+  const [requestSent, setRequestSent] = useState(false)
+  const [errorMsg, setErrorMsg] = useState<string | null>(null)
+  
+  const connectMutation = useConnectMutation()
+
+  const handleConnect = async () => {
+    setErrorMsg(null)
+    try {
+      await connectMutation.mutateAsync(alumni.id)
+      setRequestSent(true)
+    } catch (error: any) {
+      if (error?.problem?.detail) {
+        setErrorMsg(error.problem.detail)
+      } else if (error?.message) {
+        setErrorMsg(error.message)
+      } else {
+        setErrorMsg('Bağlantı isteği gönderilirken bir hata oluştu.')
+      }
+    }
+  }
+
+  return (
+    <li className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+      <div>
+        <div className="flex items-center gap-3">
+          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-lg font-bold text-primary">
+            {alumni.firstName.charAt(0)}{alumni.lastName.charAt(0)}
+          </div>
+          <div>
+            <h3 className="font-bold text-primary">{alumni.firstName} {alumni.lastName}</h3>
+            <p className="text-xs text-muted-foreground">{alumni.department ?? 'Bölüm belirtilmemiş'}</p>
+          </div>
+        </div>
+        
+        <div className="mt-4 space-y-2 text-sm text-gray-600">
+          {alumni.currentPosition && (
+            <div className="flex items-start gap-2">
+              <Briefcase size={16} className="mt-0.5 shrink-0 text-gray-400" />
+              <p>{alumni.currentPosition} {alumni.currentCompany ? `@ ${alumni.currentCompany}` : ''}</p>
+            </div>
+          )}
+          {alumni.graduationYear && (
+            <div className="flex items-center gap-2">
+              <GraduationCap size={16} className="text-gray-400" />
+              <p>{alumni.graduationYear} Mezunu</p>
+            </div>
+          )}
+          {alumni.city && (
+            <div className="flex items-center gap-2">
+              <MapPin size={16} className="text-gray-400" />
+              <p>{alumni.city}</p>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="mt-6 pt-4 border-t border-gray-100 flex flex-col gap-2">
+        {errorMsg && (
+          <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+            {errorMsg}
+          </div>
+        )}
+        <Button 
+          variant={requestSent ? "outline" : "default"}
+          className={`w-full ${requestSent ? 'text-gray-500 border-gray-200' : 'bg-primary text-white hover:bg-primary/90'}`}
+          disabled={requestSent || connectMutation.isPending}
+          onClick={handleConnect}
+        >
+          {connectMutation.isPending ? 'Gönderiliyor...' : requestSent ? 'İstek Gönderildi' : (
+            <>
+              <UserPlus size={16} className="mr-2" />
+              Bağlantı Kur
+            </>
+          )}
+        </Button>
+      </div>
+    </li>
+  )
+}
 
 export function AlumniNetworkPage() {
   const [search, setSearch] = useState('')
@@ -117,40 +198,7 @@ export function AlumniNetworkPage() {
             ) : (
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {query.data.content.map(alumni => (
-                  <li key={alumni.id} className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
-                    <div>
-                      <div className="flex items-center gap-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-lg font-bold text-primary">
-                          {alumni.firstName.charAt(0)}{alumni.lastName.charAt(0)}
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-primary">{alumni.firstName} {alumni.lastName}</h3>
-                          <p className="text-xs text-muted-foreground">{alumni.department ?? 'Bölüm belirtilmemiş'}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="mt-4 space-y-2 text-sm text-gray-600">
-                        {alumni.currentPosition && (
-                          <div className="flex items-start gap-2">
-                            <Briefcase size={16} className="mt-0.5 shrink-0 text-gray-400" />
-                            <p>{alumni.currentPosition} {alumni.currentCompany ? `@ ${alumni.currentCompany}` : ''}</p>
-                          </div>
-                        )}
-                        {alumni.graduationYear && (
-                          <div className="flex items-center gap-2">
-                            <GraduationCap size={16} className="text-gray-400" />
-                            <p>{alumni.graduationYear} Mezunu</p>
-                          </div>
-                        )}
-                        {alumni.city && (
-                          <div className="flex items-center gap-2">
-                            <MapPin size={16} className="text-gray-400" />
-                            <p>{alumni.city}</p>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </li>
+                  <AlumniCard key={alumni.id} alumni={alumni} />
                 ))}
               </ul>
             )}

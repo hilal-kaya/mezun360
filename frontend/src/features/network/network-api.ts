@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 
 export interface AlumniNetworkDTO {
@@ -38,5 +38,13 @@ export function useAlumniNetwork(params: { search?: string; department?: string;
       return await api.get<Page<AlumniNetworkDTO>>(`/network/alumni${queryStr ? '?' + queryStr : ''}`, { signal })
     },
     staleTime: 5 * 60 * 1000
+  })
+}
+
+export function useConnectMutation() {
+  return useMutation({
+    mutationFn: async (receiverId: string) => {
+      return await api.post(`/network/connections/${receiverId}`)
+    },
   })
 }
