@@ -46,7 +46,7 @@ public class DataSeeder implements CommandLineRunner {
         UserAccount admin = seedUser("admin@example.test", "admin", Role.ADMIN);
         seedUser("alumni@example.test", "alumni", Role.ALUMNI);
         seedJobs(admin);
-        seedMentors();
+        seedNetworkAlumni();
         seedEvents();
         seedNews();
     }
@@ -103,17 +103,18 @@ public class DataSeeder implements CommandLineRunner {
         return s;
     }
 
-    private void seedMentors() {
-        if (profiles.count() > 0) return;
+    private void seedNetworkAlumni() {
+        if (accounts.findByEmailCanonical("mentor1@example.test").isPresent()) return;
 
-        createMentor("mentor1@example.test", "Ahmet", "Yılmaz", "Yazılım Mimarı", "TechCorp TR", "Java", "Spring Boot", "Microservices");
-        createMentor("mentor2@example.test", "Ayşe", "Kaya", "Veri Bilimi Uzmanı", "Bursa Analytics", "Python", "Machine Learning", "Data Engineering");
-        createMentor("mentor3@example.test", "Mehmet", "Demir", "Frontend Developer", "Innovate A.S.", "React", "TypeScript", "UX Design");
-        createMentor("mentor4@example.test", "Zeynep", "Çelik", "Product Manager", "StartApp", "Agile", "Scrum", "Product Strategy");
+        createAlumni("mentor1@example.test", "Ahmet", "Yılmaz", "Yazılım Mimarı", "TechCorp TR", "Bilgisayar Mühendisliği", 2021, "Bilişim", true, "Java", "Spring Boot", "Microservices");
+        createAlumni("mentor2@example.test", "Ayşe", "Kaya", "Veri Bilimi Uzmanı", "Bursa Analytics", "Matematik", 2019, "Veri", true, "Python", "Machine Learning", "Data Engineering");
+        createAlumni("mentor3@example.test", "Mehmet", "Demir", "Frontend Developer", "Innovate A.S.", "Bilgisayar Mühendisliği", 2022, "Bilişim", false, "React", "TypeScript", "UX Design");
+        createAlumni("mentor4@example.test", "Zeynep", "Çelik", "Product Manager", "StartApp", "Endüstri Mühendisliği", 2020, "Yazılım", true, "Agile", "Scrum", "Product Strategy");
+        createAlumni("alumni5@example.test", "Can", "Öztürk", "Makine Mühendisi", "AutoMaker", "Makine Mühendisliği", 2018, "Otomotiv", false, "CAD", "SolidWorks");
     }
 
-    private void createMentor(String email, String firstName, String lastName, String title, String company, String... skillNames) {
-        UserAccount account = seedUser(email, "mentor", Role.ALUMNI);
+    private void createAlumni(String email, String firstName, String lastName, String title, String company, String department, Integer gradYear, String industry, boolean mentor, String... skillNames) {
+        UserAccount account = seedUser(email, "password123", Role.ALUMNI);
         if (profiles.findByUserId(account.id()).isEmpty()) {
             AlumniProfile profile = new AlumniProfile();
             profile.id = UUID.randomUUID();
@@ -122,7 +123,10 @@ public class DataSeeder implements CommandLineRunner {
             profile.lastName = lastName;
             profile.currentPosition = title;
             profile.currentCompany = company;
-            profile.willingToMentor = true;
+            profile.department = department;
+            profile.graduationYear = gradYear;
+            profile.industry = industry;
+            profile.willingToMentor = mentor;
             profile.createdAt = clock.instant();
             profile.updatedAt = clock.instant();
 
@@ -132,10 +136,10 @@ public class DataSeeder implements CommandLineRunner {
             profiles.save(profile);
             
             // Auto-verify mentor
-            jdbcTemplate.update("INSERT INTO mezun360.alumni_verification_requests (id, profile_id, status, request_reason, submitted_at, version) VALUES (?, ?, 'VERIFIED', 'Seeder', ?, 0)", UUID.randomUUID(), profile.id, java.sql.Timestamp.from(clock.instant()));
+            jdbcTemplate.update("INSERT INTO mezun360.alumni_verification_requests (id, profile_id, evidence_revision, evidence, status, source, submitted_at, created_at, updated_at, version) VALUES (?, ?, 0, '{}', 'VERIFIED', 'MANUAL_ADMIN', ?, ?, ?, 0)", UUID.randomUUID(), profile.id, java.sql.Timestamp.from(clock.instant()), java.sql.Timestamp.from(clock.instant()), java.sql.Timestamp.from(clock.instant()));
             
             // Add privacy settings
-            jdbcTemplate.update("INSERT INTO mezun360.alumni_privacy_settings (profile_id, show_contact_info, directory_opt_in, allow_messages, version) VALUES (?, false, true, true, 0)", profile.id);
+            jdbcTemplate.update("INSERT INTO mezun360.alumni_privacy_settings (profile_id, directory_opt_in, profile_visibility, created_at, updated_at, version) VALUES (?, true, 'ALUMNI_MEMBERS', ?, ?, 0)", profile.id, java.sql.Timestamp.from(clock.instant()), java.sql.Timestamp.from(clock.instant()));
         }
     }
     private void seedEvents() {

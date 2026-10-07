@@ -33,8 +33,8 @@ export function AlumniNetworkPage() {
   return (
     <div className="flex flex-col gap-6 md:flex-row">
       {/* Sidebar Filters */}
-      <aside className="w-full md:w-1/4 shrink-0 space-y-6 rounded-2xl bg-white p-5 shadow-sm border border-pastel-blue">
-        <h2 className="text-xl font-bold text-btu-navy font-barlow">Mezun Filtrele</h2>
+      <aside className="w-full md:w-1/4 shrink-0 space-y-6 rounded-2xl bg-white p-5 shadow-sm border border-primary/20">
+        <h2 className="text-xl font-bold text-primary font-barlow">Mezun Filtrele</h2>
         <form onSubmit={handleSearch} className="space-y-4">
           <label className="block text-sm">
             <span className="font-semibold text-gray-700">İsim ile Ara</span>
@@ -45,7 +45,7 @@ export function AlumniNetworkPage() {
                 value={search}
                 onChange={e => setSearch(e.target.value)}
                 placeholder="Örn: Ahmet Yılmaz" 
-                className="w-full rounded-lg border bg-gray-50 p-2 pl-9 focus:border-btu-navy focus:ring-1 focus:ring-btu-navy outline-none" 
+                className="w-full rounded-lg border bg-gray-50 p-2 pl-9 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
               />
             </div>
           </label>
@@ -57,7 +57,7 @@ export function AlumniNetworkPage() {
               value={department}
               onChange={e => setDepartment(e.target.value)}
               placeholder="Örn: Bilgisayar Mühendisliği" 
-              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-btu-navy focus:ring-1 focus:ring-btu-navy outline-none" 
+              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
             />
           </label>
 
@@ -68,7 +68,7 @@ export function AlumniNetworkPage() {
               value={industry}
               onChange={e => setIndustry(e.target.value)}
               placeholder="Örn: Bilişim" 
-              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-btu-navy focus:ring-1 focus:ring-btu-navy outline-none" 
+              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
             />
           </label>
 
@@ -81,13 +81,13 @@ export function AlumniNetworkPage() {
               value={year || ''}
               onChange={e => setYear(e.target.value ? parseInt(e.target.value) : undefined)}
               placeholder="Örn: 2023" 
-              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-btu-navy focus:ring-1 focus:ring-btu-navy outline-none" 
+              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
             />
           </label>
 
           <div className="flex gap-2 pt-2">
-            <Button type="submit" className="flex-1 bg-btu-navy hover:bg-btu-navy/90 text-white">Ara</Button>
-            <Button type="button" variant="outline" onClick={clearFilters} className="border-pastel-blue">Temizle</Button>
+            <Button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-white">Ara</Button>
+            <Button type="button" variant="outline" onClick={clearFilters} className="border-primary/20">Temizle</Button>
           </div>
         </form>
       </aside>
@@ -95,7 +95,7 @@ export function AlumniNetworkPage() {
       {/* Main Content */}
       <main className="flex-1 space-y-6">
         <div>
-          <h1 className="text-3xl font-bold font-barlow text-btu-navy">Mezun Ağı</h1>
+          <h1 className="text-3xl font-bold font-barlow text-primary">Mezun Ağı</h1>
           <p className="mt-2 text-muted-foreground">BTÜ mezunlarını keşfet ve ağını genişlet.</p>
         </div>
 
@@ -117,14 +117,14 @@ export function AlumniNetworkPage() {
             ) : (
               <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {query.data.content.map(alumni => (
-                  <li key={alumni.id} className="flex flex-col justify-between rounded-2xl border border-pastel-blue bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+                  <li key={alumni.id} className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
                     <div>
                       <div className="flex items-center gap-3">
-                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-pastel-blue/30 text-lg font-bold text-btu-navy">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-lg font-bold text-primary">
                           {alumni.firstName.charAt(0)}{alumni.lastName.charAt(0)}
                         </div>
                         <div>
-                          <h3 className="font-bold text-btu-navy">{alumni.firstName} {alumni.lastName}</h3>
+                          <h3 className="font-bold text-primary">{alumni.firstName} {alumni.lastName}</h3>
                           <p className="text-xs text-muted-foreground">{alumni.department ?? 'Bölüm belirtilmemiş'}</p>
                         </div>
                       </div>

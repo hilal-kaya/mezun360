@@ -2,7 +2,7 @@
 
 ## Current phase
 
-The user has explicitly authorized **M6 – News**. Preserve M1A–M5. Scope: News Module, news listing, mock data. After all required validations pass, the user explicitly requests commit `feat(news): build M6 news module and automate deployment` and push this branch to origin. Never merge, rebase, amend unrelated commits or force push.
+The user has explicitly authorized **M2 - Alumni Network** along with **M6 – News**. Preserve M1A–M5. Scope: Alumni Network, searching profiles. After all required validations pass, the user explicitly requests commit `feat(network): build M2 alumni network with comprehensive filtering` and push this branch to origin. Never merge, rebase, amend unrelated commits or force push.
 
 Read [decisions](docs/decisions.md), [requirements](docs/requirements.md), [architecture](docs/architecture.md), [database](docs/database.md), [API](docs/api.md), [repository structure](docs/repository-structure.md) and [roadmap](docs/roadmap.md) before making changes. Keep these documents consistent. The user's finalized decisions supersede the earlier open alternatives; remaining institutional inputs are recorded only in the decision register.
 
