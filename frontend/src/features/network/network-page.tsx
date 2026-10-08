@@ -55,19 +55,19 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
     : 'Bağlantı Kur'
 
   return (
-    <li className="flex flex-col justify-between rounded-2xl border border-primary/20 bg-white p-5 shadow-sm transition-shadow hover:shadow-md">
+    <li className="flex flex-col justify-between rounded-3xl border border-pastel-blue bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-primary/20 hover:bg-pastel-blue-light/50">
       <div>
-        <div className="flex items-center gap-3">
-          <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 text-lg font-bold text-primary">
+        <div className="flex items-center gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-pastel-blue text-lg font-bold text-primary">
             {alumni.firstName.charAt(0)}{alumni.lastName.charAt(0)}
           </div>
           <div>
-            <h3 className="font-bold text-primary">{alumni.firstName} {alumni.lastName}</h3>
-            <p className="text-xs text-muted-foreground">{alumni.department ?? 'Bölüm belirtilmemiş'}</p>
+            <h3 className="font-bold text-primary text-lg">{alumni.firstName} {alumni.lastName}</h3>
+            <p className="text-sm text-muted-foreground">{alumni.department ?? 'Bölüm belirtilmemiş'}</p>
           </div>
         </div>
 
-        <div className="mt-4 space-y-2 text-sm text-gray-600">
+        <div className="mt-5 space-y-2 text-sm text-gray-600">
           {alumni.currentPosition && (
             <div className="flex items-start gap-2">
               <Briefcase size={16} className="mt-0.5 shrink-0 text-gray-400" />
@@ -89,9 +89,9 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
         </div>
       </div>
 
-      <div className="mt-6 pt-4 border-t border-gray-100 flex flex-col gap-2">
+      <div className="mt-6 pt-5 border-t border-pastel-blue flex flex-col gap-2">
         {errorMsg && (
-          <div className="text-xs text-red-600 bg-red-50 p-2 rounded">
+          <div className="text-xs text-destructive bg-destructive/10 p-2 rounded-xl">
             {errorMsg}
           </div>
         )}
@@ -99,12 +99,12 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
           type="button"
           disabled={isAccepted || isActionLoading}
           onClick={handleAction}
-          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 ${
+          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 ${
             isAccepted
-              ? 'bg-gray-100 text-gray-500 border border-gray-200 cursor-default'
+              ? 'bg-gray-100 text-gray-500 cursor-default'
               : isPending
-              ? 'border border-red-300 bg-white text-red-600 hover:border-red-400 hover:bg-red-50'
-              : 'bg-primary text-white hover:bg-primary/90'
+              ? 'border-2 border-red-200 bg-white text-destructive hover:border-red-300 hover:bg-red-50'
+              : 'bg-primary text-white hover:bg-primary/90 shadow-sm'
           } w-full`}
         >
           {isActionLoading ? 'İşleniyor...' : (
@@ -142,21 +142,21 @@ export function AlumniNetworkPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 max-w-6xl mx-auto">
-      {/* Global Search Omnibar */}
-      <section className="bg-white p-8 rounded-2xl shadow-sm border border-primary/10 text-center space-y-4">
+    <div className="flex flex-col gap-8 max-w-6xl mx-auto pt-4">
+      {/* Global Search Omnibar Header */}
+      <section className="text-center space-y-3">
         <h1 className="text-3xl font-bold font-barlow text-primary">Mezun Ağı</h1>
         <p className="text-muted-foreground max-w-xl mx-auto">BTÜ mezunlarını keşfet ve ağını genişlet.</p>
         
-        <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-6">
-          <div className="relative flex items-center">
-            <Search className="absolute left-4 text-gray-400" size={24} />
+        <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-8">
+          <div className="relative flex items-center bg-white shadow-sm hover:shadow-md transition-shadow rounded-full border border-pastel-blue focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-pastel-blue">
+            <Search className="absolute left-5 text-gray-400" size={20} />
             <input 
               type="text" 
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="İsim, bölüm, sektör veya yıla göre arayın..." 
-              className="w-full h-14 pl-12 pr-4 rounded-full border-2 border-primary/20 bg-gray-50 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-lg transition-all"
+              className="w-full h-14 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
             />
             <Button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-semibold">
               Ara
@@ -168,22 +168,22 @@ export function AlumniNetworkPage() {
       {/* Main Content */}
       <main className="space-y-6">
         {isPending ? (
-          <p role="status" className="text-gray-500 text-center py-10">Mezunlar yükleniyor...</p>
+          <p role="status" className="text-muted-foreground text-center py-12">Mezunlar yükleniyor...</p>
         ) : isError ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 text-center">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 text-center max-w-lg mx-auto">
             <p role="alert">Mezun ağı yüklenirken bir hata oluştu.</p>
-            <Button variant="outline" className="mt-2 bg-white" onClick={() => void refetch()}>Tekrar Dene</Button>
+            <Button variant="outline" className="mt-4 bg-white rounded-full" onClick={() => void refetch()}>Tekrar Dene</Button>
           </div>
         ) : (
           <>
-            <p className="text-sm text-gray-500 font-medium">Toplam {data.page.totalElements} mezun bulundu.</p>
+            <p className="text-sm text-muted-foreground font-medium px-2">Toplam {data.page.totalElements} mezun bulundu.</p>
             
             {data.content.length === 0 ? (
-              <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
+              <div className="rounded-3xl border border-dashed border-pastel-blue bg-white p-16 text-center text-muted-foreground">
                 Aradığınız kriterlere uygun mezun bulunamadı.
               </div>
             ) : (
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.content.map(alumni => (
                   <AlumniCard key={alumni.id} alumni={alumni} />
                 ))}
@@ -192,17 +192,19 @@ export function AlumniNetworkPage() {
 
             {/* Pagination Controls */}
             {data.page.totalPages > 1 && (
-              <nav aria-label="Sayfalama" className="mt-6 pb-12 flex items-center justify-center gap-4">
+              <nav aria-label="Sayfalama" className="mt-8 pb-12 flex items-center justify-center gap-4">
                 <Button 
                   variant="outline" 
+                  className="rounded-full border-pastel-blue hover:bg-pastel-blue-light"
                   disabled={page === 0} 
                   onClick={() => setPage(p => p - 1)}
                 >
                   Önceki
                 </Button>
-                <span className="text-sm font-medium">Sayfa {page + 1} / {data.page.totalPages}</span>
+                <span className="text-sm font-medium text-muted-foreground">Sayfa {page + 1} / {data.page.totalPages}</span>
                 <Button 
                   variant="outline" 
+                  className="rounded-full border-pastel-blue hover:bg-pastel-blue-light"
                   disabled={page + 1 >= data.page.totalPages} 
                   onClick={() => setPage(p => p + 1)}
                 >

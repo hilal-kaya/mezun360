@@ -26,20 +26,20 @@ export function EventCard({ event }: EventCardProps) {
   const isFull = event.capacity !== null && event.currentAttendees >= event.capacity
 
   return (
-    <div className="bg-white rounded-2xl p-6 shadow-sm border border-pastel-blue flex flex-col h-full hover:shadow-md transition-shadow">
+    <div className="bg-white rounded-3xl p-6 shadow-sm border border-pastel-blue flex flex-col h-full transition-all hover:shadow-md hover:border-primary/20 hover:bg-pastel-blue-light/50">
       <div className="flex-1">
         <div className="flex items-center gap-2 mb-3">
           {event.isOnline ? (
-            <span className="inline-flex items-center gap-1 text-xs font-medium bg-blue-100 text-blue-800 px-2.5 py-0.5 rounded-full">
+            <span className="inline-flex items-center gap-1 text-xs font-medium bg-pastel-blue-light text-primary px-3 py-1 rounded-full">
               <Video className="w-3 h-3" /> Online
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 text-xs font-medium bg-emerald-100 text-emerald-800 px-2.5 py-0.5 rounded-full">
+            <span className="inline-flex items-center gap-1 text-xs font-medium bg-pastel-mint text-emerald-800 px-3 py-1 rounded-full">
               <MapPin className="w-3 h-3" /> Yüz Yüze
             </span>
           )}
           {isFull && !event.isUserAttending && (
-             <span className="inline-flex items-center gap-1 text-xs font-medium bg-red-100 text-red-800 px-2.5 py-0.5 rounded-full">
+             <span className="inline-flex items-center gap-1 text-xs font-medium bg-destructive/10 text-destructive px-3 py-1 rounded-full">
                Kontenjan Dolu
              </span>
           )}
@@ -64,14 +64,14 @@ export function EventCard({ event }: EventCardProps) {
         </div>
       </div>
 
-      <div className="pt-4 border-t border-gray-100 mt-auto flex flex-col gap-2">
+      <div className="pt-5 border-t border-pastel-blue mt-auto flex flex-col gap-2">
         {toggleAttendance.isError && (
-          <div className="text-xs text-red-600 p-2 bg-red-50 rounded">
+          <div className="text-xs text-destructive p-2 bg-destructive/10 rounded-xl">
             {(toggleAttendance.error as any)?.problem?.detail || "İşlem başarısız"}
           </div>
         )}
         {toggleAttendance.isSuccess && (
-          <div className="text-xs text-emerald-600 p-2 bg-emerald-50 rounded">
+          <div className="text-xs text-emerald-700 p-2 bg-pastel-mint rounded-xl">
             {event.isUserAttending ? "Etkinliğe başarıyla katıldınız." : "Katılımınız başarıyla iptal edildi."}
           </div>
         )}
@@ -79,7 +79,7 @@ export function EventCard({ event }: EventCardProps) {
           onClick={handleToggle}
           disabled={toggleAttendance.isPending || (isFull && !event.isUserAttending) || new Date(event.eventDate).getTime() < Date.now()}
           variant={event.isUserAttending ? "outline" : "default"}
-          className={`w-full ${!event.isUserAttending ? 'bg-primary hover:bg-primary/90 text-white' : 'text-red-600 border-red-200 hover:bg-red-50'}`}
+          className={`w-full rounded-xl ${!event.isUserAttending ? 'bg-primary hover:bg-primary/90 text-white shadow-sm' : 'text-destructive border-red-200 hover:bg-red-50'}`}
         >
           {toggleAttendance.isPending 
             ? 'İşleniyor...' 

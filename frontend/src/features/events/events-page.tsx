@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { CalendarDays, Search } from 'lucide-react'
-import { Input } from '@/components/ui/input'
 import { useEvents } from './api/eventsApi'
 import { EventCard } from './components/EventCard'
 import { Button } from '@/components/ui/button'
@@ -25,59 +24,54 @@ export function EventsPage() {
   })
 
   return (
-    <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
-      <div className="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-primary font-barlow flex items-center gap-3">
-            <CalendarDays className="w-8 h-8 text-pastel-blue" />
-            Etkinlikler
-          </h1>
-          <p className="text-gray-600 mt-2">
-            BTÜ mezun ağı tarafından düzenlenen eğitimler, atölyeler ve buluşmalar.
-          </p>
-        </div>
-      </div>
+    <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 space-y-8">
+      {/* Global Search Omnibar Header */}
+      <section className="text-center space-y-3 pt-4">
+        <h1 className="text-3xl font-bold text-primary font-barlow flex items-center justify-center gap-3">
+          <CalendarDays className="w-8 h-8 text-primary/80" />
+          Etkinlikler
+        </h1>
+        <p className="text-muted-foreground max-w-xl mx-auto">
+          BTÜ mezun ağı tarafından düzenlenen eğitimler, atölyeler ve buluşmalar.
+        </p>
 
-      <div className="bg-white rounded-xl shadow-sm border border-pastel-blue p-4 mb-8">
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center">
-          <div className="flex gap-2 w-full md:w-auto">
-            <Button
-              variant={activeTab === 'upcoming' ? 'default' : 'ghost'}
-              className={activeTab === 'upcoming' ? 'bg-primary text-white hover:bg-primary/90' : 'text-gray-600'}
-              onClick={() => { setActiveTab('upcoming'); setPage(0); }}
-            >
-              Yaklaşanlar
-            </Button>
-            <Button
-              variant={activeTab === 'past' ? 'default' : 'ghost'}
-              className={activeTab === 'past' ? 'bg-primary text-white hover:bg-primary/90' : 'text-gray-600'}
-              onClick={() => { setActiveTab('past'); setPage(0); }}
-            >
-              Geçmiş Etkinlikler
-            </Button>
+        <div className="max-w-2xl mx-auto relative mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="relative flex-1 flex items-center bg-white shadow-sm hover:shadow-md transition-shadow rounded-full border border-pastel-blue focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-pastel-blue">
+            <Search className="absolute left-5 text-gray-400" size={20} />
+            <input 
+              type="text"
+              placeholder="Etkinlik ara..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full h-14 pl-14 pr-4 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
+            />
           </div>
-          
-          <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-            <div className="relative flex-1 sm:w-64">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
-              <Input
-                placeholder="Etkinlik ara..."
-                className="pl-9"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <select
-              className="rounded-md border border-input bg-transparent px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-              value={filterType}
-              onChange={(e) => setFilterType(e.target.value as any)}
-            >
-              <option value="all">Tüm Etkinlikler</option>
-              <option value="online">Sadece Online</option>
-              <option value="offline">Sadece Yüz Yüze</option>
-            </select>
-          </div>
+          <select
+            className="h-14 px-6 rounded-full border border-pastel-blue bg-white shadow-sm text-foreground outline-none focus:border-primary/30 focus:ring-4 focus:ring-pastel-blue transition-all"
+            value={filterType}
+            onChange={(e) => setFilterType(e.target.value as any)}
+          >
+            <option value="all">Tüm Etkinlikler</option>
+            <option value="online">Sadece Online</option>
+            <option value="offline">Sadece Yüz Yüze</option>
+          </select>
         </div>
+      </section>
+
+      {/* Tabs */}
+      <div className="flex gap-4 border-b border-gray-200 justify-center">
+        <button 
+          onClick={() => { setActiveTab('upcoming'); setPage(0); }}
+          className={`pb-3 px-4 font-medium text-sm transition-colors ${activeTab === 'upcoming' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          Yaklaşanlar
+        </button>
+        <button 
+          onClick={() => { setActiveTab('past'); setPage(0); }}
+          className={`pb-3 px-4 font-medium text-sm transition-colors ${activeTab === 'past' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+        >
+          Geçmiş Etkinlikler
+        </button>
       </div>
 
       {isLoading && (

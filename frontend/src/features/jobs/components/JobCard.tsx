@@ -24,10 +24,10 @@ export function JobCard({ job }: JobCardProps) {
   });
 
   return (
-    <Card className="hover:shadow-md transition-shadow flex flex-col p-6">
+    <Card className="hover:shadow-md transition-all flex flex-col p-6 rounded-3xl border border-pastel-blue hover:border-primary/20 hover:bg-pastel-blue-light/50">
       <div className="flex flex-row items-start justify-between space-y-0 pb-2">
         <div>
-          <h3 className="text-xl font-bold text-[#233A85]">{job.title}</h3>
+          <h3 className="text-xl font-bold text-primary">{job.title}</h3>
           <div className="flex items-center text-muted-foreground mt-1">
             <Building2 className="h-4 w-4 mr-1" />
             <span>{job.company}</span>
@@ -45,16 +45,16 @@ export function JobCard({ job }: JobCardProps) {
       <div className="flex-grow pt-0">
         <div className="flex space-x-2 mt-2 mb-4">
           {job.location && (
-            <Badge className="bg-[#DDE7FF] text-[#233A85]">
+            <Badge className="bg-pastel-blue text-primary border-none rounded-full px-3">
               <MapPin className="h-3 w-3 mr-1" />
               {job.location}
             </Badge>
           )}
-          <Badge className="bg-[#DDE7FF] text-[#233A85]">
+          <Badge className="bg-pastel-blue text-primary border-none rounded-full px-3">
             <Building2 className="h-3 w-3 mr-1" />
             {job.jobType === 'FULL_TIME' ? 'Tam Zamanlı' : job.jobType === 'PART_TIME' ? 'Yarı Zamanlı' : job.jobType === 'INTERNSHIP' ? 'Staj' : job.jobType === 'CONTRACT' ? 'Sözleşmeli' : 'Serbest'}
           </Badge>
-          <Badge className="bg-gray-100 text-gray-800 border border-gray-200">
+          <Badge className="bg-gray-100 text-gray-800 border-none rounded-full px-3">
             <Clock className="h-3 w-3 mr-1" />
             {job.workModel === 'REMOTE' ? 'Uzaktan' : job.workModel === 'HYBRID' ? 'Hibrit' : 'Ofisten'}
           </Badge>
@@ -62,7 +62,7 @@ export function JobCard({ job }: JobCardProps) {
         <p className="text-sm text-gray-600 line-clamp-3 whitespace-pre-line">{job.description}</p>
       </div>
       <div className="mt-4 flex items-center pt-0">
-        <Button asChild className="w-full bg-[#233A85] text-white hover:bg-[#1a2b63]">
+        <Button asChild className="w-full bg-primary text-white hover:bg-primary/90 rounded-xl shadow-sm">
           <a 
             href={
               job.applicationUrl.startsWith('http://') || job.applicationUrl.startsWith('https://') || job.applicationUrl.startsWith('mailto:') 

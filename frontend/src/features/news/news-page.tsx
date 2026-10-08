@@ -43,16 +43,18 @@ export function NewsPage() {
               <div className="flex justify-center items-center gap-4 mt-8">
                 <Button 
                   variant="outline" 
+                  className="rounded-full border-pastel-blue hover:bg-pastel-blue-light"
                   onClick={() => setPage(p => Math.max(0, p - 1))}
                   disabled={page === 0}
                 >
                   Önceki
                 </Button>
-                <span className="text-sm text-gray-600">
+                <span className="text-sm font-medium text-muted-foreground">
                   Sayfa {page + 1} / {data.page.totalPages}
                 </span>
                 <Button 
                   variant="outline" 
+                  className="rounded-full border-pastel-blue hover:bg-pastel-blue-light"
                   onClick={() => setPage(p => Math.min(data.page.totalPages - 1, p + 1))}
                   disabled={page >= data.page.totalPages - 1}
                 >
@@ -62,9 +64,9 @@ export function NewsPage() {
             )}
           </>
         ) : (
-          <div className="bg-white rounded-2xl p-12 text-center border border-pastel-blue shadow-sm">
+          <div className="bg-white rounded-3xl p-16 text-center border border-pastel-blue shadow-sm">
             <h3 className="text-lg font-medium text-primary mb-2">Henüz bir haber yayınlanmadı</h3>
-            <p className="text-gray-500">
+            <p className="text-muted-foreground">
               Şu anda sistemde kayıtlı haber veya duyuru bulunmuyor. Daha sonra tekrar kontrol edin.
             </p>
           </div>

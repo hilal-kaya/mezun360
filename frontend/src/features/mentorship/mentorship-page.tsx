@@ -37,22 +37,22 @@ export function MentorshipPage() {
   }
 
   return (
-    <div className="space-y-6 max-w-6xl mx-auto">
+    <div className="space-y-8 max-w-6xl mx-auto pt-4">
       {/* Global Search Omnibar Header */}
-      <section className="bg-white p-8 rounded-2xl shadow-sm border border-primary/10 text-center space-y-4">
+      <section className="text-center space-y-3">
         <h1 className="text-3xl font-bold font-barlow text-primary">Mentörlük</h1>
         <p className="text-muted-foreground max-w-xl mx-auto">Mentör bul, deneyimlerini paylaş veya gelen talepleri yönet.</p>
         
         {activeTab === 'find' && (
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-6">
-            <div className="relative flex items-center">
-              <Search className="absolute left-4 text-gray-400" size={24} />
+          <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-8">
+            <div className="relative flex items-center bg-white shadow-sm hover:shadow-md transition-shadow rounded-full border border-pastel-blue focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-pastel-blue">
+              <Search className="absolute left-5 text-gray-400" size={20} />
               <input 
                 type="text" 
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="İsim, şirket, pozisyon veya uzmanlığa göre mentör ara..." 
-                className="w-full h-14 pl-12 pr-4 rounded-full border-2 border-primary/20 bg-gray-50 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-lg transition-all"
+                className="w-full h-14 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
               />
               <Button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-semibold">
                 Ara

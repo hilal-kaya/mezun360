@@ -35,27 +35,27 @@ export function Jobs() {
         <PostJobModal />
       </div>
 
-      {/* Global Search Omnibar */}
-      <section className="bg-white p-8 rounded-2xl shadow-sm border border-primary/10 text-center space-y-4">
-        <h1 className="text-3xl font-bold text-[#233A85] flex items-center justify-center font-barlow">
-          <Briefcase className="mr-3 h-8 w-8" />
+      {/* Global Search Omnibar Header */}
+      <section className="text-center space-y-3">
+        <h1 className="text-3xl font-bold text-primary flex items-center justify-center font-barlow">
+          <Briefcase className="mr-3 h-8 w-8 text-primary/80" />
           İş & Staj İlanları
         </h1>
         <p className="text-muted-foreground max-w-xl mx-auto">
           BTÜ mezun ağı tarafından paylaşılan fırsatları keşfedin.
         </p>
         
-        <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-6">
-          <div className="relative flex items-center">
-            <Search className="absolute left-4 text-gray-400" size={24} />
+        <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-8">
+          <div className="relative flex items-center bg-white shadow-sm hover:shadow-md transition-shadow rounded-full border border-pastel-blue focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-pastel-blue">
+            <Search className="absolute left-5 text-gray-400" size={20} />
             <input 
               type="text" 
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="Pozisyon, şirket veya konuma göre iş arayın..." 
-              className="w-full h-14 pl-12 pr-4 rounded-full border-2 border-primary/20 bg-gray-50 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-lg transition-all"
+              className="w-full h-14 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
             />
-            <button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-[#233A85] hover:bg-[#1a2b63] text-white font-semibold transition-colors">
+            <button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-semibold transition-colors">
               Ara
             </button>
           </div>

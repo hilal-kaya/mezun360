@@ -14,7 +14,7 @@ export function NewsCard({ article }: NewsCardProps) {
   })
 
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-pastel-blue flex flex-col h-full hover:shadow-md transition-shadow overflow-hidden group">
+    <div className="bg-white rounded-3xl shadow-sm border border-pastel-blue flex flex-col h-full transition-all hover:shadow-md hover:border-primary/20 hover:bg-pastel-blue-light/50 overflow-hidden group">
       {article.imageUrl ? (
         <div className="w-full h-48 overflow-hidden bg-gray-100">
           <img 
@@ -34,7 +34,7 @@ export function NewsCard({ article }: NewsCardProps) {
         <h3 className="text-xl font-bold text-primary font-barlow mb-2 line-clamp-2">{article.title}</h3>
         <p className="text-gray-600 text-sm mb-4 line-clamp-3">{article.summary}</p>
         
-        <div className="flex items-center justify-between mt-auto pt-4 border-t border-gray-100">
+        <div className="flex items-center justify-between mt-auto pt-5 border-t border-pastel-blue/50">
           <div className="flex flex-col gap-1">
             <div className="flex items-center gap-1.5 text-xs text-gray-500">
               <Calendar className="w-3.5 h-3.5" />
@@ -59,7 +59,7 @@ export function NewsCard({ article }: NewsCardProps) {
 
 export function NewsSkeleton() {
   return (
-    <div className="bg-white rounded-2xl shadow-sm border border-pastel-blue h-full overflow-hidden animate-pulse">
+    <div className="bg-white rounded-3xl shadow-sm border border-pastel-blue h-full overflow-hidden animate-pulse">
       <div className="w-full h-48 bg-gray-200"></div>
       <div className="p-6 flex flex-col gap-4">
         <div className="h-6 bg-gray-200 rounded-md w-3/4"></div>
@@ -67,7 +67,7 @@ export function NewsSkeleton() {
           <div className="h-4 bg-gray-200 rounded-md w-full"></div>
           <div className="h-4 bg-gray-200 rounded-md w-5/6"></div>
         </div>
-        <div className="mt-4 pt-4 border-t border-gray-100 flex justify-between">
+        <div className="mt-4 pt-4 border-t border-pastel-blue/50 flex justify-between">
           <div className="h-4 bg-gray-200 rounded-md w-24"></div>
           <div className="h-4 bg-gray-200 rounded-md w-20"></div>
         </div>

@@ -9,21 +9,22 @@
 @import 'tailwindcss';
 
 :root {
-  --background: #fafaf7;
-  --foreground: #1f2937;
+  --background: #f7f9fc; /* Soft pastel blue/gray off-white */
+  --foreground: #1e293b;
   --primary: #233a85;
   --primary-foreground: #ffffff;
-  --pastel-blue: #dde7ff;
-  --pastel-turquoise: #ddf6f4;
-  --pastel-mint: #e4f4ea;
-  --pastel-lavender: #ece8fa;
-  --pastel-peach: #fce9de;
+  --pastel-blue-light: #f1f5f9;
+  --pastel-blue: #e2e8f0;
+  --pastel-turquoise: #ccfbf1;
+  --pastel-mint: #d1fae5;
+  --pastel-lavender: #f3e8ff;
+  --pastel-peach: #ffedd5;
   --card: #ffffff;
-  --muted-foreground: #4b5563;
-  --border: #cbd5e1;
-  --input: #64748b;
-  --destructive: #b42318;
-  --radius: 0.75rem;
+  --muted-foreground: #475569;
+  --border: #e2e8f0;
+  --input: #94a3b8;
+  --destructive: #b91c1c;
+  --radius: 1rem; /* Softer radius */
 }
 
 @theme inline {
@@ -32,6 +33,7 @@
   --color-foreground: var(--foreground);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
+  --color-pastel-blue-light: var(--pastel-blue-light);
   --color-pastel-blue: var(--pastel-blue);
   --color-pastel-turquoise: var(--pastel-turquoise);
   --color-pastel-mint: var(--pastel-mint);
@@ -43,10 +45,11 @@
   --color-input: var(--input);
   --color-destructive: var(--destructive);
   --color-ring: var(--primary);
-  --radius-sm: calc(var(--radius) - 0.25rem);
-  --radius-md: calc(var(--radius) - 0.125rem);
+  --radius-sm: calc(var(--radius) - 0.5rem);
+  --radius-md: calc(var(--radius) - 0.25rem);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 0.25rem);
+  --radius-xl: calc(var(--radius) + 0.5rem);
+  --radius-2xl: calc(var(--radius) + 1rem);
 }
 
 @layer base {
