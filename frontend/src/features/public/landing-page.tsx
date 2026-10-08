@@ -247,34 +247,36 @@ export function LandingPage() {
                 bir gelecekte buluşturmayı amaçlayan bir kariyer ekosistemi.
               </p>
             </div>
-            <div className="relative w-full h-[500px] flex justify-center items-center overflow-hidden mt-16 mb-8">
-              {/* The Orbit Rings (Visual Aid) */}
-              <div className="absolute w-[300px] h-[300px] border border-dashed border-white/20 rounded-full z-10" />
-              <div className="absolute w-[450px] h-[450px] border border-dashed border-white/10 rounded-full z-10" />
+            <div className="flex flex-col items-center mt-12 mb-6">
+              <div className="relative w-full max-w-[350px] h-[320px] flex justify-center items-center">
+                {/* The Orbit Rings (Visual Aid) */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] border border-dashed border-white/20 rounded-full z-10" />
 
-              {/* The Core (Kariyer Merkezi) */}
-              <div className="absolute z-20 flex flex-col items-center justify-center w-40 h-40 rounded-full bg-white text-primary shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-transform hover:scale-105 cursor-default">
-                <span className="font-bold text-center text-lg leading-tight">Kariyer<br/>Merkezi</span>
+                {/* The Core (Kariyer Merkezi) */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 flex flex-col items-center justify-center w-32 h-32 rounded-full bg-white text-primary shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-transform hover:scale-105 cursor-default">
+                  <span className="font-bold text-center text-base leading-tight">Kariyer<br/>Merkezi</span>
+                </div>
+
+                {/* Satellite 1: Mezun (Top Left) */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[85px] -ml-[85px] z-30 flex flex-col items-center justify-center w-20 h-20 rounded-full bg-green-100 text-emerald-900 shadow-[0_0_20px_rgba(193,225,193,0.3)] animate-float transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-xs">Mezun</span>
+                </div>
+
+                {/* Satellite 2: Öğrenci (Top Right) */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 -mt-[85px] ml-[85px] z-30 flex flex-col items-center justify-center w-20 h-20 rounded-full bg-pink-100 text-pink-900 shadow-[0_0_20px_rgba(255,209,220,0.3)] animate-float-delayed transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-xs">Öğrenci</span>
+                </div>
+
+                {/* Satellite 3: İş Dünyası (Bottom Center) */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 mt-[120px] ml-[0px] z-30 flex flex-col items-center justify-center w-20 h-20 rounded-full bg-amber-100 text-amber-900 shadow-[0_0_20px_rgba(230,218,166,0.3)] animate-float-slow transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-center text-xs leading-tight">İş<br/>Dünyası</span>
+                </div>
               </div>
 
-              {/* Satellite 1: Mezun (Top Left) */}
-              <div className="absolute top-[10%] left-[20%] z-30 flex flex-col items-center justify-center w-28 h-28 rounded-full bg-green-100 text-emerald-900 shadow-[0_0_20px_rgba(193,225,193,0.3)] animate-float transition-transform hover:scale-110 cursor-default">
-                <span className="font-bold">Mezun</span>
-              </div>
-
-              {/* Satellite 2: Öğrenci (Top Right) */}
-              <div className="absolute top-[10%] right-[20%] z-30 flex flex-col items-center justify-center w-28 h-28 rounded-full bg-pink-100 text-pink-900 shadow-[0_0_20px_rgba(255,209,220,0.3)] animate-float-delayed transition-transform hover:scale-110 cursor-default">
-                <span className="font-bold">Öğrenci</span>
-              </div>
-
-              {/* Satellite 3: İş Dünyası (Bottom Center) */}
-              <div className="absolute bottom-[15%] z-30 flex flex-col items-center justify-center w-28 h-28 rounded-full bg-amber-100 text-amber-900 shadow-[0_0_20px_rgba(230,218,166,0.3)] animate-float-slow transition-transform hover:scale-110 cursor-default">
-                <span className="font-bold text-center leading-tight">İş<br/>Dünyası</span>
-              </div>
+              <p className="mt-8 text-sm text-pastel-blue text-center">
+                Ortak bir geçmişten, birlikte şekillenen bir geleceğe.
+              </p>
             </div>
-            <p className="mt-5 text-sm text-pastel-blue">
-              Ortak bir geçmişten, birlikte şekillenen bir geleceğe.
-            </p>
           </div>
         </section>
         <section
