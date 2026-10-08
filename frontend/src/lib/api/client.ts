@@ -64,8 +64,10 @@ export function createApiClient(baseUrl: string, fetcher: typeof fetch = (...arg
     }
     options.onResponse?.(response)
     if (response.status === 204) return undefined as T
+    const text = await response.text()
+    if (!text) return undefined as T
     try {
-      return await response.json() as T
+      return JSON.parse(text) as T
     } catch {
       if (signal.aborted) throw signal.reason
       throw new ApiError(response.status, 'INVALID_RESPONSE')
