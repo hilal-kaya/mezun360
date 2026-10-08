@@ -1,5 +1,7 @@
 package tr.edu.btu.mezun360.network.api;
 
+import tr.edu.btu.mezun360.network.domain.ConnectionStatus;
+import com.fasterxml.jackson.annotation.JsonGetter;
 import java.util.UUID;
 
 public record AlumniNetworkDTO(
@@ -12,5 +14,10 @@ public record AlumniNetworkDTO(
     String currentPosition,
     String industry,
     String city,
-    String connectionStatus
-) {}
+    ConnectionStatus rawConnectionStatus
+) {
+    @JsonGetter("connectionStatus")
+    public String connectionStatus() {
+        return rawConnectionStatus != null ? rawConnectionStatus.name() : "NONE";
+    }
+}

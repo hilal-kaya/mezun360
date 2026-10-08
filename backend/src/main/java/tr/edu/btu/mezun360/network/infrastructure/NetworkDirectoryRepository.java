@@ -15,7 +15,7 @@ public interface NetworkDirectoryRepository extends JpaRepository<AlumniProfile,
         SELECT new tr.edu.btu.mezun360.network.api.AlumniNetworkDTO(
             p.id, p.firstName, p.lastName, p.department, p.graduationYear,
             p.currentCompany, p.currentPosition, p.industry, p.city,
-            COALESCE((SELECT CAST(cr.status AS string) FROM ConnectionRequest cr WHERE cr.senderId = :currentUserId AND cr.receiverId = p.id), 'NONE')
+            (SELECT cr.status FROM ConnectionRequest cr WHERE cr.senderId = :currentUserId AND cr.receiverId = p.id)
         )
         FROM AlumniProfile p, PrivacySettings ps, AlumniVerificationRequest r
         WHERE ps.profileId = p.id

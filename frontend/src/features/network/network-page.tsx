@@ -28,6 +28,12 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
         await connectMutation.mutateAsync(alumni.id)
       }
     } catch (error: any) {
+      if (error?.problem?.detail === 'Bu kişiye zaten istek gönderdiniz.') {
+        setStatus('PENDING')
+        setErrorMsg(null) // self-corrected
+        return;
+      }
+      
       setStatus(prevStatus) // revert on failure
       if (error?.problem?.detail) {
         setErrorMsg(error.problem.detail)

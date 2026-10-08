@@ -111,9 +111,10 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return problem(HttpStatus.valueOf(ex.status), ex.code, "The request could not be processed.", ex.errors, new HttpHeaders(), request);
     }
 
-    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class})
+    @ExceptionHandler({IllegalArgumentException.class, IllegalStateException.class, org.springframework.dao.DataIntegrityViolationException.class})
     ResponseEntity<Object> badRequest(RuntimeException ex, HttpServletRequest request) {
-        return problem(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", ex.getMessage(), List.of(), new HttpHeaders(), request);
+        String msg = ex instanceof org.springframework.dao.DataIntegrityViolationException ? "Bu kişiye zaten istek gönderdiniz." : ex.getMessage();
+        return problem(HttpStatus.BAD_REQUEST, "INVALID_REQUEST", msg, List.of(), new HttpHeaders(), request);
     }
 
     @ExceptionHandler(Exception.class)
