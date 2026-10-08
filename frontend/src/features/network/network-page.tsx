@@ -6,7 +6,6 @@ import { useAlumniNetwork, useConnectMutation, useCancelConnectionMutation, type
 function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
   const [status, setStatus] = useState<string>(alumni.connectionStatus || 'NONE')
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
-  const [isHovered, setIsHovered] = useState(false)
 
   // Sync local state whenever server data changes (e.g. after query invalidation)
   useEffect(() => {
@@ -52,7 +51,7 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
   const buttonLabel = isAccepted
     ? 'Bağlantılı'
     : isPending
-    ? (isHovered ? 'İptal Et' : 'İstek Gönderildi')
+    ? 'İptal Et'
     : 'Bağlantı Kur'
 
   return (
@@ -100,13 +99,11 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
           type="button"
           disabled={isAccepted || isActionLoading}
           onClick={handleAction}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
           className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-md px-4 py-2 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 ${
             isAccepted
               ? 'bg-gray-100 text-gray-500 border border-gray-200 cursor-default'
               : isPending
-              ? 'border border-gray-300 bg-white text-gray-600 hover:text-red-600 hover:border-red-400 hover:bg-red-50'
+              ? 'border border-red-300 bg-white text-red-600 hover:border-red-400 hover:bg-red-50'
               : 'bg-primary text-white hover:bg-primary/90'
           } w-full`}
         >
