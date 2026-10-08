@@ -40,6 +40,6 @@ export function PrivacyPage() {
     {!query.data.data.profileExists && <p className="rounded-xl bg-pastel-blue p-4">Tercihlerini kaydetmek için önce <Link to="/app/profile" className="underline">profilini oluştur</Link>. Şu anda görünürlüğün kapalı.</p>}
     <PrivacyForm key={formVersion} initial={query.data} reload={() => { void query.refetch().then(result => { if (result.isSuccess) setFormVersion(v => v + 1) }) }} saved={() => { setToast(true); setFormVersion(v => v + 1) }} />
     <section className="profile-card !bg-pastel-mint"><h2 className="flex items-center gap-2"><LockKeyhole size={18} aria-hidden="true" />İletişim bilgilerin gizli</h2><p className="mt-3 text-sm">Kişisel e-posta, telefon ve ayrıntılı iletişim bilgileri diğer mezunlara, işverenlere veya ziyaretçilere açılmaz. Giriş e-postan profil iletişim bilgisi olarak paylaşılmaz.</p></section>
-    {toast && <Toast message="Gizlilik tercihlerin güncellendi." clear={clear} />}
+    {toast && <Toast message="Gizlilik ayarlarınız başarıyla güncellendi." clear={clear} />}
   </div>
 }

@@ -108,7 +108,7 @@ public class SecurityConfiguration {
         configuration.setAllowCredentials(true);
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Content-Type", "X-CSRF-TOKEN", "If-Match"));
-        configuration.setExposedHeaders(List.of("X-Request-ID", "Retry-After"));
+        configuration.setExposedHeaders(List.of("X-Request-ID", "Retry-After", "ETag"));
         configuration.setMaxAge(600L);
         var source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration);

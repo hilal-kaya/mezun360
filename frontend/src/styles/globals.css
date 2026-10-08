@@ -19,6 +19,9 @@
   --pastel-mint: #d1fae5;
   --pastel-lavender: #f3e8ff;
   --pastel-peach: #ffedd5;
+  --pastel-pink: #fce7f3;
+  --pastel-green: #dcfce7;
+  --pastel-brown: #f5ebd5;
   --card: #ffffff;
   --muted-foreground: #475569;
   --border: #e2e8f0;
@@ -39,6 +42,9 @@
   --color-pastel-mint: var(--pastel-mint);
   --color-pastel-lavender: var(--pastel-lavender);
   --color-pastel-peach: var(--pastel-peach);
+  --color-pastel-pink: var(--pastel-pink);
+  --color-pastel-green: var(--pastel-green);
+  --color-pastel-brown: var(--pastel-brown);
   --color-card: var(--card);
   --color-muted-foreground: var(--muted-foreground);
   --color-border: var(--border);

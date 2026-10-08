@@ -79,7 +79,7 @@ export function EventCard({ event }: EventCardProps) {
           onClick={handleToggle}
           disabled={toggleAttendance.isPending || (isFull && !event.isUserAttending) || new Date(event.eventDate).getTime() < Date.now()}
           variant={event.isUserAttending ? "outline" : "default"}
-          className={`w-full rounded-xl ${!event.isUserAttending ? 'bg-primary hover:bg-primary/90 text-white shadow-sm' : 'text-destructive border-red-200 hover:bg-red-50'}`}
+          className={`w-full rounded-xl ${!event.isUserAttending ? 'bg-primary hover:bg-primary/90 text-white shadow-sm' : 'bg-pastel-pink text-destructive border-transparent hover:bg-pastel-pink/80'}`}
         >
           {toggleAttendance.isPending 
             ? 'İşleniyor...' 

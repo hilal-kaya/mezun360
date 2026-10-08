@@ -103,7 +103,7 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
             isAccepted
               ? 'bg-gray-100 text-gray-500 cursor-default'
               : isPending
-              ? 'border-2 border-red-200 bg-white text-destructive hover:border-red-300 hover:bg-red-50'
+              ? 'bg-pastel-pink text-destructive hover:bg-pastel-pink/80'
               : 'bg-primary text-white hover:bg-primary/90 shadow-sm'
           } w-full`}
         >
