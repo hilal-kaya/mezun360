@@ -72,10 +72,9 @@ public class DataSeeder implements CommandLineRunner {
 
     private void seedJobs(UserAccount admin) {
         if (jobs.count() > 0) return;
-
         jobs.save(new JobPost(UUID.randomUUID(), "Senior Java Engineer", "TechCorp TR", "Istanbul", tr.edu.btu.mezun360.jobs.domain.JobType.FULL_TIME, WorkModel.HYBRID, "We are looking for an experienced Java developer with Spring Boot expertise to join our core banking team.", "https://techcorp.tr/careers/1", admin, clock.instant().minus(2, ChronoUnit.DAYS)));
         jobs.save(new JobPost(UUID.randomUUID(), "Frontend Developer Internship", "StartApp", "Remote", tr.edu.btu.mezun360.jobs.domain.JobType.INTERNSHIP, WorkModel.REMOTE, "Fast-growing startup looking for an intern frontend developer to build responsive web applications using React and TypeScript.", "https://startapp.io/apply", admin, clock.instant().minus(1, ChronoUnit.DAYS)));
-        jobs.save(new JobPost(UUID.randomUUID(), "Data Scientist", "Bursa Analytics", "Bursa", tr.edu.btu.mezun360.jobs.domain.JobType.PART_TIME, WorkModel.HYBRID, "Join our data team to build predictive models and analyze large datasets using Python and SQL.", "https://bursaanalytics.com/careers", admin, clock.instant().minus(10, ChronoUnit.DAYS)));
+        jobs.save(new JobPost(UUID.randomUUID(), "Data Scientist", "Bursa Analytics", "Bursa", tr.edu.btu.mezun360.jobs.domain.JobType.PART_TIME, WorkModel.HYBRID, "Join our data team to build predictive models and analyze large datasets using Python and SQL.", "ik@bursaanalytics.com", admin, clock.instant().minus(10, ChronoUnit.DAYS)));
         jobs.save(new JobPost(UUID.randomUUID(), "DevOps Engineer", "CloudNet", "Remote", tr.edu.btu.mezun360.jobs.domain.JobType.FULL_TIME, WorkModel.REMOTE, "We need a DevOps engineer to manage our Kubernetes clusters, CI/CD pipelines, and AWS infrastructure.", "https://cloudnet.com/jobs", admin, clock.instant().minus(14, ChronoUnit.DAYS)));
     }
 

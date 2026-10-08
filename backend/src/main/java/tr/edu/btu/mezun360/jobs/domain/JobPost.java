@@ -50,6 +50,18 @@ public class JobPost {
 
     protected JobPost() {}
 
+    private String formatUrl(String url) {
+        if (url == null || url.isBlank()) return url;
+        url = url.trim();
+        if (url.contains("@") && !url.startsWith("mailto:") && !url.startsWith("http")) {
+            return "mailto:" + url;
+        }
+        if (!url.startsWith("http://") && !url.startsWith("https://") && !url.startsWith("mailto:")) {
+            return "https://" + url;
+        }
+        return url;
+    }
+
     public JobPost(UUID id, String title, String company, String location, JobType jobType, WorkModel workModel, String description, String applicationUrl, UserAccount postedBy) {
         this.id = id != null ? id : UUID.randomUUID();
         this.title = title;
@@ -58,7 +70,7 @@ public class JobPost {
         this.jobType = jobType != null ? jobType : JobType.FULL_TIME;
         this.workModel = workModel;
         this.description = description;
-        this.applicationUrl = applicationUrl;
+        this.applicationUrl = formatUrl(applicationUrl);
         this.postedBy = postedBy;
         this.createdAt = Instant.now();
         this.updatedAt = this.createdAt;
@@ -72,7 +84,7 @@ public class JobPost {
         this.jobType = jobType != null ? jobType : JobType.FULL_TIME;
         this.workModel = workModel;
         this.description = description;
-        this.applicationUrl = applicationUrl;
+        this.applicationUrl = formatUrl(applicationUrl);
         this.postedBy = postedBy;
         this.createdAt = createdAt;
         this.updatedAt = createdAt;

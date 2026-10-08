@@ -59,16 +59,19 @@ public class JobService {
         
         Specification<JobPost> spec = Specification.where(null);
         if (search != null && !search.isBlank()) {
-            String searchLower = "%" + search.toLowerCase() + "%";
+            final String searchPattern = "%" + search + "%";
             spec = spec.and((root, query, cb) -> 
                 cb.or(
-                    cb.like(cb.lower(root.get("title")), searchLower),
-                    cb.like(cb.lower(root.get("company")), searchLower)
+                    cb.like(cb.lower(root.get("title")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("company")), cb.lower(cb.literal(searchPattern)))
                 )
             );
         }
         if (location != null && !location.isBlank()) {
-            spec = spec.and((root, query, cb) -> cb.like(cb.lower(root.get("location")), "%" + location.toLowerCase() + "%"));
+            final String locationPattern = "%" + location + "%";
+            spec = spec.and((root, query, cb) -> 
+                cb.like(cb.lower(root.get("location")), cb.lower(cb.literal(locationPattern)))
+            );
         }
         if (jobType != null) {
             spec = spec.and((root, query, cb) -> cb.equal(root.get("jobType"), jobType));
