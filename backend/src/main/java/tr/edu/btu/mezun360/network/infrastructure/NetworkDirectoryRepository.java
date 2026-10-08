@@ -24,17 +24,16 @@ public interface NetworkDirectoryRepository extends JpaRepository<AlumniProfile,
           AND ps.directoryOptIn = true
           AND ps.profileVisibility = tr.edu.btu.mezun360.alumni.domain.ProfileVisibility.ALUMNI_MEMBERS
           AND r.status = tr.edu.btu.mezun360.alumni.domain.VerificationStatus.VERIFIED
-          AND (:#{#search == null} = true OR CONCAT(p.firstName, ' ', p.lastName) ilike CONCAT('%', :search, '%'))
-          AND (:#{#department == null} = true OR p.department ilike CONCAT('%', :department, '%'))
-          AND (:#{#year == null} = true OR p.graduationYear = :year)
-          AND (:#{#industry == null} = true OR p.industry ilike CONCAT('%', :industry, '%'))
+          AND (:#{#query == null} = true OR 
+              CONCAT(p.firstName, ' ', p.lastName) ilike CONCAT('%', :query, '%') OR
+              p.department ilike CONCAT('%', :query, '%') OR
+              p.industry ilike CONCAT('%', :query, '%') OR
+              CAST(p.graduationYear AS string) ilike CONCAT('%', :query, '%')
+          )
     """)
     Page<AlumniNetworkDTO> searchDirectory(
         @Param("currentUserId") UUID currentUserId,
-        @Param("search") String search,
-        @Param("department") String department,
-        @Param("year") Integer year,
-        @Param("industry") String industry,
+        @Param("query") String query,
         Pageable pageable
     );
 }

@@ -62,12 +62,12 @@ export interface MentorResponse {
   expertise: string[];
 }
 
-export function useMentors(expertise?: string, page = 0) {
+export function useMentors(query?: string, page = 0) {
   return useQuery({
-    queryKey: ['mentors', expertise, page],
+    queryKey: ['mentors', query, page],
     queryFn: async ({ signal }) => {
       try {
-        const qs = expertise ? `?expertise=${encodeURIComponent(expertise)}&page=${page}` : `?page=${page}`;
+        const qs = query ? `?query=${encodeURIComponent(query)}&page=${page}` : `?page=${page}`;
         return await api.get<Page<MentorResponse>>(`/mentors${qs}`, { signal })
       } catch (error: any) {
         console.error("Mentor fetch error:", error.response || error);

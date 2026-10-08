@@ -17,8 +17,8 @@ public class MentorController {
 
     @GetMapping
     public Page<MentorResponse> listMentors(
-            @RequestParam(required = false) String expertise,
+            @RequestParam(required = false) String query,
             Pageable pageable) {
-        return mentorSearchService.searchMentors(expertise, pageable);
+        return mentorSearchService.searchMentors(query, pageable);
     }
 }

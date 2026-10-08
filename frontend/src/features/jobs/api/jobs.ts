@@ -34,16 +34,13 @@ export interface Page<T> {
   size: number;
 }
 
-export async function searchJobs(params: { search?: string; location?: string; jobType?: string; workModel?: string; page?: number; size?: number }): Promise<Page<JobPostDTO>> {
-  const query = new URLSearchParams();
-  if (params.search) query.append('search', params.search);
-  if (params.location) query.append('location', params.location);
-  if (params.jobType) query.append('jobType', params.jobType);
-  if (params.workModel) query.append('workModel', params.workModel);
-  if (params.page !== undefined) query.append('page', params.page.toString());
-  if (params.size !== undefined) query.append('size', params.size.toString());
+export async function searchJobs(params: { query?: string; page?: number; size?: number }): Promise<Page<JobPostDTO>> {
+  const searchParams = new URLSearchParams();
+  if (params.query) searchParams.append('query', params.query);
+  if (params.page !== undefined) searchParams.append('page', params.page.toString());
+  if (params.size !== undefined) searchParams.append('size', params.size.toString());
   
-  const queryString = query.toString();
+  const queryString = searchParams.toString();
   return api.get<Page<JobPostDTO>>(`/jobs${queryString ? '?' + queryString : ''}`);
 }
 

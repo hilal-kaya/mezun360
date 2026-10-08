@@ -30,19 +30,13 @@ public class NetworkController {
     @GetMapping("/alumni")
     @Operation(summary = "Search verified alumni directory", security = @SecurityRequirement(name = "sessionCookie"))
     public Page<AlumniNetworkDTO> searchAlumni(
-        @RequestParam(required = false) String search,
-        @RequestParam(required = false) String department,
-        @RequestParam(required = false) Integer year,
-        @RequestParam(required = false) String industry,
+        @RequestParam(required = false) String query,
         @RequestParam(required = false, defaultValue = "0") int page,
         @RequestParam(required = false, defaultValue = "20") int size
     ) {
         return repository.searchDirectory(
             currentAccountService.current().userId(),
-            search != null && !search.isBlank() ? search : null,
-            department != null && !department.isBlank() ? department : null,
-            year,
-            industry != null && !industry.isBlank() ? industry : null,
+            query != null && !query.isBlank() ? query : null,
             org.springframework.data.domain.PageRequest.of(page, size)
         );
     }

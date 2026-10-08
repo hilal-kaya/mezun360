@@ -120,127 +120,79 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
 }
 
 export function AlumniNetworkPage() {
-  const [search, setSearch] = useState('')
-  const [department, setDepartment] = useState('')
-  const [industry, setIndustry] = useState('')
-  const [year, setYear] = useState<number | undefined>(undefined)
+  const [query, setQuery] = useState('')
+  const [debouncedQuery, setDebouncedQuery] = useState('')
   const [page, setPage] = useState(0)
 
-  // Quick debounce or simple form submission
-  const [filters, setFilters] = useState({ search: '', department: '', industry: '', year: undefined as number | undefined })
+  // Debounce the query for real-time search without flooding the API
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      setDebouncedQuery(query)
+      setPage(0)
+    }, 400)
+    return () => clearTimeout(handler)
+  }, [query])
 
-  const query = useAlumniNetwork({ ...filters, page })
+  const { data, isPending, isError, refetch } = useAlumniNetwork({ query: debouncedQuery, page })
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    setFilters({ search, department, industry, year })
-    setPage(0)
-  }
-
-  const clearFilters = () => {
-    setSearch('')
-    setDepartment('')
-    setIndustry('')
-    setYear(undefined)
-    setFilters({ search: '', department: '', industry: '', year: undefined })
+    setDebouncedQuery(query)
     setPage(0)
   }
 
   return (
-    <div className="flex flex-col gap-6 md:flex-row">
-      {/* Sidebar Filters */}
-      <aside className="w-full md:w-1/4 shrink-0 space-y-6 rounded-2xl bg-white p-5 shadow-sm border border-primary/20">
-        <h2 className="text-xl font-bold text-primary font-barlow">Mezun Filtrele</h2>
-        <form onSubmit={handleSearch} className="space-y-4">
-          <label className="block text-sm">
-            <span className="font-semibold text-gray-700">İsim ile Ara</span>
-            <div className="relative mt-1">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-              <input 
-                type="text" 
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                placeholder="Örn: Ahmet Yılmaz" 
-                className="w-full rounded-lg border bg-gray-50 p-2 pl-9 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
-              />
-            </div>
-          </label>
-          
-          <label className="block text-sm">
-            <span className="font-semibold text-gray-700">Bölüm</span>
+    <div className="flex flex-col gap-6 max-w-6xl mx-auto">
+      {/* Global Search Omnibar */}
+      <section className="bg-white p-8 rounded-2xl shadow-sm border border-primary/10 text-center space-y-4">
+        <h1 className="text-3xl font-bold font-barlow text-primary">Mezun Ağı</h1>
+        <p className="text-muted-foreground max-w-xl mx-auto">BTÜ mezunlarını keşfet ve ağını genişlet.</p>
+        
+        <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-6">
+          <div className="relative flex items-center">
+            <Search className="absolute left-4 text-gray-400" size={24} />
             <input 
               type="text" 
-              value={department}
-              onChange={e => setDepartment(e.target.value)}
-              placeholder="Örn: Bilgisayar Mühendisliği" 
-              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="İsim, bölüm, sektör veya yıla göre arayın..." 
+              className="w-full h-14 pl-12 pr-4 rounded-full border-2 border-primary/20 bg-gray-50 focus:bg-white focus:border-primary focus:ring-4 focus:ring-primary/10 outline-none text-lg transition-all"
             />
-          </label>
-
-          <label className="block text-sm">
-            <span className="font-semibold text-gray-700">Sektör</span>
-            <input 
-              type="text" 
-              value={industry}
-              onChange={e => setIndustry(e.target.value)}
-              placeholder="Örn: Bilişim" 
-              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
-            />
-          </label>
-
-          <label className="block text-sm">
-            <span className="font-semibold text-gray-700">Mezuniyet Yılı</span>
-            <input 
-              type="number" 
-              min={1900}
-              max={new Date().getFullYear()}
-              value={year || ''}
-              onChange={e => setYear(e.target.value ? parseInt(e.target.value) : undefined)}
-              placeholder="Örn: 2023" 
-              className="mt-1 w-full rounded-lg border bg-gray-50 p-2 focus:border-primary focus:ring-1 focus:ring-primary outline-none" 
-            />
-          </label>
-
-          <div className="flex gap-2 pt-2">
-            <Button type="submit" className="flex-1 bg-primary hover:bg-primary/90 text-white">Ara</Button>
-            <Button type="button" variant="outline" onClick={clearFilters} className="border-primary/20">Temizle</Button>
+            <Button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-semibold">
+              Ara
+            </Button>
           </div>
         </form>
-      </aside>
+      </section>
 
       {/* Main Content */}
-      <main className="flex-1 space-y-6">
-        <div>
-          <h1 className="text-3xl font-bold font-barlow text-primary">Mezun Ağı</h1>
-          <p className="mt-2 text-muted-foreground">BTÜ mezunlarını keşfet ve ağını genişlet.</p>
-        </div>
-
-        {query.isPending ? (
-          <p role="status" className="text-gray-500">Mezunlar yükleniyor...</p>
-        ) : query.isError ? (
-          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700">
+      <main className="space-y-6">
+        {isPending ? (
+          <p role="status" className="text-gray-500 text-center py-10">Mezunlar yükleniyor...</p>
+        ) : isError ? (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-red-700 text-center">
             <p role="alert">Mezun ağı yüklenirken bir hata oluştu.</p>
-            <Button variant="outline" className="mt-2 bg-white" onClick={() => void query.refetch()}>Tekrar Dene</Button>
+            <Button variant="outline" className="mt-2 bg-white" onClick={() => void refetch()}>Tekrar Dene</Button>
           </div>
         ) : (
           <>
-            <p className="text-sm text-gray-500 font-medium">Toplam {query.data.page.totalElements} mezun bulundu.</p>
+            <p className="text-sm text-gray-500 font-medium">Toplam {data.page.totalElements} mezun bulundu.</p>
             
-            {query.data.content.length === 0 ? (
+            {data.content.length === 0 ? (
               <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
                 Aradığınız kriterlere uygun mezun bulunamadı.
               </div>
             ) : (
-              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                {query.data.content.map(alumni => (
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {data.content.map(alumni => (
                   <AlumniCard key={alumni.id} alumni={alumni} />
                 ))}
               </ul>
             )}
 
             {/* Pagination Controls */}
-            {query.data.page.totalPages > 1 && (
-              <nav aria-label="Sayfalama" className="mt-6 flex items-center justify-center gap-4">
+            {data.page.totalPages > 1 && (
+              <nav aria-label="Sayfalama" className="mt-6 pb-12 flex items-center justify-center gap-4">
                 <Button 
                   variant="outline" 
                   disabled={page === 0} 
@@ -248,10 +200,10 @@ export function AlumniNetworkPage() {
                 >
                   Önceki
                 </Button>
-                <span className="text-sm font-medium">Sayfa {page + 1} / {query.data.page.totalPages}</span>
+                <span className="text-sm font-medium">Sayfa {page + 1} / {data.page.totalPages}</span>
                 <Button 
                   variant="outline" 
-                  disabled={page + 1 >= query.data.page.totalPages} 
+                  disabled={page + 1 >= data.page.totalPages} 
                   onClick={() => setPage(p => p + 1)}
                 >
                   Sonraki

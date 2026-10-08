@@ -54,30 +54,21 @@ public class JobService {
     }
 
     @Transactional(readOnly = true)
-    public Page<JobPostDTO> searchJobs(String search, String location, tr.edu.btu.mezun360.jobs.domain.JobType jobType, WorkModel workModel, UUID currentUserId, Pageable pageable) {
+    public Page<JobPostDTO> searchJobs(String query, UUID currentUserId, Pageable pageable) {
         enforceVerifiedAlumniOrAdmin(currentUserId);
         
         Specification<JobPost> spec = Specification.where(null);
-        if (search != null && !search.isBlank()) {
-            final String searchPattern = "%" + search + "%";
-            spec = spec.and((root, query, cb) -> 
+        if (query != null && !query.isBlank()) {
+            final String searchPattern = "%" + query + "%";
+            spec = spec.and((root, cq, cb) -> 
                 cb.or(
                     cb.like(cb.lower(root.get("title")), cb.lower(cb.literal(searchPattern))),
-                    cb.like(cb.lower(root.get("company")), cb.lower(cb.literal(searchPattern)))
+                    cb.like(cb.lower(root.get("company")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("location")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("jobType").as(String.class)), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("workModel").as(String.class)), cb.lower(cb.literal(searchPattern)))
                 )
             );
-        }
-        if (location != null && !location.isBlank()) {
-            final String locationPattern = "%" + location + "%";
-            spec = spec.and((root, query, cb) -> 
-                cb.like(cb.lower(root.get("location")), cb.lower(cb.literal(locationPattern)))
-            );
-        }
-        if (jobType != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("jobType"), jobType));
-        }
-        if (workModel != null) {
-            spec = spec.and((root, query, cb) -> cb.equal(root.get("workModel"), workModel));
         }
 
         return jobPostRepository.findAll(spec, pageable).map(job -> {

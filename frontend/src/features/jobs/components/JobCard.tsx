@@ -63,7 +63,17 @@ export function JobCard({ job }: JobCardProps) {
       </div>
       <div className="mt-4 flex items-center pt-0">
         <Button asChild className="w-full bg-[#233A85] text-white hover:bg-[#1a2b63]">
-          <a href={job.applicationUrl} target="_blank" rel="noopener noreferrer">İncele / Başvur</a>
+          <a 
+            href={
+              job.applicationUrl.startsWith('http://') || job.applicationUrl.startsWith('https://') || job.applicationUrl.startsWith('mailto:') 
+                ? job.applicationUrl 
+                : `https://${job.applicationUrl}`
+            } 
+            target="_blank" 
+            rel="noopener noreferrer"
+          >
+            İncele / Başvur
+          </a>
         </Button>
       </div>
     </Card>

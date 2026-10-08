@@ -19,13 +19,21 @@ public class MentorSearchService {
         this.profileRepository = profileRepository;
     }
 
-    public Page<MentorResponse> searchMentors(String expertise, Pageable pageable) {
+    public Page<MentorResponse> searchMentors(String queryStr, Pageable pageable) {
         Specification<AlumniProfile> spec = (root, query, cb) -> cb.isTrue(root.get("willingToMentor"));
 
-        if (expertise != null && !expertise.isBlank()) {
+        if (queryStr != null && !queryStr.isBlank()) {
+            final String searchPattern = "%" + queryStr + "%";
             spec = spec.and((root, query, cb) -> {
-                var skillsJoin = root.join("skills");
-                return cb.like(cb.lower(skillsJoin.get("name")), "%" + expertise.toLowerCase() + "%");
+                query.distinct(true);
+                var skillsJoin = root.join("skills", jakarta.persistence.criteria.JoinType.LEFT);
+                return cb.or(
+                    cb.like(cb.lower(root.get("firstName")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("lastName")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("currentCompany")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("currentPosition")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(skillsJoin.get("name")), cb.lower(cb.literal(searchPattern)))
+                );
             });
         }
 

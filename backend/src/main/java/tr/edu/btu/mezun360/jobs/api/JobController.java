@@ -32,14 +32,11 @@ public class JobController {
     @GetMapping
     @Operation(summary = "Search jobs (paginated)", security = @SecurityRequirement(name = "sessionCookie"))
     public Page<JobPostDTO> searchJobs(
-            @RequestParam(required = false) String search,
-            @RequestParam(required = false) String location,
-            @RequestParam(required = false) tr.edu.btu.mezun360.jobs.domain.JobType jobType,
-            @RequestParam(required = false) WorkModel workModel,
+            @RequestParam(required = false) String query,
             @RequestParam(required = false, defaultValue = "0") int page,
             @RequestParam(required = false, defaultValue = "20") int size
     ) {
-        return jobService.searchJobs(search, location, jobType, workModel, currentAccountService.current().userId(), PageRequest.of(page, size));
+        return jobService.searchJobs(query, currentAccountService.current().userId(), PageRequest.of(page, size));
     }
 
     @PostMapping

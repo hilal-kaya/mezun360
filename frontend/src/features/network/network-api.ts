@@ -26,15 +26,12 @@ export interface Page<T> {
 
 export const NETWORK_QUERY_KEY = 'network'
 
-export function useAlumniNetwork(params: { search?: string; department?: string; year?: number; industry?: string; page?: number }) {
+export function useAlumniNetwork(params: { query?: string; page?: number }) {
   return useQuery({
     queryKey: [NETWORK_QUERY_KEY, params],
     queryFn: async ({ signal }) => {
       const searchParams = new URLSearchParams()
-      if (params.search) searchParams.set('search', params.search)
-      if (params.department) searchParams.set('department', params.department)
-      if (params.year) searchParams.set('year', params.year.toString())
-      if (params.industry) searchParams.set('industry', params.industry)
+      if (params.query) searchParams.set('query', params.query)
       if (params.page !== undefined) searchParams.set('page', params.page.toString())
       
       const queryStr = searchParams.toString()
