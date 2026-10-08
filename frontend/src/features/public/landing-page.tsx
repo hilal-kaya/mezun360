@@ -247,22 +247,38 @@ export function LandingPage() {
                 bir gelecekte buluşturmayı amaçlayan bir kariyer ekosistemi.
               </p>
             </div>
-            <ul
-              className="ecosystem-network"
-              aria-label="Kariyer ekosisteminin paydaşları"
-            >
-              {['Mezun', 'Öğrenci', 'Kariyer Merkezi', 'İş Dünyası'].map(
-                (label, index) => (
-                  <li key={label}>
-                    <span
-                      className={`ecosystem-dot ecosystem-dot-${index}`}
-                      aria-hidden="true"
-                    />
-                    <span>{label}</span>
-                  </li>
-                ),
-              )}
-            </ul>
+            <div className="relative w-full h-[450px] mt-16 mb-8 flex items-center justify-center overflow-hidden lg:overflow-visible">
+              {/* Dashed connecting lines & Rings */}
+              <svg className="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 800 450" preserveAspectRatio="xMidYMid meet">
+                {/* Lines from center to satellites */}
+                <line x1="400" y1="225" x2="250" y2="100" stroke="rgba(255,255,255,0.15)" strokeWidth="2" strokeDasharray="6 6" />
+                <line x1="400" y1="225" x2="550" y2="100" stroke="rgba(255,255,255,0.15)" strokeWidth="2" strokeDasharray="6 6" />
+                <line x1="400" y1="225" x2="400" y2="380" stroke="rgba(255,255,255,0.15)" strokeWidth="2" strokeDasharray="6 6" />
+                {/* Orbital Rings */}
+                <circle cx="400" cy="225" r="160" stroke="rgba(255,255,255,0.06)" strokeWidth="1" fill="none" />
+                <circle cx="400" cy="225" r="240" stroke="rgba(255,255,255,0.03)" strokeWidth="1" fill="none" />
+              </svg>
+
+              {/* The Core: Kariyer Merkezi */}
+              <div className="absolute z-10 flex flex-col items-center justify-center w-40 h-40 rounded-full bg-white text-primary shadow-[0_0_50px_rgba(255,255,255,0.2)] border-4 border-white/20 transition-transform hover:scale-105 cursor-default">
+                <span className="font-bold text-center text-lg leading-tight">Kariyer<br/>Merkezi</span>
+              </div>
+
+              {/* Satellite 1: Mezun (Top Left) */}
+              <div className="absolute z-10 flex flex-col items-center justify-center w-28 h-28 rounded-full bg-pastel-mint text-emerald-900 shadow-[0_0_30px_rgba(209,250,229,0.15)] animate-float border-2 border-white/20 transition-transform hover:scale-110 cursor-default" style={{ top: '8%', left: '18%' }}>
+                <span className="font-bold">Mezun</span>
+              </div>
+
+              {/* Satellite 2: Öğrenci (Top Right) */}
+              <div className="absolute z-10 flex flex-col items-center justify-center w-28 h-28 rounded-full bg-pastel-pink text-pink-900 shadow-[0_0_30px_rgba(252,231,243,0.15)] animate-float-delayed border-2 border-white/20 transition-transform hover:scale-110 cursor-default" style={{ top: '8%', right: '18%' }}>
+                <span className="font-bold">Öğrenci</span>
+              </div>
+
+              {/* Satellite 3: İş Dünyası (Bottom Center) */}
+              <div className="absolute z-10 flex flex-col items-center justify-center w-28 h-28 rounded-full bg-pastel-brown text-amber-900 shadow-[0_0_30px_rgba(245,235,213,0.15)] animate-float-slow border-2 border-white/20 transition-transform hover:scale-110 cursor-default" style={{ bottom: '2%', left: '50%', marginLeft: '-3.5rem' }}>
+                <span className="font-bold text-center leading-tight">İş<br/>Dünyası</span>
+              </div>
+            </div>
             <p className="mt-5 text-sm text-pastel-blue">
               Ortak bir geçmişten, birlikte şekillenen bir geleceğe.
             </p>
