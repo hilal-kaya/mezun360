@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link, NavLink, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { House, Users, BriefcaseBusiness, Handshake, CalendarDays, Newspaper, UserRound, Settings, LogOut, Menu, ShieldCheck } from 'lucide-react'
+import { House, Users, BriefcaseBusiness, Handshake, CalendarDays, Newspaper, UserRound, Settings, LogOut, Menu } from 'lucide-react'
 import { ProductIdentity } from '@/components/product-identity'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog'
@@ -45,9 +45,8 @@ export function AlumniLayout() {
     <Dialog open={open} onOpenChange={setOpen}><DialogContent className="max-w-sm"><DialogTitle>Mezun menüsü</DialogTitle><DialogDescription>BTÜ Mezun360 alanın</DialogDescription><AlumniNavigation onNavigate={() => setOpen(false)} />{userArea}</DialogContent></Dialog>
   </div>
 }
-export function AlumniHome() {
-  return <section className="rounded-2xl border border-slate-200 bg-white p-6 sm:p-10"><span className="inline-flex rounded-full bg-pastel-mint px-3 py-1 text-sm text-primary">Oturum açık</span><h1 className="mt-5 text-3xl">Mezun360 Mezun Alanı</h1><p className="mt-3 max-w-xl text-muted-foreground">Kariyer yolculuğunu profilinde bir araya getir. Deneyimlerini, eğitimini ve yeteneklerini ekleyerek ilk adımı at.</p><Button asChild className="mt-6"><Link to="/app/profile">Profilime git</Link></Button><p className="mt-8 flex items-center gap-2 text-sm text-muted-foreground"><ShieldCheck size={18} aria-hidden="true" />Gizlilik tercihlerini Ayarlar’dan yönetebilirsin.</p></section>
-}
+export { DashboardHome as AlumniHome } from '@/features/home/home-page'
+
 export function UpcomingAlumniPage() {
   const path = useLocation().pathname
   const label = navigation.find(([url]) => path === url)?.[1] ?? 'Bu alan'
