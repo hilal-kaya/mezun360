@@ -29,9 +29,9 @@ export function DashboardHome() {
   const alumni = alumniData?.content?.slice(0, 3) || []
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 pt-2">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-10 bg-gradient-to-br from-gray-50 via-pink-50/40 to-green-50/40 -mx-6 lg:-mx-8 px-6 lg:px-8 pt-6 -mt-6 rounded-t-[2.5rem] min-h-[calc(100vh-88px)]">
       {/* Hero Welcome Widget */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-pastel-pink to-pastel-peach p-8 sm:p-12 shadow-sm border border-pastel-pink">
+      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-pink-100/80 to-orange-50 p-8 sm:p-12 shadow-xl shadow-pink-100 flex flex-col md:flex-row items-center gap-6 border-none">
         <div className="relative z-10">
           <span className="inline-flex rounded-full bg-white/60 px-4 py-1.5 text-sm font-semibold text-primary mb-4 backdrop-blur-md">
             Oturum Açık
@@ -60,10 +60,10 @@ export function DashboardHome() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         
         {/* Jobs Widget (2 columns wide on large screens) */}
-        <section className="lg:col-span-2 rounded-3xl bg-white p-6 shadow-sm border border-pastel-blue flex flex-col hover:shadow-md transition-shadow">
+        <section className="lg:col-span-2 rounded-[2rem] bg-white p-6 shadow-xl shadow-green-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-green-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <BriefcaseBusiness className="text-pastel-green" size={24} />
+              <BriefcaseBusiness className="text-green-500" size={24} />
               Öne Çıkan İş & Staj İlanları
             </h2>
             <Link to="/app/jobs" className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -73,7 +73,7 @@ export function DashboardHome() {
           
           <div className="flex flex-col gap-4 flex-1">
             {jobs.length > 0 ? jobs.map(job => (
-              <Link to="/app/jobs" key={job.id} className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-pastel-blue-light hover:bg-pastel-mint/30 transition-colors border border-transparent hover:border-pastel-mint">
+              <Link to="/app/jobs" key={job.id} className="group flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-green-50/50 hover:bg-green-100 transition-colors border border-transparent hover:border-green-200">
                 <div>
                   <h3 className="font-semibold text-primary group-hover:text-emerald-700 transition-colors">{job.title}</h3>
                   <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
@@ -92,25 +92,25 @@ export function DashboardHome() {
         </section>
 
         {/* Network Suggested Widget */}
-        <section className="rounded-3xl bg-white p-6 shadow-sm border border-pastel-blue flex flex-col hover:shadow-md transition-shadow">
+        <section className="rounded-[2rem] bg-white p-6 shadow-xl shadow-blue-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-blue-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <Users className="text-pastel-blue" size={24} />
+              <Users className="text-blue-400" size={24} />
               Ağınız İçin Öneriler
             </h2>
           </div>
           
           <div className="flex flex-col gap-4 flex-1">
             {alumni.length > 0 ? alumni.map(person => (
-              <div key={person.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-pastel-blue-light transition-colors">
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-pastel-blue text-sm font-bold text-primary">
+              <div key={person.id} className="flex items-center gap-4 p-3 rounded-2xl hover:bg-blue-50 transition-colors">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 text-sm font-bold text-blue-800">
                   {person.firstName.charAt(0)}{person.lastName.charAt(0)}
                 </div>
                 <div className="flex-1 min-w-0">
                   <h3 className="font-semibold text-primary truncate">{person.firstName} {person.lastName}</h3>
                   <p className="text-xs text-muted-foreground truncate">{person.currentPosition || person.department || 'Mezun'}</p>
                 </div>
-                <Link to="/app/network" className="shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-pastel-blue text-primary hover:bg-primary hover:text-white transition-colors" title="Ağa Git">
+                <Link to="/app/network" className="shrink-0 h-8 w-8 flex items-center justify-center rounded-full bg-blue-100 text-blue-700 hover:bg-blue-600 hover:text-white transition-colors" title="Ağa Git">
                   <UserPlus size={16} />
                 </Link>
               </div>
@@ -124,17 +124,17 @@ export function DashboardHome() {
         </section>
 
         {/* Events Widget */}
-        <section className="rounded-3xl bg-white p-6 shadow-sm border border-pastel-blue flex flex-col hover:shadow-md transition-shadow">
+        <section className="rounded-[2rem] bg-white p-6 shadow-xl shadow-orange-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-orange-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <CalendarDays className="text-pastel-brown" size={24} />
+              <CalendarDays className="text-amber-500" size={24} />
               Yaklaşan Etkinlikler
             </h2>
           </div>
           
           <div className="flex flex-col gap-4 flex-1">
             {events.length > 0 ? events.map(event => (
-              <Link to="/app/events" key={event.id} className="group p-4 rounded-2xl border border-pastel-brown/50 hover:bg-pastel-brown/20 transition-colors">
+              <Link to="/app/events" key={event.id} className="group p-4 rounded-2xl border border-amber-200 bg-amber-50/30 hover:bg-amber-100/50 transition-colors">
                 <div className="text-xs font-semibold text-amber-700 mb-1">
                   {new Date(event.eventDate).toLocaleDateString('tr-TR', { day: 'numeric', month: 'long' })}
                 </div>
@@ -151,10 +151,10 @@ export function DashboardHome() {
         </section>
 
         {/* News Widget */}
-        <section className="lg:col-span-2 rounded-3xl bg-white p-6 shadow-sm border border-pastel-blue flex flex-col hover:shadow-md transition-shadow">
+        <section className="lg:col-span-2 rounded-[2rem] bg-white p-6 shadow-xl shadow-purple-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-purple-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
             <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <Newspaper className="text-pastel-lavender" size={24} />
+              <Newspaper className="text-purple-400" size={24} />
               Yeni Haberler
             </h2>
             <Link to="/app/news" className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -164,7 +164,7 @@ export function DashboardHome() {
           
           <div className="grid sm:grid-cols-2 gap-4 flex-1">
             {news.length > 0 ? news.map(article => (
-              <Link to={`/app/news/${article.id}`} key={article.id} className="group flex flex-col gap-3 p-4 rounded-2xl border border-pastel-lavender/50 hover:bg-pastel-lavender/30 transition-colors">
+              <Link to={`/app/news/${article.id}`} key={article.id} className="group flex flex-col gap-3 p-4 rounded-2xl border border-purple-200 bg-purple-50/30 hover:bg-purple-100/50 transition-colors">
                 {article.imageUrl ? (
                   <div className="h-24 w-full rounded-xl overflow-hidden bg-gray-100">
                     <img src={article.imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
