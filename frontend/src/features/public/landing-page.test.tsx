@@ -88,8 +88,8 @@ describe('public entry experience', () => {
     for (const link of screen.getAllByRole('link', {
       name: 'Platformu Keşfet',
     }))
-      expect(link).toHaveAttribute('href', '#platform')
-    expect(document.getElementById('platform')).toBeInTheDocument()
+      expect(link).toHaveAttribute('href', '#ekosistem')
+    expect(document.getElementById('ekosistem')).toBeInTheDocument()
     for (const link of screen.getAllByRole('link', {
       name: 'Mezun Ağına Katıl',
     }))
@@ -105,11 +105,11 @@ describe('public entry experience', () => {
     await user.click(toggle)
     const mobile = screen.getByRole('navigation', { name: 'Mobil gezinme' })
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
-    await user.click(within(mobile).getByRole('link', { name: 'Mentörlük' }))
+    await user.click(within(mobile).getByRole('link', { name: 'Güvenlik' }))
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
     await user.click(toggle)
     within(screen.getByRole('navigation', { name: 'Mobil gezinme' }))
-      .getByRole('link', { name: 'Platform' })
+      .getByRole('link', { name: 'Ekosistem' })
       .focus()
     await user.keyboard('{Escape}')
     expect(toggle).toHaveFocus()
@@ -122,7 +122,7 @@ describe('public entry experience', () => {
     'offers %s an account link while keeping landing public',
     async (role, destination) => {
       const user = mount({ role })
-      const account = await screen.findByRole('link', { name: 'Alanıma dön' })
+      const account = (await screen.findAllByRole('link', { name: 'Alanıma dön' }))[0]
       expect(account).toHaveAttribute('href', destination)
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
         'BTÜ ile bağın',
@@ -134,7 +134,7 @@ describe('public entry experience', () => {
           name:
             role === 'ADMIN'
               ? 'Mezun360 Yönetim Alanı'
-              : 'Mezun360 Mezun Alanı',
+              : /Merhaba/i,
         }),
       ).toBeVisible()
       expect(screen.getByLabelText('Konum')).toHaveTextContent(destination)
@@ -152,7 +152,7 @@ describe('public entry experience', () => {
           name:
             role === 'ADMIN'
               ? 'Mezun360 Yönetim Alanı'
-              : 'Mezun360 Mezun Alanı',
+              : /Merhaba/i,
         }),
       ).toBeVisible()
       expect(screen.getByLabelText('Konum')).toHaveTextContent(destination)

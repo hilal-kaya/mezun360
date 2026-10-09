@@ -117,7 +117,7 @@ export function LandingPage() {
                 variant="outline"
                 className="border-border bg-transparent px-6"
               >
-                <a href="#platform">
+                <a href="#ekosistem">
                   Platformu Keşfet
                   <ArrowRight size={18} aria-hidden="true" />
                 </a>
@@ -130,7 +130,60 @@ export function LandingPage() {
           <CommunityVisual />
         </section>
         <section
-          id="platform"
+          id="ekosistem"
+          className="ecosystem-section"
+          aria-labelledby="ecosystem-title"
+        >
+          <div className="public-container section-space">
+            <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
+              <div>
+                <p className="eyebrow text-pastel-turquoise">
+                  BTÜ’DEN HAYATA UZANAN BİR BAĞ
+                </p>
+                <h2 id="ecosystem-title" className="section-title text-white">
+                  Bir mezun veri tabanından
+                  <br />
+                  daha fazlası.
+                </h2>
+              </div>
+              <p className="self-end text-lg leading-relaxed text-pastel-blue">
+                Mezunları, öğrencileri, Kariyer Merkezini ve iş dünyasını ortak
+                bir gelecekte buluşturmayı amaçlayan bir kariyer ekosistemi.
+              </p>
+            </div>
+            <div className="flex flex-col items-center mt-12 mb-6">
+              <div className="relative w-full max-w-[700px] h-[450px] mb-16 flex justify-center items-center">
+                {/* The Orbit Rings (Visual Aid) - Wide Ellipse */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[250px] sm:h-[300px] border border-dashed border-white/10 rounded-[50%] z-10" />
+
+                {/* The Core (Kariyer Merkezi) */}
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center w-32 h-32 rounded-full bg-white text-primary shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-transform hover:scale-105 cursor-default">
+                  <span className="font-bold text-center text-base leading-tight">Kariyer<br/>Merkezi</span>
+                </div>
+
+                {/* Satellite 1: Mezun (Top Left) */}
+                <div className="absolute top-[15%] left-[10%] sm:left-[15%] z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-green-100 text-emerald-900 shadow-[0_0_20px_rgba(193,225,193,0.5)] animate-float transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-sm">Mezun</span>
+                </div>
+
+                {/* Satellite 2: Öğrenci (Top Right) */}
+                <div className="absolute top-[15%] right-[10%] sm:right-[15%] z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-pink-100 text-pink-900 shadow-[0_0_20px_rgba(255,209,220,0.5)] animate-float-delayed transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-sm">Öğrenci</span>
+                </div>
+
+                {/* Satellite 3: İş Dünyası (Bottom Center) */}
+                <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-amber-100 text-amber-900 shadow-[0_0_20px_rgba(230,218,166,0.5)] animate-float-slow transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-center text-sm leading-tight">İş<br/>Dünyası</span>
+                </div>
+                <p className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full text-sm text-slate-500 text-center">
+                  Ortak bir geçmişten, birlikte şekillenen bir geleceğe.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+        <section
+          id="ozellikler"
           className="public-container section-space border-t"
           aria-labelledby="platform-title"
         >
@@ -188,7 +241,7 @@ export function LandingPage() {
             </p>
           </div>
         </section>
-        <section className="bg-gradient-to-b from-pink-50 to-slate-50">
+        <section id="nasil-calisir" className="bg-gradient-to-b from-pink-50 to-slate-50">
           <div
             className="public-container section-space"
             aria-labelledby="how-title"
@@ -227,59 +280,7 @@ export function LandingPage() {
             </p>
           </div>
         </section>
-        <section
-          id="hakkinda"
-          className="ecosystem-section"
-          aria-labelledby="ecosystem-title"
-        >
-          <div className="public-container section-space">
-            <div className="grid gap-8 lg:grid-cols-[1.1fr_1fr]">
-              <div>
-                <p className="eyebrow text-pastel-turquoise">
-                  BTÜ’DEN HAYATA UZANAN BİR BAĞ
-                </p>
-                <h2 id="ecosystem-title" className="section-title text-white">
-                  Bir mezun veri tabanından
-                  <br />
-                  daha fazlası.
-                </h2>
-              </div>
-              <p className="self-end text-lg leading-relaxed text-pastel-blue">
-                Mezunları, öğrencileri, Kariyer Merkezini ve iş dünyasını ortak
-                bir gelecekte buluşturmayı amaçlayan bir kariyer ekosistemi.
-              </p>
-            </div>
-            <div className="flex flex-col items-center mt-12 mb-6">
-              <div className="relative w-full max-w-[700px] h-[450px] mb-16 flex justify-center items-center">
-                {/* The Orbit Rings (Visual Aid) - Wide Ellipse */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[250px] sm:h-[300px] border border-dashed border-white/10 rounded-[50%] z-10" />
-
-                {/* The Core (Kariyer Merkezi) */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center w-32 h-32 rounded-full bg-white text-primary shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-transform hover:scale-105 cursor-default">
-                  <span className="font-bold text-center text-base leading-tight">Kariyer<br/>Merkezi</span>
-                </div>
-
-                {/* Satellite 1: Mezun (Top Left) */}
-                <div className="absolute top-[15%] left-[10%] sm:left-[15%] z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-green-100 text-emerald-900 shadow-[0_0_20px_rgba(193,225,193,0.5)] animate-float transition-transform hover:scale-110 cursor-default">
-                  <span className="font-bold text-sm">Mezun</span>
-                </div>
-
-                {/* Satellite 2: Öğrenci (Top Right) */}
-                <div className="absolute top-[15%] right-[10%] sm:right-[15%] z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-pink-100 text-pink-900 shadow-[0_0_20px_rgba(255,209,220,0.5)] animate-float-delayed transition-transform hover:scale-110 cursor-default">
-                  <span className="font-bold text-sm">Öğrenci</span>
-                </div>
-
-                {/* Satellite 3: İş Dünyası (Bottom Center) */}
-                <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-amber-100 text-amber-900 shadow-[0_0_20px_rgba(230,218,166,0.5)] animate-float-slow transition-transform hover:scale-110 cursor-default">
-                  <span className="font-bold text-center text-sm leading-tight">İş<br/>Dünyası</span>
-                </div>
-                <p className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full text-sm text-slate-500 text-center">
-                  Ortak bir geçmişten, birlikte şekillenen bir geleceğe.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
+        
         <section
           className="public-container section-space grid items-center gap-12 lg:grid-cols-2"
           aria-labelledby="insight-title"
@@ -321,6 +322,7 @@ export function LandingPage() {
           <InsightPreview />
         </section>
         <section
+          id="guvenlik"
           className="public-container pb-20"
           aria-labelledby="privacy-title"
         >
@@ -376,7 +378,7 @@ export function LandingPage() {
                 </Link>
               </Button>
               <Button asChild variant="outline" className="bg-transparent">
-                <a href="#platform">Platformu Keşfet</a>
+                <a href="#ekosistem">Platformu Keşfet</a>
               </Button>
             </div>
           </div>
@@ -395,8 +397,8 @@ export function LandingPage() {
               aria-label="Alt gezinme"
               className="flex flex-wrap items-start gap-x-7 gap-y-3 text-sm font-semibold text-primary"
             >
-              <a href="#platform">Platform</a>
-              <a href="#hakkinda">Hakkında</a>
+              <a href="#ekosistem">Platform</a>
+              <a href="#ozellikler">Hakkında</a>
               <Link to="/login">Giriş Yap</Link>
             </nav>
           </div>

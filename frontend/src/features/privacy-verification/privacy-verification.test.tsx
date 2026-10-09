@@ -66,7 +66,7 @@ describe('privacy and verification', () => {
     const toggle = await screen.findByRole('switch', { name: "Mezunlar Ağı'nda görünmek istiyorum." })
     expect(toggle).not.toBeChecked(); expect(screen.getByRole('radio', { name: 'Yalnızca Ben' })).toBeChecked()
     await user.click(toggle); await user.click(screen.getByRole('radio', { name: 'BTÜ Mezunları' })); await user.click(screen.getByRole('button', { name: 'Tercihleri Kaydet' }))
-    expect(await screen.findByText('Gizlilik tercihlerin güncellendi.')).toBeVisible()
+    expect(await screen.findByText('Gizlilik ayarlarınız başarıyla güncellendi.')).toBeVisible()
     expect(saved()).toMatchObject({ directoryOptIn: true, profileVisibility: 'ALUMNI_MEMBERS' })
     // A second edit must use the fresh cache version, not the initial ETag.
     await user.click(screen.getByRole('radio', { name: 'Yalnızca Ben' })); await user.click(screen.getByRole('button', { name: 'Tercihleri Kaydet' }))
@@ -127,7 +127,7 @@ describe('privacy and verification', () => {
   })
   it('redirects alumni away from admin without requesting private review data', async () => {
     const { request } = setup({ route: '/admin/verifications' })
-    expect(await screen.findByRole('heading', { name: 'Mezun360 Mezun Alanı' })).toBeVisible()
+    expect(await screen.findByRole('heading', { name: /Merhaba/i })).toBeVisible()
     expect(request.mock.calls.some(([url]) => String(url).includes('/admin/'))).toBe(false)
   })
 })

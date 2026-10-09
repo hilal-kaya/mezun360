@@ -46,7 +46,7 @@ describe('session authentication UX', () => {
     expect(screen.getByRole('button', { name: 'Şifremi Unuttum' })).toBeDisabled()
     expect(screen.getByText('Yakında')).toBeVisible()
   })
-  it.each([['ALUMNI', '/app', 'Mezun360 Mezun Alanı'], ['ADMIN', '/admin', 'Mezun360 Yönetim Alanı']] as const)('redirects authenticated %s using backend identity', async (role, path, heading) => {
+  it.each([['ALUMNI', '/app', /Merhaba/i], ['ADMIN', '/admin', 'Mezun360 Yönetim Alanı']] as const)('redirects authenticated %s using backend identity', async (role, path, heading) => {
     const { user } = setup(role)
     await fill(user)
     expect(await screen.findByRole('heading', { name: heading })).toBeVisible()
@@ -65,7 +65,7 @@ describe('session authentication UX', () => {
   })
   it('never renders admin UI to an alumni user', async () => {
     setup('ALUMNI', '/admin', true)
-    await screen.findByRole('heading', { name: 'Mezun360 Mezun Alanı' })
+    await screen.findByRole('heading', { name: /Merhaba/i })
     expect(screen.queryByRole('heading', { name: 'Mezun360 Yönetim Alanı' })).not.toBeInTheDocument()
   })
   it('logs out through the server and removes private UI', async () => {

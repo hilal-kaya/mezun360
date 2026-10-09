@@ -6,6 +6,8 @@ import * as apiModule from './network-api'
 
 vi.mock('./network-api', () => ({
   useAlumniNetwork: vi.fn(),
+  useConnectMutation: vi.fn(() => ({ mutate: vi.fn(), isPending: false })),
+  useCancelConnectionMutation: vi.fn(() => ({ mutate: vi.fn(), isPending: false })),
 }))
 
 const queryClient = new QueryClient()

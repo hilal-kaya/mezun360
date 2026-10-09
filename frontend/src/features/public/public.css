@@ -540,3 +540,6 @@
   animation: float 8s ease-in-out infinite;
   animation-delay: 1s;
 }
+html {
+  scroll-behavior: smooth;
+}
