@@ -6,10 +6,10 @@ import { ProductIdentity } from '@/components/product-identity'
 import { homeFor, useIdentity } from '@/features/auth/auth'
 
 const navigation = [
-  ['Ekosistem', '#ekosistem'],
+  ['Platform', '#platform'],
   ['Özellikler', '#ozellikler'],
   ['Nasıl Çalışır?', '#nasil-calisir'],
-  ['Güvenlik', '#guvenlik'],
+  ['Hakkında', '#hakkinda'],
 ] as const
 
 export function PublicHeader() {

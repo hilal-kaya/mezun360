@@ -37,7 +37,7 @@ export function MentorshipPage() {
   }
 
   return (
-    <div className="space-y-8 max-w-6xl mx-auto pt-4">
+    <div className="space-y-6 max-w-5xl mx-auto pt-4">
       {/* Global Search Omnibar Header */}
       <section className="text-center space-y-3">
         <h1 className="text-3xl font-bold font-barlow text-primary">Mentörlük</h1>
@@ -52,7 +52,7 @@ export function MentorshipPage() {
                 value={query}
                 onChange={e => setQuery(e.target.value)}
                 placeholder="İsim, şirket, pozisyon veya uzmanlığa göre mentör ara..." 
-                className="w-full h-14 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
+                className="w-full h-12 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
               />
               <Button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-semibold">
                 Ara
@@ -95,7 +95,7 @@ export function MentorshipPage() {
           ) : (
             <>
               {queryMentors.data.content.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center text-gray-500">
+                <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-gray-500">
                   Aradığınız kriterlere uygun mentör bulunamadı.
                 </div>
               ) : (

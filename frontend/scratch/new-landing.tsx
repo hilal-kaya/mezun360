@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import { ArrowRight, Sparkles, Briefcase, Users, Calendar, Lightbulb } from 'lucide-react'
+import { ArrowRight, Sparkles, Briefcase, Users, Calendar, MoveUpRight, Navigation, Lightbulb, MapPin, Search, PlusCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { PublicHeader } from './public-header'
 import { ProductIdentity } from '@/components/product-identity'

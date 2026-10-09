@@ -40,61 +40,62 @@ function mount({
   return userEvent.setup()
 }
 afterEach(() => vi.unstubAllGlobals())
+
 describe('public entry experience', () => {
   it('renders all public sections without exposing identities or live metrics', async () => {
     mount()
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-      'BTÜ ile bağınmezuniyetle bitmez.',
+      'Kariyerin,bağlantıların, birsonraki adımın.',
     )
     for (const name of [
-      'Birlikte daha ileri.',
-      'Mezun360 nasıl çalışır?',
+      'Sana Ait Bir Alan',
+      /Üç adımda topluluğun/,
       /Bir mezun veri tabanından/,
-      /Verilerin senin/,
       'BTÜ topluluğuyla bağını sürdür.',
     ]) {
       expect(screen.getByRole('heading', { name })).toBeVisible()
     }
-    expect(
-      screen.getAllByText('Tasarım önizlemesi · Temsili içerik'),
-    ).toHaveLength(2)
     expect(screen.queryByText('owner@example.test')).not.toBeInTheDocument()
+    
+    // Yasal sayfalar gizli (div icinde metin veya span), bu yuzden link olmamali.
     expect(
       screen.queryByRole('link', { name: 'Gizlilik' }),
-    ).not.toBeInTheDocument()
-    expect(
-      screen.queryByRole('link', { name: 'Kullanım Koşulları' }),
     ).not.toBeInTheDocument()
     expect(
       screen.queryByRole('link', { name: 'İletişim' }),
     ).not.toBeInTheDocument()
   })
+
   it('keeps public content usable when the identity service is unavailable', () => {
     mount({ unavailable: true })
     expect(screen.getByRole('heading', { level: 1 })).toBeVisible()
     expect(screen.getByLabelText('Konum')).toHaveTextContent('/')
   })
+
   it('takes the main CTA to the real login page', async () => {
     const user = mount()
-    const hero = screen.getByRole('region', { name: /BTÜ ile bağın/ })
-    await user.click(within(hero).getByRole('link', { name: 'Giriş Yap' }))
+    const hero = screen.getByRole('region', { name: /Kariyerin,bağlantıların, birsonraki adımın./ })
+    // The link is "Hemen Katıl", let's use regex
+    await user.click(within(hero).getByRole('link', { name: /Hemen Katıl/i }))
     expect(
       await screen.findByRole('heading', { name: 'Tekrar hoş geldin' }),
     ).toBeVisible()
     expect(screen.getByLabelText('Konum')).toHaveTextContent('/login')
   })
+
   it('links exploration to real page sections and join to existing login', () => {
     mount()
     for (const link of screen.getAllByRole('link', {
       name: 'Platformu Keşfet',
     }))
-      expect(link).toHaveAttribute('href', '#ekosistem')
-    expect(document.getElementById('ekosistem')).toBeInTheDocument()
+      expect(link).toHaveAttribute('href', '#platform')
+    expect(document.getElementById('platform')).toBeInTheDocument()
     for (const link of screen.getAllByRole('link', {
-      name: 'Mezun Ağına Katıl',
+      name: /Kayıt Ol/i,
     }))
       expect(link).toHaveAttribute('href', '/login')
   })
+
   it('opens the mobile disclosure, closes on navigation and restores focus on Escape', async () => {
     const user = mount()
     const toggle = screen.getByRole('button', { name: 'Menüyü aç' })
@@ -105,16 +106,17 @@ describe('public entry experience', () => {
     await user.click(toggle)
     const mobile = screen.getByRole('navigation', { name: 'Mobil gezinme' })
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
-    await user.click(within(mobile).getByRole('link', { name: 'Güvenlik' }))
+    await user.click(within(mobile).getByRole('link', { name: 'Platform' }))
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
     await user.click(toggle)
     within(screen.getByRole('navigation', { name: 'Mobil gezinme' }))
-      .getByRole('link', { name: 'Ekosistem' })
+      .getByRole('link', { name: 'Platform' })
       .focus()
     await user.keyboard('{Escape}')
     expect(toggle).toHaveFocus()
     expect(toggle).toHaveAttribute('aria-expanded', 'false')
   })
+
   it.each([
     ['ALUMNI', '/app'],
     ['ADMIN', '/admin'],
@@ -122,10 +124,10 @@ describe('public entry experience', () => {
     'offers %s an account link while keeping landing public',
     async (role, destination) => {
       const user = mount({ role })
-      const account = (await screen.findAllByRole('link', { name: 'Alanıma dön' }))[0]
+      const account = (await screen.findAllByRole('link', { name: 'Alanıma dön' }))[0]!
       expect(account).toHaveAttribute('href', destination)
       expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
-        'BTÜ ile bağın',
+        'Kariyerin,bağlantıların, birsonraki adımın.',
       )
       expect(screen.getByLabelText('Konum')).toHaveTextContent('/')
       await user.click(account)
@@ -140,6 +142,7 @@ describe('public entry experience', () => {
       expect(screen.getByLabelText('Konum')).toHaveTextContent(destination)
     },
   )
+
   it.each([
     ['ALUMNI', '/app'],
     ['ADMIN', '/admin'],

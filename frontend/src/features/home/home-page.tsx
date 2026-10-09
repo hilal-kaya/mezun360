@@ -29,9 +29,9 @@ export function DashboardHome() {
   const alumni = alumniData?.content?.slice(0, 3) || []
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-500 pb-10 bg-gradient-to-br from-gray-50 via-pink-50/40 to-green-50/40 -mx-6 lg:-mx-8 px-6 lg:px-8 pt-6 -mt-6 rounded-t-[2.5rem] min-h-[calc(100vh-88px)]">
+    <div className="space-y-8 animate-in fade-in duration-500 pb-10 bg-gradient-to-br from-gray-50 via-pink-50/40 to-green-50/40 -mx-6 lg:-mx-8 px-6 lg:px-8 pt-6 -mt-4 rounded-t-[2.5rem] min-h-[calc(100vh-88px)]">
       {/* Hero Welcome Widget */}
-      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-pink-100/80 to-orange-50 p-8 sm:p-12 shadow-xl shadow-pink-100 flex flex-col md:flex-row items-center gap-6 border-none">
+      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-pink-100/80 to-orange-50 p-8 sm:p-12 shadow-xl shadow-pink-100 flex flex-col md:flex-row items-center gap-5 border-none">
         <div className="relative z-10">
           <span className="inline-flex rounded-full bg-white/60 px-4 py-1.5 text-sm font-semibold text-primary mb-4 backdrop-blur-md">
             Oturum Açık
@@ -57,13 +57,13 @@ export function DashboardHome() {
       </section>
 
       {/* Grid Layout for Widgets */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         
         {/* Jobs Widget (2 columns wide on large screens) */}
-        <section className="lg:col-span-2 rounded-[2rem] bg-white p-6 shadow-xl shadow-green-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-green-100/80 transition-shadow">
+        <section className="lg:col-span-2 rounded-2xl bg-white p-5 shadow-xl shadow-green-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-green-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <BriefcaseBusiness className="text-green-500" size={24} />
+            <h2 className="text-lg font-bold text-primary font-barlow flex items-center gap-2">
+              <BriefcaseBusiness className="text-green-500" size={20} />
               Öne Çıkan İş & Staj İlanları
             </h2>
             <Link to="/app/jobs" className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -86,16 +86,16 @@ export function DashboardHome() {
                 </span>
               </Link>
             )) : (
-              <div className="flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-6">Henüz ilan bulunmuyor.</div>
+              <div className="flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-5">Henüz ilan bulunmuyor.</div>
             )}
           </div>
         </section>
 
         {/* Network Suggested Widget */}
-        <section className="rounded-[2rem] bg-white p-6 shadow-xl shadow-blue-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-blue-100/80 transition-shadow">
+        <section className="rounded-2xl bg-white p-5 shadow-xl shadow-blue-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-blue-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <Users className="text-blue-400" size={24} />
+            <h2 className="text-lg font-bold text-primary font-barlow flex items-center gap-2">
+              <Users className="text-blue-400" size={20} />
               Ağınız İçin Öneriler
             </h2>
           </div>
@@ -115,7 +115,7 @@ export function DashboardHome() {
                 </Link>
               </div>
             )) : (
-              <div className="flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-6">Kişi bulunamadı.</div>
+              <div className="flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-5">Kişi bulunamadı.</div>
             )}
           </div>
           <Link to="/app/network" className="mt-4 block text-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
@@ -124,10 +124,10 @@ export function DashboardHome() {
         </section>
 
         {/* Events Widget */}
-        <section className="rounded-[2rem] bg-white p-6 shadow-xl shadow-orange-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-orange-100/80 transition-shadow">
+        <section className="rounded-2xl bg-white p-5 shadow-xl shadow-orange-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-orange-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <CalendarDays className="text-amber-500" size={24} />
+            <h2 className="text-lg font-bold text-primary font-barlow flex items-center gap-2">
+              <CalendarDays className="text-amber-500" size={20} />
               Yaklaşan Etkinlikler
             </h2>
           </div>
@@ -142,7 +142,7 @@ export function DashboardHome() {
                 <p className="text-xs text-muted-foreground mt-2 line-clamp-1">{event.location}</p>
               </Link>
             )) : (
-              <div className="flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-6">Yaklaşan etkinlik yok.</div>
+              <div className="flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-5">Yaklaşan etkinlik yok.</div>
             )}
           </div>
           <Link to="/app/events" className="mt-4 block text-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors">
@@ -151,10 +151,10 @@ export function DashboardHome() {
         </section>
 
         {/* News Widget */}
-        <section className="lg:col-span-2 rounded-[2rem] bg-white p-6 shadow-xl shadow-purple-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-purple-100/80 transition-shadow">
+        <section className="lg:col-span-2 rounded-2xl bg-white p-5 shadow-xl shadow-purple-100/60 border-none flex flex-col hover:shadow-2xl hover:shadow-purple-100/80 transition-shadow">
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-xl font-bold text-primary font-barlow flex items-center gap-2">
-              <Newspaper className="text-purple-400" size={24} />
+            <h2 className="text-lg font-bold text-primary font-barlow flex items-center gap-2">
+              <Newspaper className="text-purple-400" size={20} />
               Yeni Haberler
             </h2>
             <Link to="/app/news" className="text-sm font-medium text-muted-foreground hover:text-primary flex items-center gap-1">
@@ -166,7 +166,7 @@ export function DashboardHome() {
             {news.length > 0 ? news.map(article => (
               <Link to={`/app/news/${article.id}`} key={article.id} className="group flex flex-col gap-3 p-4 rounded-2xl border border-purple-200 bg-purple-50/30 hover:bg-purple-100/50 transition-colors">
                 {article.imageUrl ? (
-                  <div className="h-24 w-full rounded-xl overflow-hidden bg-gray-100">
+                  <div className="h-20 w-full rounded-xl overflow-hidden bg-gray-100">
                     <img src={article.imageUrl} alt="" className="w-full h-full object-cover group-hover:scale-105 transition-transform" />
                   </div>
                 ) : null}
@@ -176,7 +176,7 @@ export function DashboardHome() {
                 </div>
               </Link>
             )) : (
-              <div className="sm:col-span-2 flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-6">Yeni haber bulunmuyor.</div>
+              <div className="sm:col-span-2 flex-1 flex items-center justify-center text-muted-foreground bg-gray-50 rounded-2xl p-5">Yeni haber bulunmuyor.</div>
             )}
           </div>
         </section>

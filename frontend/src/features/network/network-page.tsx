@@ -55,10 +55,10 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
     : 'Bağlantı Kur'
 
   return (
-    <li className="flex flex-col justify-between rounded-3xl border border-pastel-blue bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-primary/20 hover:bg-pastel-blue-light/50">
+    <li className="flex flex-col justify-between rounded-2xl border border-pastel-blue bg-white p-5 shadow-sm transition-all hover:shadow-md hover:border-primary/20 hover:bg-pastel-blue-light/50">
       <div>
         <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-pastel-blue text-lg font-bold text-primary">
+          <div className="flex h-12 w-14 shrink-0 items-center justify-center rounded-full bg-pastel-blue text-lg font-bold text-primary">
             {alumni.firstName.charAt(0)}{alumni.lastName.charAt(0)}
           </div>
           <div>
@@ -67,7 +67,7 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
           </div>
         </div>
 
-        <div className="mt-5 space-y-2 text-sm text-gray-600">
+        <div className="mt-4 space-y-2 text-sm text-gray-600">
           {alumni.currentPosition && (
             <div className="flex items-start gap-2">
               <Briefcase size={16} className="mt-0.5 shrink-0 text-gray-400" />
@@ -89,7 +89,7 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
         </div>
       </div>
 
-      <div className="mt-6 pt-5 border-t border-pastel-blue flex flex-col gap-2">
+      <div className="mt-5 pt-4 border-t border-pastel-blue flex flex-col gap-2">
         {errorMsg && (
           <div className="text-xs text-destructive bg-destructive/10 p-2 rounded-xl">
             {errorMsg}
@@ -99,7 +99,7 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
           type="button"
           disabled={isAccepted || isActionLoading}
           onClick={handleAction}
-          className={`inline-flex min-h-11 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 ${
+          className={`inline-flex min-h-10 items-center justify-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-colors disabled:pointer-events-none disabled:opacity-50 ${
             isAccepted
               ? 'bg-gray-100 text-gray-500 cursor-default'
               : isPending
@@ -142,7 +142,7 @@ export function AlumniNetworkPage() {
   }
 
   return (
-    <div className="flex flex-col gap-8 max-w-6xl mx-auto pt-4">
+    <div className="flex flex-col gap-5 max-w-5xl mx-auto pt-4">
       {/* Global Search Omnibar Header */}
       <section className="text-center space-y-3">
         <h1 className="text-3xl font-bold font-barlow text-primary">Mezun Ağı</h1>
@@ -156,9 +156,9 @@ export function AlumniNetworkPage() {
               value={query}
               onChange={e => setQuery(e.target.value)}
               placeholder="İsim, bölüm, sektör veya yıla göre arayın..." 
-              className="w-full h-14 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
+              className="w-full h-12 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
             />
-            <Button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-semibold">
+            <Button type="submit" className="absolute right-2 h-10 rounded-full px-5 bg-primary hover:bg-primary/90 text-white font-semibold">
               Ara
             </Button>
           </div>
@@ -168,9 +168,9 @@ export function AlumniNetworkPage() {
       {/* Main Content */}
       <main className="space-y-6">
         {isPending ? (
-          <p role="status" className="text-muted-foreground text-center py-12">Mezunlar yükleniyor...</p>
+          <p role="status" className="text-muted-foreground text-center py-8">Mezunlar yükleniyor...</p>
         ) : isError ? (
-          <div className="rounded-2xl border border-red-200 bg-red-50 p-6 text-red-700 text-center max-w-lg mx-auto">
+          <div className="rounded-2xl border border-red-200 bg-red-50 p-5 text-red-700 text-center max-w-lg mx-auto">
             <p role="alert">Mezun ağı yüklenirken bir hata oluştu.</p>
             <Button variant="outline" className="mt-4 bg-white rounded-full" onClick={() => void refetch()}>Tekrar Dene</Button>
           </div>
@@ -179,11 +179,11 @@ export function AlumniNetworkPage() {
             <p className="text-sm text-muted-foreground font-medium px-2">Toplam {data.page.totalElements} mezun bulundu.</p>
             
             {data.content.length === 0 ? (
-              <div className="rounded-3xl border border-dashed border-pastel-blue bg-white p-16 text-center text-muted-foreground">
+              <div className="rounded-2xl border border-dashed border-pastel-blue bg-white p-16 text-center text-muted-foreground">
                 Aradığınız kriterlere uygun mezun bulunamadı.
               </div>
             ) : (
-              <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+              <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {data.content.map(alumni => (
                   <AlumniCard key={alumni.id} alumni={alumni} />
                 ))}
