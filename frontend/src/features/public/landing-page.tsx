@@ -17,10 +17,10 @@ function HeroSection() {
           <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-[11px] font-bold text-slate-500 tracking-widest uppercase mb-8 shadow-sm">
             <Sparkles className="w-3.5 h-3.5 text-[#F87171]" /> Kariyerin boyunca yanında
           </div>
-          <h1 id="hero-title" className="text-5xl lg:text-7xl font-bold tracking-tight text-slate-900 leading-[1.05]">
+          <h1 id="hero-title" className="text-3xl lg:text-4xl font-bold tracking-tight text-slate-900 leading-[1.05]">
             Kariyerin,<br />bağlantıların, <span className="text-slate-400">bir<br />sonraki adımın.</span>
           </h1>
-          <p className="mt-6 text-lg text-slate-600 leading-relaxed max-w-md">
+          <p className="mt-6 text-sm text-slate-600 leading-relaxed max-w-md">
             Öğrencileri, mezunları ve iş dünyasını tek bir sıcak toplulukta buluşturan kariyer ekosistemine katıl.
           </p>
           <div className="mt-10 flex flex-wrap gap-4 items-center">
@@ -51,7 +51,7 @@ function HeroSection() {
         </div>
 
         {/* Right Column: Visual Diagram */}
-        <div className="relative h-[550px] w-full hidden lg:block select-none" aria-hidden="true">
+        <div className="relative h-[450px] w-full hidden lg:block select-none max-w-md mx-auto scale-75 origin-center" aria-hidden="true">
           {/* Orbits */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[320px] h-[320px] border border-dashed border-slate-300 rounded-full" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] border border-dashed border-slate-300 rounded-full" />
@@ -59,7 +59,7 @@ function HeroSection() {
           {/* Center */}
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[160px] h-[160px] bg-white rounded-full shadow-[0_20px_40px_-15px_rgba(0,0,0,0.1)] flex flex-col items-center justify-center z-20">
             <div className="w-10 h-10 bg-[#0B1727] text-white rounded-xl flex items-center justify-center font-bold text-xl mb-3">M</div>
-            <h3 className="font-bold text-slate-900 text-lg leading-none mb-1">Mezun360</h3>
+            <h3 className="font-bold text-slate-900 text-sm leading-none mb-1">Mezun360</h3>
             <p className="text-[10px] text-slate-400 font-medium">Herkes için ortak alan</p>
           </div>
 
@@ -120,28 +120,28 @@ function HeroSection() {
 
 function FeaturesSection() {
   return (
-    <section id="platform" className="py-24 bg-white">
+    <section id="platform" className="py-12 bg-white">
       <div className="public-container">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <p className="text-[#F87171] font-bold text-[11px] tracking-widest uppercase mb-4">Tek Platform, Sınırsız Bağ</p>
-          <h2 className="text-4xl lg:text-5xl font-bold text-[#0B1727] tracking-tight mb-6">Sana Ait Bir Alan</h2>
-          <p className="text-lg text-slate-500 max-w-2xl mx-auto">
+          <h2 className="text-3xl lg:text-4xl font-bold text-[#0B1727] tracking-tight mb-6">Sana Ait Bir Alan</h2>
+          <p className="text-sm text-slate-500 max-w-2xl mx-auto">
             Kariyerinin her aşamasında ihtiyaç duyduğun insanlara, fırsatlara ve deneyimlere yakın ol.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid md:grid-cols-2 gap-4">
           {/* Card 1 */}
-          <div className="bg-[#FFE4E6] rounded-[2.5rem] p-10 relative overflow-hidden group">
+          <div className="bg-[#FFE4E6] rounded-3xl p-8 relative overflow-hidden group">
             <div className="absolute bottom-0 right-0 w-64 h-64 border border-white/40 rounded-tl-full translate-x-1/4 translate-y-1/4" />
-            <div className="flex justify-between items-start mb-16">
+            <div className="flex justify-between items-start mb-10">
               <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <Users className="w-6 h-6 text-slate-700" />
               </div>
               <span className="text-sm font-medium text-slate-400">01</span>
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Mezun Ağı</h3>
-            <p className="text-slate-600 leading-relaxed mb-10 max-w-sm">
+            <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Farklı sektörlerden mezunlarla yeniden buluş, deneyimlerini paylaş ve güçlü bağlantılar kur.
             </p>
             <a href="#mezun-agi" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
@@ -150,16 +150,16 @@ function FeaturesSection() {
           </div>
 
           {/* Card 2 */}
-          <div className="bg-[#D1FAE5] rounded-[2.5rem] p-10 relative overflow-hidden group">
+          <div className="bg-[#D1FAE5] rounded-3xl p-8 relative overflow-hidden group">
             <div className="absolute bottom-0 right-0 w-64 h-64 border border-white/40 rounded-tl-full translate-x-1/4 translate-y-1/4" />
-            <div className="flex justify-between items-start mb-16">
+            <div className="flex justify-between items-start mb-10">
               <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <Briefcase className="w-6 h-6 text-slate-700" />
               </div>
               <span className="text-sm font-medium text-slate-400">02</span>
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">İş & Staj</h3>
-            <p className="text-slate-600 leading-relaxed mb-10 max-w-sm">
+            <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Sana uygun kariyer fırsatlarını keşfet; üniversite topluluğuna özel ilanlara kolayca ulaş.
             </p>
             <a href="#is-staj" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
@@ -168,16 +168,16 @@ function FeaturesSection() {
           </div>
 
           {/* Card 3 */}
-          <div className="bg-[#FFEDD5] rounded-[2.5rem] p-10 relative overflow-hidden group">
+          <div className="bg-[#FFEDD5] rounded-3xl p-8 relative overflow-hidden group">
             <div className="absolute bottom-0 right-0 w-64 h-64 border border-white/40 rounded-tl-full translate-x-1/4 translate-y-1/4" />
-            <div className="flex justify-between items-start mb-16">
+            <div className="flex justify-between items-start mb-10">
               <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <Lightbulb className="w-6 h-6 text-slate-700" />
               </div>
               <span className="text-sm font-medium text-slate-400">03</span>
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Mentörlük</h3>
-            <p className="text-slate-600 leading-relaxed mb-10 max-w-sm">
+            <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Yolculuğunu daha önce tamamlayanlardan ilham al ya da deneyiminle bir başkasına ışık ol.
             </p>
             <a href="#mentorluk" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
@@ -186,16 +186,16 @@ function FeaturesSection() {
           </div>
 
           {/* Card 4 */}
-          <div className="bg-[#F3F4F6] rounded-[2.5rem] p-10 relative overflow-hidden group">
+          <div className="bg-[#F3F4F6] rounded-3xl p-8 relative overflow-hidden group">
             <div className="absolute bottom-0 right-0 w-64 h-64 border border-white/40 rounded-tl-full translate-x-1/4 translate-y-1/4" />
-            <div className="flex justify-between items-start mb-16">
+            <div className="flex justify-between items-start mb-10">
               <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center shadow-sm">
                 <Calendar className="w-6 h-6 text-slate-700" />
               </div>
               <span className="text-sm font-medium text-slate-400">04</span>
             </div>
             <h3 className="text-2xl font-bold text-slate-900 mb-4">Etkinlikler</h3>
-            <p className="text-slate-600 leading-relaxed mb-10 max-w-sm">
+            <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Buluşmalar, kariyer sohbetleri ve atölyelerle kampüs ruhunu hayatının her döneminde yaşa.
             </p>
             <a href="#etkinlikler" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
@@ -210,12 +210,12 @@ function FeaturesSection() {
 
 function HowItWorksSection() {
   return (
-    <section id="nasil-calisir" className="py-24 bg-white">
+    <section id="nasil-calisir" className="py-12 bg-white">
       <div className="public-container">
-        <div className="bg-[#FAFAF9] rounded-[3rem] p-12 lg:p-20 grid lg:grid-cols-2 gap-16 items-center">
+        <div className="bg-[#FAFAF9] rounded-[3rem] p-8 lg:p-12 grid lg:grid-cols-2 gap-16 items-center">
           <div>
             <p className="text-[#F87171] font-bold text-[11px] tracking-widest uppercase mb-4">Bağlantı Kurmak Çok Kolay</p>
-            <h2 className="text-4xl lg:text-5xl font-bold text-[#0B1727] tracking-tight leading-[1.1]">
+            <h2 className="text-3xl lg:text-4xl font-bold text-[#0B1727] tracking-tight leading-[1.1]">
               Üç adımda topluluğun<br />bir parçası ol.
             </h2>
           </div>
@@ -261,48 +261,48 @@ function HowItWorksSection() {
 
 function EcosystemRadialSection() {
   return (
-    <section id="ozellikler" className="py-24 lg:py-32 bg-[#0B1727] relative overflow-hidden">
+    <section id="ozellikler" className="py-16 lg:py-24 bg-[#0B1727] relative overflow-hidden">
       <div className="public-container relative z-10 text-center">
         <p className="text-[#34D399] font-bold text-[11px] tracking-widest uppercase mb-4">Mezun360 Ekosistemi</p>
-        <h2 className="text-4xl lg:text-5xl font-bold text-white tracking-tight mb-6">
+        <h2 className="text-3xl lg:text-4xl font-bold text-white tracking-tight mb-6">
           Bir mezun veri tabanından<br /><span className="text-[#FBCFE8]">daha fazlası</span>
         </h2>
-        <p className="text-slate-400 text-lg max-w-2xl mx-auto mb-20">
+        <p className="text-slate-400 text-sm max-w-2xl mx-auto mb-20">
           Üniversiteden iş dünyasına uzanan bağların merkezinde, yaşayan ve büyüyen bir topluluk.
         </p>
 
         {/* Radial Diagram */}
-        <div className="relative h-[600px] max-w-[800px] mx-auto hidden md:block select-none" aria-hidden="true">
+        <div className="relative h-[400px] max-w-[600px] mx-auto hidden md:block select-none" aria-hidden="true">
           {/* Orbits */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] border border-dashed border-white/10 rounded-full" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] border border-dashed border-white/10 rounded-full" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[750px] h-[750px] border border-dashed border-white/10 rounded-full" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[240px] h-[240px] border border-dashed border-white/10 rounded-full" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[380px] h-[380px] border border-dashed border-white/10 rounded-full" />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[520px] h-[520px] border border-dashed border-white/10 rounded-full" />
 
           {/* Center */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 bg-white rounded-full flex flex-col items-center justify-center z-20 shadow-[0_0_60px_rgba(255,255,255,0.1)]">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 bg-white rounded-full flex flex-col items-center justify-center z-20 shadow-[0_0_60px_rgba(255,255,255,0.1)]">
             <span className="text-[#F87171] font-bold text-[10px] tracking-widest mb-1">360°</span>
-            <h3 className="font-bold text-slate-900 text-xl leading-tight">Kariyer<br />Merkezi</h3>
+            <h3 className="font-bold text-slate-900 text-base leading-tight">Kariyer<br />Merkezi</h3>
           </div>
 
           {/* Satellites */}
           {/* Mezun */}
-          <div className="absolute top-[35%] left-[10%] -translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-[#A7F3D0] flex flex-col items-center justify-center z-10">
+          <div className="absolute top-[35%] left-[10%] -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-[#A7F3D0] flex flex-col items-center justify-center z-10">
             <span className="text-slate-500 font-medium text-[10px] mb-1">01</span>
-            <h4 className="font-bold text-slate-900 text-lg">Mezun</h4>
+            <h4 className="font-bold text-slate-900 text-sm">Mezun</h4>
             <p className="text-[10px] text-slate-700 mt-0.5">Deneyim paylaşır</p>
           </div>
 
           {/* Öğrenci */}
-          <div className="absolute top-[35%] right-[10%] translate-x-1/2 -translate-y-1/2 w-32 h-32 rounded-full bg-[#FBCFE8] flex flex-col items-center justify-center z-10">
+          <div className="absolute top-[35%] right-[10%] translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-full bg-[#FBCFE8] flex flex-col items-center justify-center z-10">
             <span className="text-slate-500 font-medium text-[10px] mb-1">02</span>
-            <h4 className="font-bold text-slate-900 text-lg">Öğrenci</h4>
+            <h4 className="font-bold text-slate-900 text-sm">Öğrenci</h4>
             <p className="text-[10px] text-slate-700 mt-0.5">Geleceğini kurar</p>
           </div>
 
           {/* İş Dünyası */}
-          <div className="absolute bottom-[5%] left-1/2 -translate-x-1/2 translate-y-1/2 w-32 h-32 rounded-full bg-[#FED7AA] flex flex-col items-center justify-center z-10">
+          <div className="absolute bottom-[5%] left-1/2 -translate-x-1/2 translate-y-1/2 w-20 h-20 rounded-full bg-[#FED7AA] flex flex-col items-center justify-center z-10">
             <span className="text-slate-600 font-medium text-[10px] mb-1">03</span>
-            <h4 className="font-bold text-slate-900 text-lg">İş Dünyası</h4>
+            <h4 className="font-bold text-slate-900 text-sm">İş Dünyası</h4>
             <p className="text-[10px] text-slate-700 mt-0.5">Yeteneğe ulaşır</p>
           </div>
         </div>
@@ -313,24 +313,24 @@ function EcosystemRadialSection() {
 
 function FinalCtaSection() {
   return (
-    <section className="py-24 bg-white">
+    <section className="py-12 bg-white">
       <div className="public-container">
-        <div className="bg-gradient-to-r from-[#FCE7F3] via-[#FFEDD5] to-[#D1FAE5] rounded-[3rem] p-12 lg:p-20 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-10">
+        <div className="bg-gradient-to-r from-[#FCE7F3] via-[#FFEDD5] to-[#D1FAE5] rounded-[3rem] p-8 lg:p-12 relative overflow-hidden flex flex-col lg:flex-row items-center justify-between gap-8">
           <div className="absolute right-0 top-0 w-96 h-96 border border-white/40 rounded-full translate-x-1/4 -translate-y-1/4" />
           <div className="absolute right-20 bottom-0 w-64 h-64 border border-white/40 rounded-full translate-y-1/4" />
           
           <div className="relative z-10 max-w-xl text-center lg:text-left">
             <p className="text-[#F87171] font-bold text-[11px] tracking-widest uppercase mb-4">Topluluk Seni Bekliyor</p>
-            <h2 className="text-4xl lg:text-5xl font-bold text-[#0B1727] tracking-tight mb-6">
+            <h2 className="text-3xl lg:text-4xl font-bold text-[#0B1727] tracking-tight mb-6">
               BTÜ topluluğuyla bağını sürdür.
             </h2>
-            <p className="text-lg text-slate-700">
+            <p className="text-sm text-slate-700">
               Bugün katıl, kariyer yolculuğunda yeni bir sayfa aç.
             </p>
           </div>
           
           <div className="relative z-10 shrink-0">
-            <Button asChild className="bg-[#0B1727] hover:bg-slate-800 text-white px-10 h-16 text-lg rounded-full shadow-xl">
+            <Button asChild className="bg-[#0B1727] hover:bg-slate-800 text-white px-10 h-16 text-sm rounded-full shadow-xl">
               <Link to="/login">Kayıt Ol <ArrowRight className="w-5 h-5 ml-2" /></Link>
             </Button>
           </div>
