@@ -81,7 +81,7 @@ const privacyPoints = [
 
 export function LandingPage() {
   return (
-    <div className="public-site">
+    <div className="public-site bg-slate-50">
       <a href="#main" className="public-skip">
         İçeriğe geç
       </a>
@@ -188,42 +188,44 @@ export function LandingPage() {
             </p>
           </div>
         </section>
-        <section
-          className="public-container section-space"
-          aria-labelledby="how-title"
-        >
-          <p className="eyebrow">YOLCULUĞUN ÇOK BASİT</p>
-          <h2 id="how-title" className="section-title">
-            Mezun360 nasıl çalışır?
-          </h2>
-          <ol className="steps-grid">
-            {[
-              [
-                'Profilini oluştur ve güncel tut',
-                'Deneyimin, yetkinliklerin ve hedeflerinle kendini anlat.',
-              ],
-              [
-                'BTÜ mezun ağıyla bağlantı kur',
-                'Ortak bir geçmişten yeni bir diyaloğa adım at.',
-              ],
-              [
-                'Kariyer fırsatları ve mentörlükten yararlan',
-                'Yeni yollar keşfet, deneyimini paylaşarak ilerle.',
-              ],
-            ].map(([title, text], index) => (
-              <li key={title}>
-                <span className="step-number" aria-hidden="true">
-                  0{index + 1}
-                </span>
-                <h3 className="mb-3 mt-5 text-xl font-semibold">{title}</h3>
-                <p className="text-muted-foreground">{text}</p>
-              </li>
-            ))}
-          </ol>
-          <p className="mt-6 text-sm text-muted-foreground">
-            Bu adımlar, yakında sunulacak mezun deneyimini anlatır. Katılım
-            bağlantısı şu anda mevcut hesapların giriş ekranına yönlendirir.
-          </p>
+        <section className="bg-gradient-to-b from-pink-50 to-slate-50">
+          <div
+            className="public-container section-space"
+            aria-labelledby="how-title"
+          >
+            <p className="eyebrow">YOLCULUĞUN ÇOK BASİT</p>
+            <h2 id="how-title" className="section-title">
+              Mezun360 nasıl çalışır?
+            </h2>
+            <ol className="steps-grid">
+              {[
+                [
+                  'Profilini oluştur ve güncel tut',
+                  'Deneyimin, yetkinliklerin ve hedeflerinle kendini anlat.',
+                ],
+                [
+                  'BTÜ mezun ağıyla bağlantı kur',
+                  'Ortak bir geçmişten yeni bir diyaloğa adım at.',
+                ],
+                [
+                  'Kariyer fırsatları ve mentörlükten yararlan',
+                  'Yeni yollar keşfet, deneyimini paylaşarak ilerle.',
+                ],
+              ].map(([title, text], index) => (
+                <li key={title}>
+                  <span className="step-number" aria-hidden="true">
+                    0{index + 1}
+                  </span>
+                  <h3 className="mb-3 mt-5 text-xl font-semibold">{title}</h3>
+                  <p className="text-muted-foreground">{text}</p>
+                </li>
+              ))}
+            </ol>
+            <p className="mt-6 text-sm text-muted-foreground">
+              Bu adımlar, yakında sunulacak mezun deneyimini anlatır. Katılım
+              bağlantısı şu anda mevcut hesapların giriş ekranına yönlendirir.
+            </p>
+          </div>
         </section>
         <section
           id="hakkinda"
@@ -248,9 +250,9 @@ export function LandingPage() {
               </p>
             </div>
             <div className="flex flex-col items-center mt-12 mb-6">
-              <div className="relative w-full max-w-[700px] h-[400px] flex justify-center items-center">
+              <div className="relative w-full max-w-[700px] h-[450px] mb-16 flex justify-center items-center">
                 {/* The Orbit Rings (Visual Aid) - Wide Ellipse */}
-                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[250px] sm:h-[300px] border border-dashed border-white/20 rounded-[50%] z-10" />
+                <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[300px] sm:w-[500px] md:w-[600px] h-[250px] sm:h-[300px] border border-dashed border-white/10 rounded-[50%] z-10" />
 
                 {/* The Core (Kariyer Merkezi) */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-40 flex flex-col items-center justify-center w-32 h-32 rounded-full bg-white text-primary shadow-[0_0_30px_rgba(255,255,255,0.5)] transition-transform hover:scale-105 cursor-default">
@@ -258,24 +260,23 @@ export function LandingPage() {
                 </div>
 
                 {/* Satellite 1: Mezun (Top Left) */}
-                <div className="absolute top-[15%] left-[10%] sm:left-[15%] z-30 flex flex-col items-center justify-center w-20 h-20 rounded-full bg-green-100 text-emerald-900 shadow-[0_0_20px_rgba(193,225,193,0.5)] animate-float transition-transform hover:scale-110 cursor-default">
-                  <span className="font-bold text-xs">Mezun</span>
+                <div className="absolute top-[15%] left-[10%] sm:left-[15%] z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-green-100 text-emerald-900 shadow-[0_0_20px_rgba(193,225,193,0.5)] animate-float transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-sm">Mezun</span>
                 </div>
 
                 {/* Satellite 2: Öğrenci (Top Right) */}
-                <div className="absolute top-[15%] right-[10%] sm:right-[15%] z-30 flex flex-col items-center justify-center w-20 h-20 rounded-full bg-pink-100 text-pink-900 shadow-[0_0_20px_rgba(255,209,220,0.5)] animate-float-delayed transition-transform hover:scale-110 cursor-default">
-                  <span className="font-bold text-xs">Öğrenci</span>
+                <div className="absolute top-[15%] right-[10%] sm:right-[15%] z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-pink-100 text-pink-900 shadow-[0_0_20px_rgba(255,209,220,0.5)] animate-float-delayed transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-sm">Öğrenci</span>
                 </div>
 
                 {/* Satellite 3: İş Dünyası (Bottom Center) */}
-                <div className="absolute bottom-[5%] left-1/2 -translate-x-1/2 z-30 flex flex-col items-center justify-center w-20 h-20 rounded-full bg-amber-100 text-amber-900 shadow-[0_0_20px_rgba(230,218,166,0.5)] animate-float-slow transition-transform hover:scale-110 cursor-default">
-                  <span className="font-bold text-center text-xs leading-tight">İş<br/>Dünyası</span>
+                <div className="absolute bottom-[10%] left-1/2 -translate-x-1/2 z-30 flex flex-col items-center justify-center w-24 h-24 rounded-full bg-amber-100 text-amber-900 shadow-[0_0_20px_rgba(230,218,166,0.5)] animate-float-slow transition-transform hover:scale-110 cursor-default">
+                  <span className="font-bold text-center text-sm leading-tight">İş<br/>Dünyası</span>
                 </div>
+                <p className="absolute -bottom-12 left-1/2 -translate-x-1/2 w-full text-sm text-slate-500 text-center">
+                  Ortak bir geçmişten, birlikte şekillenen bir geleceğe.
+                </p>
               </div>
-
-              <p className="mt-8 text-sm text-pastel-blue text-center">
-                Ortak bir geçmişten, birlikte şekillenen bir geleceğe.
-              </p>
             </div>
           </div>
         </section>
@@ -408,7 +409,7 @@ export function LandingPage() {
               {['Gizlilik', 'Kullanım Koşulları', 'İletişim'].map((label) => (
                 <li key={label}>
                   {label}
-                  <span className="ml-2 rounded bg-background px-2 py-0.5 text-xs">
+                  <span className="ml-2 rounded bg-background px-2 py-0.5 text-sm">
                     Yakında
                   </span>
                 </li>

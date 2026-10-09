@@ -1,4 +1,5 @@
 .public-site {
+  background-color: #f8f9fa;
   overflow-wrap: break-word;
 }
 .public-container {
@@ -123,7 +124,7 @@
   border-radius: 24px;
   background: var(--primary);
   color: white;
-  box-shadow: 0 14px 24px #233a8510;
+  box-shadow: 0 14px 30px rgba(35, 58, 133, 0.08);
 }
 .community-node {
   position: absolute;
@@ -132,9 +133,9 @@
   gap: 12px;
   padding: 14px;
   border: 1px solid #e4e7e9;
-  border-radius: 14px;
+  border-radius: 24px;
   background: white;
-  box-shadow: 0 5px 16px #233a8505;
+  box-shadow: 0 8px 30px rgba(56, 189, 248, 0.1);
   font-weight: 600;
 }
 .community-node svg {
@@ -204,7 +205,7 @@
 }
 .value-icon {
   display: inline-flex;
-  border-radius: 14px;
+  border-radius: 24px;
   padding: 15px;
   color: var(--primary);
 }
@@ -216,7 +217,7 @@
   gap: 10px;
   padding: 15px 20px;
   background: var(--primary);
-  border-radius: 15px 15px 0 0;
+  border-radius: 24px 24px 0 0;
   color: white;
   font-size: 12px;
   letter-spacing: 0.035em;
@@ -226,9 +227,9 @@
   overflow: hidden;
   border: 1px solid #ced7e8;
   border-top: 0;
-  border-radius: 0 0 15px 15px;
+  border-radius: 0 0 24px 24px;
   background: var(--background);
-  box-shadow: 0 16px 40px #233a8508;
+  box-shadow: 0 16px 40px rgba(56, 189, 248, 0.1);
 }
 .preview-sidebar {
   display: flex;
@@ -342,8 +343,8 @@
   padding: 30px;
   background: white;
   border: 1px solid #dce1e7;
-  border-radius: 18px;
-  box-shadow: 0 10px 30px #233a8505;
+  border-radius: 32px;
+  box-shadow: 0 16px 40px rgba(56, 189, 248, 0.1);
 }
 .privacy-panel {
   display: grid;
