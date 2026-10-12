@@ -50,7 +50,7 @@ public class MentorshipService {
         );
 
         if (optInStatuses.isEmpty() || !optInStatuses.get(0)) {
-            throw new AccessDeniedException("User is not a verified alumni or has not opted into the directory.");
+            throw new AccessDeniedException("Mentörlük işlemleri için mezuniyetinizin doğrulanmış (VERIFIED) olması ve profilinizin hazır olması gerekmektedir.");
         }
     }
 

@@ -7,6 +7,7 @@ import { Input, Label } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
 import { Loading } from '@/components/ui/loading'
 import { authApi, homeFor, identityKey, safeAuthError, useIdentity } from './auth'
+import { api } from '@/lib/api'
 
 export function AuthGuard({ role }: { role: 'ALUMNI' | 'ADMIN' }) {
   const identity = useIdentity()
@@ -168,12 +169,33 @@ export function RegisterPage() {
       await authApi.register({ email, password, firstName, lastName })
       await cache.cancelQueries()
       cache.clear()
-      form.reset()
+
+      try {
+        let etag = ''
+        await api.get('/me/profile', { onResponse: r => { etag = r.headers.get('ETag') ?? '"empty"' } })
+        await api.put('/me/profile', {
+          firstName,
+          lastName,
+          career: [],
+          education: [],
+          skills: [],
+          certifications: [],
+          contribution: {
+            willingToMentor: false,
+            willingToShareOpportunities: false,
+            willingToSpeakAtEvents: false,
+            willingToSupportUniversityProjects: false
+          }
+        }, { headers: { 'If-Match': etag || '"empty"' } })
+      } catch {
+        // Tolerated initial profile initialization fallback
+      }
 
       const user = await authApi.me()
       cache.setQueryData(identityKey, user)
       if (!user) throw new Error('Session unavailable')
       
+      form.reset()
       navigate(homeFor(user), { replace: true })
     } catch (failure) {
       setError(safeAuthError(failure))

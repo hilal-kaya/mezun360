@@ -37,8 +37,20 @@ export function PostJobModal() {
     }
   });
 
+  const errorObj = mutation.error as any;
+  let errorMsg = errorObj?.problem?.detail || errorObj?.message;
+  if (errorObj?.status === 403 || errorMsg?.includes('VERIFIED') || errorMsg?.includes('doğrulanmış')) {
+    errorMsg = 'Yalnızca mezuniyeti onaylanmış (VERIFIED) mezunlar yeni iş veya staj ilanı ekleyebilir.';
+  } else if (errorObj?.status === 400 || errorObj?.problem?.code === 'VALIDATION_FAILED') {
+    errorMsg = 'Lütfen formdaki tüm zorunlu alanları ve geçerli bir başvuru bağlantısını (https://...) eksiksiz doldurun.';
+  }
+
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!form.applicationUrl.startsWith('http://') && !form.applicationUrl.startsWith('https://')) {
+      alert('Başvuru linki http:// veya https:// ile başlamalıdır.');
+      return;
+    }
     mutation.mutate(form as any);
   };
 
@@ -48,11 +60,23 @@ export function PostJobModal() {
         <Button className="bg-[#233A85] hover:bg-[#1a2b63] text-white">İlan Ekle</Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px]">
-          <DialogTitle className="text-[#233A85]">Yeni İlan Ekle</DialogTitle>
-        <form onSubmit={onSubmit} className="space-y-4 py-4">
+        <DialogTitle className="text-[#233A85]">Yeni İlan Ekle</DialogTitle>
+        
+        {mutation.isError && (
+          <div className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-destructive font-medium space-y-1">
+            <p>{errorMsg || 'İlan eklenirken bir hata oluştu.'}</p>
+            {errorObj?.status === 403 && (
+              <a href="/app/profile" className="inline-block font-semibold text-primary underline">
+                Profil Doğrulama Durumunu İncele →
+              </a>
+            )}
+          </div>
+        )}
+
+        <form onSubmit={onSubmit} className="space-y-4 py-2">
           <div className="space-y-2">
             <label htmlFor="title" className="block text-sm font-medium">İlan Başlığı</label>
-            <Input id="title" required minLength={3} value={form.title} onChange={e => setForm({...form, title: e.target.value})} />
+            <Input id="title" required minLength={3} value={form.title} onChange={e => setForm({...form, title: e.target.value})} disabled={mutation.isPending} />
           </div>
 
           <div className="grid grid-cols-2 gap-4">

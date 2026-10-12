@@ -49,7 +49,7 @@ public class JobService {
         );
         
         if (statuses.isEmpty() || !"VERIFIED".equals(statuses.get(0))) {
-            throw new AccessDeniedException("Only VERIFIED alumni can access the job board.");
+            throw new AccessDeniedException("İş ve staj ilanlarına erişebilmek için mezuniyetinizin doğrulanmış (VERIFIED) olması gerekmektedir.");
         }
     }
 

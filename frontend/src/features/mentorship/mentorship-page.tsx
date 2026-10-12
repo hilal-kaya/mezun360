@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { Link } from 'react-router-dom'
 import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useIncomingRequests, useOutgoingRequests, useMentors } from './api/mentorshipApi'
@@ -124,17 +125,41 @@ export function MentorshipPage() {
 
       {activeTab === 'incoming' && (
         <div className="max-w-4xl mx-auto">
-          {queryIncoming.isPending ? <p className="text-gray-500 text-center py-10">Gelen talepler yükleniyor...</p> : 
-           queryIncoming.isError ? <p className="text-red-500 text-center py-10">Hata oluştu.</p> :
-           <MentorshipRequestsList requests={queryIncoming.data.content} type="incoming" />}
+          {queryIncoming.isPending ? (
+            <p className="text-gray-500 text-center py-10">Gelen talepler yükleniyor...</p>
+          ) : queryIncoming.isError ? (
+            <div className="rounded-2xl border border-dashed border-pastel-blue bg-white p-8 text-center space-y-3">
+              <p className="text-base font-semibold text-primary">Mezuniyet Doğrulaması Gereklidir</p>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Gelen mentörlük taleplerinizi yönetebilmek için mezuniyet durumunuzun doğrulanmış (VERIFIED) olması gerekmektedir.
+              </p>
+              <Button asChild variant="outline" className="rounded-xl text-xs h-9 px-4">
+                <Link to="/app/profile">Profil ve Doğrulama Durumunu İncele</Link>
+              </Button>
+            </div>
+          ) : (
+            <MentorshipRequestsList requests={queryIncoming.data.content} type="incoming" />
+          )}
         </div>
       )}
 
       {activeTab === 'outgoing' && (
         <div className="max-w-4xl mx-auto">
-          {queryOutgoing.isPending ? <p className="text-gray-500 text-center py-10">Giden talepler yükleniyor...</p> : 
-           queryOutgoing.isError ? <p className="text-red-500 text-center py-10">Hata oluştu.</p> :
-           <MentorshipRequestsList requests={queryOutgoing.data.content} type="outgoing" />}
+          {queryOutgoing.isPending ? (
+            <p className="text-gray-500 text-center py-10">Giden talepler yükleniyor...</p>
+          ) : queryOutgoing.isError ? (
+            <div className="rounded-2xl border border-dashed border-pastel-blue bg-white p-8 text-center space-y-3">
+              <p className="text-base font-semibold text-primary">Mezuniyet Doğrulaması Gereklidir</p>
+              <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                Giden mentörlük taleplerinizi listeleyebilmek için mezuniyet durumunuzun doğrulanmış (VERIFIED) olması gerekmektedir.
+              </p>
+              <Button asChild variant="outline" className="rounded-xl text-xs h-9 px-4">
+                <Link to="/app/profile">Profil ve Doğrulama Durumunu İncele</Link>
+              </Button>
+            </div>
+          ) : (
+            <MentorshipRequestsList requests={queryOutgoing.data.content} type="outgoing" />
+          )}
         </div>
       )}
 

@@ -13,4 +13,4 @@ target/
 playwright-report/
 test-results/
 *.tsbuildinfo
-
+*cookies*.txt

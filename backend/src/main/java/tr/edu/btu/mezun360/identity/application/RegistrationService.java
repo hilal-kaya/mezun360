@@ -28,7 +28,7 @@ public class RegistrationService {
         String canonical = EmailCanonicalizer.canonicalize(email);
         var existing = accounts.findByEmailCanonical(canonical);
         if (existing.isPresent()) {
-            throw new IllegalArgumentException("Email already registered.");
+            throw new IllegalArgumentException("Bu e-posta adresi ile kayıtlı bir hesap zaten bulunmaktadır.");
         }
         var account = accounts.save(UserAccount.publicRegistration(email.strip(), canonical, passwords.encode(password), clock.instant()));
         return account.id();

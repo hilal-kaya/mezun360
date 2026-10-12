@@ -37,7 +37,14 @@ export function PrivacyPage() {
   if (query.isPending) return <p role="status">Gizlilik tercihlerin yükleniyor…</p>
   if (query.isError) return <section className="profile-card"><h1>Gizlilik Ayarları</h1><p role="alert" className="my-4">Tercihler yüklenemedi.</p><Button onClick={() => void query.refetch()}>Tekrar dene</Button></section>
   return <div className="max-w-2xl space-y-5"><div><h1 className="text-2xl">Gizlilik Ayarları</h1><p className="mt-2 text-muted-foreground">Görünürlüğün senin kontrolünde.</p></div>
-    {!query.data.data.profileExists && <p className="rounded-xl bg-pastel-blue p-4">Tercihlerini kaydetmek için önce <Link to="/app/profile" className="underline">profilini oluştur</Link>. Şu anda görünürlüğün kapalı.</p>}
+    {!query.data.data.profileExists && (
+      <div className="rounded-2xl border border-pastel-blue bg-pastel-blue/30 p-5 space-y-2">
+        <h2 className="text-base font-semibold text-primary">Profil Kaydı Gereklidir</h2>
+        <p className="text-sm text-slate-700 leading-relaxed">
+          Tercihlerinizi kaydedebilmek için önce <Link to="/app/profile" className="font-semibold text-primary underline">profilinizi oluşturun</Link>. Güvenliğiniz için şu anda ağ görünürlüğünüz varsayılan olarak kapalıdır.
+        </p>
+      </div>
+    )}
     <PrivacyForm key={formVersion} initial={query.data} reload={() => { void query.refetch().then(result => { if (result.isSuccess) setFormVersion(v => v + 1) }) }} saved={() => { setToast(true); setFormVersion(v => v + 1) }} />
     <section className="profile-card !bg-pastel-mint"><h2 className="flex items-center gap-2"><LockKeyhole size={18} aria-hidden="true" />İletişim bilgilerin gizli</h2><p className="mt-3 text-sm">Kişisel e-posta, telefon ve ayrıntılı iletişim bilgileri diğer mezunlara, işverenlere veya ziyaretçilere açılmaz. Giriş e-postan profil iletişim bilgisi olarak paylaşılmaz.</p></section>
     {toast && <Toast message="Gizlilik ayarlarınız başarıyla güncellendi." clear={clear} />}

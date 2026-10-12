@@ -16,10 +16,20 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
     })
   }
 
-  let errorMessage = (mutation.error as any)?.problem?.detail || (mutation.error as any)?.message || "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."
-  const problemCode = (mutation.error as any)?.problem?.code;
+  const errorObj = mutation.error as any
+  let errorMessage = errorObj?.problem?.detail || errorObj?.message || "Bir hata oluştu. Lütfen daha sonra tekrar deneyin."
+  const problemCode = errorObj?.problem?.code
+  const status = errorObj?.status
 
-  if (problemCode === "VALIDATION_FAILED" || errorMessage === "One or more fields are invalid.") {
+  const isAccessDenied = status === 403 || 
+    errorMessage.includes('Access is denied') || 
+    errorMessage.includes('verified') || 
+    errorMessage.includes('doğrulanmış') || 
+    problemCode === 'FORBIDDEN'
+
+  if (isAccessDenied) {
+    errorMessage = "Mentörlük talebi gönderebilmek için mezuniyetinizin onaylanmış (VERIFIED) olması ve profilinizin tamamlanmış olması gerekmektedir."
+  } else if (problemCode === "VALIDATION_FAILED" || errorMessage === "One or more fields are invalid.") {
     errorMessage = "Lütfen geçerli ve yeterli uzunlukta bir açıklama giriniz (En az 10 karakter)."
   } else if (errorMessage === "You cannot mentor yourself.") {
     errorMessage = "Kendinize mentörlük talebi gönderemezsiniz."
@@ -28,15 +38,20 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
   }
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 animate-in fade-in duration-200">
       <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-xl border border-pastel-blue">
         <h2 className="text-xl font-bold text-primary font-barlow mb-4">
           Mentörlük Talebi: {mentorName}
         </h2>
         
         {mutation.isError && (
-          <div className="mb-4 rounded bg-red-50 p-3 text-sm text-red-700">
-            {errorMessage}
+          <div className="mb-4 rounded-xl border border-red-200 bg-pastel-peach/60 p-3.5 text-xs text-destructive font-medium space-y-2">
+            <p>{errorMessage}</p>
+            {isAccessDenied && (
+              <a href="/app/profile" className="inline-block text-xs font-semibold text-primary underline">
+                Profil ve Mezuniyet Doğrulama Sayfasına Git →
+              </a>
+            )}
           </div>
         )}
 

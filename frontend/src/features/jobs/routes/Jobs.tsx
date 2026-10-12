@@ -17,12 +17,16 @@ export function Jobs() {
     return () => clearTimeout(handler);
   }, [query]);
   
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ['jobs', debouncedQuery],
     queryFn: () => searchJobs({ 
       query: debouncedQuery || undefined,
     })
   });
+
+  const isForbidden = (error as any)?.status === 403 || 
+    (error as any)?.problem?.detail?.includes('VERIFIED') || 
+    (error as any)?.problem?.detail?.includes('doğrulanmış');
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -71,10 +75,22 @@ export function Jobs() {
         )}
 
         {isError && (
-          <div className="bg-red-50 text-red-600 p-6 rounded-lg text-center flex flex-col items-center">
-            <p>İlanlar yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>
-            <button className="mt-4 px-4 py-2 bg-white border border-red-200 rounded text-red-600 hover:bg-red-50" onClick={() => void refetch()}>Tekrar Dene</button>
-          </div>
+          isForbidden ? (
+            <div className="bg-pastel-blue/30 border border-pastel-blue p-8 rounded-2xl text-center flex flex-col items-center space-y-3">
+              <p className="text-base font-semibold text-primary">Mezuniyet Doğrulaması Gereklidir</p>
+              <p className="text-sm text-muted-foreground max-w-md">
+                İş ve staj ilanlarını görüntüleyebilmek ve başvuru yapabilmek için mezuniyet durumunuzun Kariyer Merkezi tarafından onaylanmış (VERIFIED) olması gerekmektedir.
+              </p>
+              <a href="/app/profile" className="inline-block px-5 py-2.5 bg-primary text-white rounded-xl text-xs font-semibold hover:bg-primary/90 transition-colors">
+                Profil ve Doğrulama Durumunu İncele
+              </a>
+            </div>
+          ) : (
+            <div className="bg-red-50 text-red-600 p-6 rounded-lg text-center flex flex-col items-center">
+              <p>İlanlar yüklenirken bir hata oluştu. Lütfen daha sonra tekrar deneyin.</p>
+              <button className="mt-4 px-4 py-2 bg-white border border-red-200 rounded text-red-600 hover:bg-red-50" onClick={() => void refetch()}>Tekrar Dene</button>
+            </div>
+          )
         )}
 
         {data?.content.length === 0 && (

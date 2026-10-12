@@ -39,8 +39,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AccessDeniedException.class)
-    ResponseEntity<Object> accessDenied(HttpServletRequest request) {
-        return problem(HttpStatus.FORBIDDEN, "FORBIDDEN", "Access is denied.", List.of(), new HttpHeaders(), request);
+    ResponseEntity<Object> accessDenied(AccessDeniedException ex, HttpServletRequest request) {
+        String detail = ex.getMessage() != null && !ex.getMessage().isBlank()
+                ? ex.getMessage()
+                : "Access is denied.";
+        return problem(HttpStatus.FORBIDDEN, "FORBIDDEN", detail, List.of(), new HttpHeaders(), request);
     }
 
     @ExceptionHandler(RateLimitExceededException.class)

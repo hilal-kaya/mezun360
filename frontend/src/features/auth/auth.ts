@@ -26,8 +26,14 @@ export function safeAuthError(error: unknown) {
     if (error.status === 429) return 'Çok fazla deneme yapıldı. Birkaç dakika sonra tekrar deneyin.'
     if (error.code === 'CSRF_INVALID') return 'Oturum güvenlik bilgisi yenilendi. Lütfen tekrar deneyin.'
     if (error.status === 0) return 'Sunucuya ulaşılamadı. Lütfen bağlantınızı kontrol edin.'
-    if (error.message) return `İşlem Başarısız: ${error.message}`
+    if (error.problem?.detail) {
+      if (error.problem.detail.includes('already registered') || error.problem.detail.includes('kayıtlı')) {
+        return 'Bu e-posta adresi ile kayıtlı bir hesap zaten bulunmaktadır. Lütfen giriş yapın.'
+      }
+      return error.problem.detail
+    }
+    if (error.message && error.message !== 'API request failed.') return error.message
   }
-  if (error instanceof Error && error.message) return error.message;
+  if (error instanceof Error && error.message) return error.message
   return 'Şu anda işlem tamamlanamıyor. Lütfen tekrar deneyin.'
 }
