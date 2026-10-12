@@ -1,6 +1,6 @@
 import { lazy, Suspense } from 'react'
 import { Link, Route, Routes } from 'react-router-dom'
-import { AuthGuard, LoginPage, ForgotPasswordPage, AuthenticatedPlaceholder } from '@/features/auth/auth-pages'
+import { AuthGuard, LoginPage, RegisterPage, ForgotPasswordPage, AuthenticatedPlaceholder } from '@/features/auth/auth-pages'
 import { Loading } from '@/components/ui/loading'
 import { LandingPage } from '@/features/public/landing-page'
 import { AlumniLayout, AlumniHome } from '@/layouts/alumni-layout'
@@ -39,6 +39,7 @@ export function App() {
         </Route>
         <Route element={<RootLayout />}>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
           <Route element={<AuthGuard role="ADMIN" />}><Route path="/admin" element={<AuthenticatedPlaceholder admin />} /><Route path="/admin/verifications" element={<AdminVerificationsPage />} /></Route>
           {DevelopmentFoundation && <Route path="/__dev/foundation" element={<DevelopmentFoundation />} />}

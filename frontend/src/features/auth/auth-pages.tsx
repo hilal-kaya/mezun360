@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Eye, EyeOff, ArrowRight, LogOut, ShieldCheck } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight, LogOut, ShieldCheck, UserPlus, CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input, Label } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -24,6 +24,7 @@ export function LoginPage() {
   const [visible, setVisible] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
+
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
@@ -46,32 +47,257 @@ export function LoginPage() {
     } catch (failure) { setError(safeAuthError(failure)) }
     finally { setBusy(false) }
   }
+
   if (identity.isPending) return <Loading label="Oturum kontrol ediliyor…" />
   if (identity.data) return <Navigate to={homeFor(identity.data)} replace />
+
   return (
-    <div className="grid overflow-hidden rounded-3xl border bg-card shadow-sm md:grid-cols-2">
+    <div className="grid overflow-hidden rounded-3xl border bg-card shadow-sm md:grid-cols-2 max-w-4xl mx-auto my-8">
       <section className="relative hidden flex-col justify-between md:flex gap-10 bg-primary p-8 text-primary-foreground sm:p-12" aria-label="BTÜ Mezun360">
-        <div><p className="text-2xl font-semibold">BTÜ Mezun360</p><p className="mt-1 text-sm text-pastel-blue">Kariyer ve Mezun Platformu</p></div>
-        <div className="space-y-5"><span className="inline-flex rounded-full bg-white/10 px-4 py-1 text-sm text-pastel-turquoise">Aynı üniversite. Yeni yollar.</span><h2 className="max-w-sm text-3xl leading-tight sm:text-4xl">BTÜ ile bağın mezuniyetle bitmez.</h2><p className="max-w-sm text-lg text-pastel-blue">Mezun topluluğumuzla bağını sürdür, kariyer yolculuğuna birlikte devam edelim.</p></div>
-        <p className="flex items-center gap-2 text-sm text-pastel-blue"><ShieldCheck size={18} aria-hidden="true" />Üniversitenle güvenli bir bağ.</p>
+        <div>
+          <p className="text-2xl font-bold tracking-tight">BTÜ Mezun360</p>
+          <p className="mt-1 text-sm text-pastel-blue font-medium">Kariyer ve Mezun Platformu</p>
+        </div>
+        <div className="space-y-5">
+          <span className="inline-flex rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold text-pastel-turquoise tracking-wide uppercase">
+            Aynı üniversite. Yeni yollar.
+          </span>
+          <h2 className="max-w-sm text-3xl font-bold leading-tight sm:text-4xl">BTÜ ile bağın mezuniyetle bitmez.</h2>
+          <p className="max-w-sm text-base text-pastel-blue leading-relaxed">
+            Mezun topluluğumuzla bağını sürdür, kariyer yolculuğuna birlikte yön verelim.
+          </p>
+        </div>
+        <p className="flex items-center gap-2 text-sm text-pastel-blue">
+          <ShieldCheck size={18} aria-hidden="true" className="text-pastel-turquoise" />
+          Üniversitenle resmi ve güvenli bir bağ.
+        </p>
       </section>
-      <section className="p-8 sm:p-12" aria-labelledby="login-title">
-        <div className="mb-8 space-y-2"><h1 id="login-title" className="text-3xl">Tekrar hoş geldin</h1><p className="text-muted-foreground">Mezun360 hesabınla yolculuğuna devam et.</p></div>
-        <form noValidate onSubmit={submit} className="space-y-5" aria-busy={busy}>
-          <div className="space-y-2"><Label htmlFor="email">E-posta adresi</Label><Input id="email" name="email" type="email" autoComplete="username" maxLength={254} required disabled={busy} placeholder="ornek@eposta.com" /></div>
-          <div className="space-y-2"><Label htmlFor="password">Parola</Label><div className="relative"><Input className="pr-14" id="password" name="password" type={visible ? 'text' : 'password'} autoComplete="current-password" maxLength={128} required disabled={busy} /><Button variant="ghost" className="absolute right-0 top-0 px-3" aria-label={visible ? 'Parolayı gizle' : 'Parolayı göster'} aria-pressed={visible} onClick={() => setVisible(!visible)}>{visible ? <EyeOff size={18} /> : <Eye size={18} />}</Button></div></div>
-          <div className="flex flex-wrap items-center justify-end gap-2 text-sm"><button type="button" disabled className="cursor-not-allowed text-muted-foreground" aria-describedby="reset-availability">Şifremi Unuttum</button><span id="reset-availability" className="rounded bg-pastel-lavender px-2 py-1 text-xs font-medium text-primary">Yakında</span></div>
-          {(error || identity.isError) && <p role="alert" className="rounded-md bg-pastel-peach p-3 text-sm text-destructive">{error || 'Oturum bilgisi alınamadı. Bağlantınızı kontrol edip tekrar deneyin.'}</p>}
-          <Button type="submit" className="w-full" disabled={busy}>{busy ? 'Giriş yapılıyor…' : 'Giriş Yap'}<ArrowRight size={18} aria-hidden="true" /></Button>
-        </form>
-        <p className="mt-8 text-sm text-muted-foreground">Hesabın ve kişisel bilgilerin yalnızca yetkin dahilinde erişilebilir.</p>
+
+      <section className="p-8 sm:p-12 flex flex-col justify-between" aria-labelledby="login-title">
+        <div>
+          <div className="mb-8 space-y-2">
+            <h1 id="login-title" className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Tekrar hoş geldin</h1>
+            <p className="text-sm text-muted-foreground">Mezun360 hesabınla kariyer yolculuğuna devam et.</p>
+          </div>
+          <form noValidate onSubmit={submit} className="space-y-4" aria-busy={busy}>
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-xs font-semibold text-slate-700">E-posta adresi</Label>
+              <Input id="email" name="email" type="email" autoComplete="username" maxLength={254} required disabled={busy} placeholder="ornek@btu.edu.tr" className="h-11 rounded-xl" />
+            </div>
+            <div className="space-y-1.5">
+              <Label htmlFor="password" className="text-xs font-semibold text-slate-700">Parola</Label>
+              <div className="relative">
+                <Input className="pr-12 h-11 rounded-xl" id="password" name="password" type={visible ? 'text' : 'password'} autoComplete="current-password" maxLength={128} required disabled={busy} />
+                <Button type="button" variant="ghost" className="absolute right-0 top-0 h-11 px-3 text-slate-400 hover:text-slate-600" aria-label={visible ? 'Parolayı gizle' : 'Parolayı göster'} onClick={() => setVisible(!visible)}>
+                  {visible ? <EyeOff size={18} /> : <Eye size={18} />}
+                </Button>
+              </div>
+            </div>
+            <div className="flex flex-wrap items-center justify-between gap-2 text-xs pt-1">
+              <Link to="/register" className="font-semibold text-primary hover:underline flex items-center gap-1">
+                Hesabın yok mu? Kayıt Ol
+              </Link>
+              <div className="flex items-center gap-1">
+                <button type="button" disabled className="cursor-not-allowed text-muted-foreground">Şifremi Unuttum</button>
+                <span className="rounded bg-pastel-lavender px-1.5 py-0.5 text-[10px] font-semibold text-primary">Yakında</span>
+              </div>
+            </div>
+            {(error || identity.isError) && (
+              <p role="alert" className="rounded-xl bg-pastel-peach/60 border border-red-200 p-3 text-xs text-destructive font-medium">
+                {error || 'Oturum bilgisi alınamadı. Bağlantınızı kontrol edip tekrar deneyin.'}
+              </p>
+            )}
+            <Button type="submit" className="w-full h-11 rounded-xl font-semibold shadow-sm mt-2" disabled={busy}>
+              {busy ? 'Giriş yapılıyor…' : 'Giriş Yap'}
+              <ArrowRight size={16} className="ml-1.5" aria-hidden="true" />
+            </Button>
+          </form>
+        </div>
+        <p className="mt-8 text-xs text-center text-muted-foreground">
+          Hesabın ve kişisel bilgilerin KVKK standartlarında güvenle korunmaktadır.
+        </p>
       </section>
     </div>
   )
 }
-export function ForgotPasswordPage() {
-  return <Card className="mx-auto max-w-lg space-y-4"><h1>Parola yardımı</h1><p>Parola sıfırlama henüz kullanıma açılmadı. Bu ekranda e-posta veya sıfırlama bağlantısı gönderilmez.</p><Link to="/login" className="font-semibold text-primary underline">Girişe dön</Link></Card>
+
+export function RegisterPage() {
+  const identity = useIdentity()
+  const cache = useQueryClient()
+  const navigate = useNavigate()
+  const [visible, setVisible] = useState(false)
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState('')
+  const [kvkkAccepted, setKvkkAccepted] = useState(false)
+
+  async function submit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault()
+    const form = event.currentTarget
+    const data = new FormData(form)
+    const email = String(data.get('email') ?? '').trim()
+    const password = String(data.get('password') ?? '')
+    const passwordConfirm = String(data.get('passwordConfirm') ?? '')
+    const firstName = String(data.get('firstName') ?? '').trim()
+    const lastName = String(data.get('lastName') ?? '').trim()
+
+    if (!firstName || !lastName) {
+      setError('Lütfen ad ve soyadınızı belirtin.')
+      return
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      setError('Geçerli bir e-posta adresi girin.')
+      return
+    }
+    if (password.length < 15 || password.length > 128) {
+      setError('Parola en az 15, en fazla 128 karakter uzunluğunda olmalıdır.')
+      return
+    }
+    if (password !== passwordConfirm) {
+      setError('Parolalar birbiriyle eşleşmiyor.')
+      return
+    }
+    if (!kvkkAccepted) {
+      setError('Lütfen KVKK Aydınlatma Metnini onaylayın.')
+      return
+    }
+
+    setBusy(true)
+    setError('')
+
+    try {
+      await authApi.register({ email, password, firstName, lastName })
+      await cache.cancelQueries()
+      cache.clear()
+      form.reset()
+
+      const user = await authApi.me()
+      cache.setQueryData(identityKey, user)
+      if (!user) throw new Error('Session unavailable')
+      
+      navigate(homeFor(user), { replace: true })
+    } catch (failure) {
+      setError(safeAuthError(failure))
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  if (identity.isPending) return <Loading label="Oturum kontrol ediliyor…" />
+  if (identity.data) return <Navigate to={homeFor(identity.data)} replace />
+
+  return (
+    <div className="grid overflow-hidden rounded-3xl border bg-card shadow-sm md:grid-cols-2 max-w-4xl mx-auto my-8">
+      <section className="relative hidden flex-col justify-between md:flex gap-10 bg-primary p-8 text-primary-foreground sm:p-12" aria-label="BTÜ Mezun360 Ağı">
+        <div>
+          <p className="text-2xl font-bold tracking-tight">BTÜ Mezun360</p>
+          <p className="mt-1 text-sm text-pastel-blue font-medium">Yeni Mezun & Kariyer Topluluğu</p>
+        </div>
+        <div className="space-y-5">
+          <span className="inline-flex rounded-full bg-white/10 px-4 py-1.5 text-xs font-semibold text-pastel-turquoise tracking-wide uppercase">
+            Topluluğa Katılın
+          </span>
+          <h2 className="max-w-sm text-3xl font-bold leading-tight sm:text-4xl">Aramıza Hoş Geldiniz!</h2>
+          <p className="max-w-sm text-base text-pastel-blue leading-relaxed">
+            Kariyer fırsatları, mentörlük eşleşmeleri ve üniversite ağı artık tek bir noktada.
+          </p>
+          <ul className="space-y-2 text-sm text-pastel-turquoise pt-2">
+            <li className="flex items-center gap-2">
+              <CheckCircle2 size={16} /> Doğrulanmış Bursa Teknik mezun ağı
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle2 size={16} /> Üniversite onaylı iş & staj ilanları
+            </li>
+            <li className="flex items-center gap-2">
+              <CheckCircle2 size={16} /> Birebir hızlı mentörlük imkanları
+            </li>
+          </ul>
+        </div>
+        <p className="flex items-center gap-2 text-sm text-pastel-blue">
+          <ShieldCheck size={18} aria-hidden="true" className="text-pastel-turquoise" />
+          BTÜ Kariyer Merkezi güvencesiyle.
+        </p>
+      </section>
+
+      <section className="p-8 sm:p-12 flex flex-col justify-between" aria-labelledby="register-title">
+        <div>
+          <div className="mb-6 space-y-2">
+            <h1 id="register-title" className="text-2xl sm:text-3xl font-bold tracking-tight text-slate-900">Kayıt Ol</h1>
+            <p className="text-sm text-muted-foreground">Mezun360 ağına katılmak için formu doldurun.</p>
+          </div>
+
+          <form noValidate onSubmit={submit} className="space-y-4" aria-busy={busy}>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <Label htmlFor="firstName" className="text-xs font-semibold text-slate-700">Adınız</Label>
+                <Input id="firstName" name="firstName" required disabled={busy} placeholder="Ad" className="h-11 rounded-xl" />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="lastName" className="text-xs font-semibold text-slate-700">Soyadınız</Label>
+                <Input id="lastName" name="lastName" required disabled={busy} placeholder="Soyad" className="h-11 rounded-xl" />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="reg-email" className="text-xs font-semibold text-slate-700">E-posta adresi</Label>
+              <Input id="reg-email" name="email" type="email" autoComplete="email" maxLength={254} required disabled={busy} placeholder="ad.soyad@ornek.com" className="h-11 rounded-xl" />
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="reg-password" className="text-xs font-semibold text-slate-700">Parola (En az 15 karakter)</Label>
+              <div className="relative">
+                <Input className="pr-12 h-11 rounded-xl" id="reg-password" name="password" type={visible ? 'text' : 'password'} autoComplete="new-password" maxLength={128} required disabled={busy} />
+                <Button type="button" variant="ghost" className="absolute right-0 top-0 h-11 px-3 text-slate-400 hover:text-slate-600" aria-label={visible ? 'Parolayı gizle' : 'Parolayı göster'} onClick={() => setVisible(!visible)}>
+                  {visible ? <EyeOff size={18} /> : <Eye size={18} />}
+                </Button>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="reg-password-confirm" className="text-xs font-semibold text-slate-700">Parola Tekrarı</Label>
+              <Input className="h-11 rounded-xl" id="reg-password-confirm" name="passwordConfirm" type={visible ? 'text' : 'password'} autoComplete="new-password" maxLength={128} required disabled={busy} />
+            </div>
+
+            <div className="flex items-start gap-2 pt-1">
+              <input 
+                type="checkbox" 
+                id="kvkk" 
+                checked={kvkkAccepted} 
+                onChange={(e) => setKvkkAccepted(e.target.checked)} 
+                className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+              />
+              <Label htmlFor="kvkk" className="text-xs text-muted-foreground leading-snug cursor-pointer">
+                BTÜ Mezun360 KVKK Aydınlatma Metnini okudum ve kişisel verilerimin işlenmesini kabul ediyorum.
+              </Label>
+            </div>
+
+            {(error || identity.isError) && (
+              <p role="alert" className="rounded-xl bg-pastel-peach/60 border border-red-200 p-3 text-xs text-destructive font-medium">
+                {error || 'İşlem tamamlanamadı. Bağlantınızı kontrol edip tekrar deneyin.'}
+              </p>
+            )}
+
+            <Button type="submit" className="w-full h-11 rounded-xl font-semibold shadow-sm mt-2" disabled={busy}>
+              {busy ? 'Kayıt Yapılıyor…' : 'Hesap Oluştur'}
+              <UserPlus size={16} className="ml-1.5" aria-hidden="true" />
+            </Button>
+          </form>
+        </div>
+
+        <div className="mt-6 pt-4 border-t text-center text-xs text-muted-foreground">
+          Zaten bir hesabın var mı?{' '}
+          <Link to="/login" className="font-semibold text-primary hover:underline">
+            Giriş Yap
+          </Link>
+        </div>
+      </section>
+    </div>
+  )
 }
+
+export function ForgotPasswordPage() {
+  return <Card className="mx-auto max-w-lg space-y-4 my-8"><h1>Parola yardımı</h1><p>Parola sıfırlama henüz kullanıma açılmadı. Bu ekranda e-posta veya sıfırlama bağlantısı gönderilmez.</p><Link to="/login" className="font-semibold text-primary underline">Girişe dön</Link></Card>
+}
+
 export function AuthenticatedPlaceholder({ admin = false }: { admin?: boolean }) {
   const identity = useIdentity()
   const cache = useQueryClient()
@@ -87,5 +313,5 @@ export function AuthenticatedPlaceholder({ admin = false }: { admin?: boolean })
     } catch (failure) { setError(safeAuthError(failure)) }
     finally { setBusy(false) }
   }
-  return <Card className="space-y-5"><span className="rounded-full bg-pastel-mint px-3 py-1 text-sm">Oturum açık</span><h1>{admin ? 'Mezun360 Yönetim Alanı' : 'Mezun360 Mezun Alanı'}</h1><p className="text-muted-foreground">Giriş başarılı. Bu alanın özellikleri sonraki aşamalarda eklenecek.</p>{admin && <Button asChild><Link to="/admin/verifications">Mezuniyet Doğrulamaları</Link></Button>}<p>{identity.data?.email}</p>{error && <p role="alert">{error}</p>}<Button variant="outline" onClick={() => void logout()} disabled={busy}><LogOut size={18} aria-hidden="true" />{busy ? 'Çıkış yapılıyor…' : 'Çıkış Yap'}</Button></Card>
+  return <Card className="space-y-5 my-8"><span className="rounded-full bg-pastel-mint px-3 py-1 text-sm">Oturum açık</span><h1>{admin ? 'Mezun360 Yönetim Alanı' : 'Mezun360 Mezun Alanı'}</h1><p className="text-muted-foreground">Giriş başarılı. Bu alanın özellikleri sonraki aşamalarda eklenecek.</p>{admin && <Button asChild><Link to="/admin/verifications">Mezuniyet Doğrulamaları</Link></Button>}<p>{identity.data?.email}</p>{error && <p role="alert">{error}</p>}<Button variant="outline" onClick={() => void logout()} disabled={busy}><LogOut size={18} aria-hidden="true" />{busy ? 'Çıkış yapılıyor…' : 'Çıkış Yap'}</Button></Card>
 }

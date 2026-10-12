@@ -2,7 +2,7 @@
 .alumni-sidebar { display:none; }
 .alumni-workspace { min-width:0; }
 .alumni-header { min-height:64px; display:flex; align-items:center; justify-content:space-between; gap:1rem; padding:0.75rem 1.5rem; background:#fafaf7; border-bottom:1px solid #e9ebef; }
-.alumni-main { padding:1.25rem; max-width:1200px; margin:0 auto; }
+.alumni-main { padding:1.5rem 2rem; max-width:1240px; margin:0 auto; }
 .alumni-nav { display:grid; gap:.25rem; margin:1.25rem 0; }
 .alumni-nav a { min-height:38px; display:flex; align-items:center; gap:.6rem; padding:.5rem .75rem; border-radius:.6rem; font-size:.85rem; color:#4b5563; }
 .alumni-nav a:hover { background:#eceefa; }
@@ -36,7 +36,7 @@
 @media (min-width:1024px) {
   .alumni-sidebar { display:flex; flex-direction:column; position:fixed; inset:0 auto 0 0; width:220px; padding:1.25rem 1rem; background:#f6f6fd; border-right:1px solid #e9ebef; }
   .alumni-workspace { margin-left:220px; }
-  .alumni-main { padding:1.5rem; }
+  .alumni-main { padding:2rem 2.5rem; }
   .profile-grid { grid-template-columns:minmax(240px,280px) minmax(0,1fr); }
 }
 @media (max-width:420px) { .alumni-main { padding:.85rem; } .profile-card { padding:1rem; } .alumni-header { padding:.65rem 1rem; } }

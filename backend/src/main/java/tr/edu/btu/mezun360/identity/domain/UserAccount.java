@@ -38,6 +38,21 @@ public class UserAccount {
         return account;
     }
 
+    public static UserAccount publicRegistration(String email, String canonical, String hash, Instant now) {
+        UserAccount account = new UserAccount();
+        account.id = UUID.randomUUID();
+        account.email = email;
+        account.emailCanonical = canonical;
+        account.passwordHash = hash;
+        account.role = Role.ALUMNI;
+        account.status = AccountStatus.ACTIVE;
+        account.emailVerifiedAt = now; // Auto-verify for MVP
+        account.developmentOnly = false;
+        account.createdAt = now;
+        account.updatedAt = now;
+        return account;
+    }
+
     public void recordLogin(Instant now) { lastLoginAt = now; updatedAt = now; }
     public UUID id() { return id; }
     public String email() { return email; }
