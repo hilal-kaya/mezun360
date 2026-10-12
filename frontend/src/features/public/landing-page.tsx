@@ -46,7 +46,7 @@ function HeroSection() {
                 <img src={`https://api.dicebear.com/7.x/notionists/svg?seed=M2&backgroundColor=ffedd5`} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
-            <span><strong className="text-slate-900 font-bold">12.000+</strong> öğrenci ve mezunla birlikte</span>
+            <span>Bursa Teknik Üniversitesi mezun ve öğrencileriyle birlikte</span>
           </div>
         </div>
 
@@ -261,7 +261,7 @@ function HowItWorksSection() {
 
 function EcosystemRadialSection() {
   return (
-    <section id="ozellikler" className="py-16 lg:py-24 bg-[#0B1727] relative overflow-hidden">
+    <section id="ekosistem" className="py-16 lg:py-24 bg-[#0B1727] relative overflow-hidden">
       <div className="public-container relative z-10 text-center">
         <p className="text-[#34D399] font-bold text-[11px] tracking-widest uppercase mb-4">Mezun360 Ekosistemi</p>
         <h2 className="text-3xl lg:text-4xl font-bold text-white tracking-tight mb-6">
@@ -311,6 +311,45 @@ function EcosystemRadialSection() {
   )
 }
 
+function ContactSection() {
+  return (
+    <section id="iletisim" className="py-12 bg-white">
+      <div className="public-container">
+        <div className="rounded-3xl border border-slate-100 bg-[#FAFAF9] p-8 lg:p-12 shadow-sm">
+          <div className="max-w-2xl">
+            <p className="text-[#F87171] font-bold text-[11px] tracking-widest uppercase mb-3">Kurumsal İletişim & Destek</p>
+            <h2 className="text-2xl lg:text-3xl font-bold text-[#0B1727] tracking-tight mb-4">
+              BTÜ Kariyer Merkezi Yanınızda
+            </h2>
+            <p className="text-sm text-slate-600 leading-relaxed mb-6">
+              Bursa Teknik Üniversitesi Kariyer Gelişimi Uygulama ve Araştırma Merkezi (BUKAGEM), mezuniyet doğrulama, hesap aktivasyonu ve kurumsal iş birlikleri süreçlerinde tüm mezun ve öğrencilerimize resmi destek sağlamaktadır.
+            </p>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-6 pt-4 border-t border-slate-200 text-sm">
+            <div>
+              <p className="font-semibold text-slate-900">Resmi E-Posta</p>
+              <a href="mailto:kariyer@btu.edu.tr" className="text-primary font-medium hover:underline mt-1 inline-block">
+                kariyer@btu.edu.tr
+              </a>
+              <p className="text-xs text-slate-500 mt-1">Doğrulama ve parola destek talepleri</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">Yerleşke</p>
+              <p className="text-slate-600 mt-1">Mimar Sinan Yerleşkesi, E-Blok</p>
+              <p className="text-xs text-slate-500 mt-1">Yıldırım / Bursa</p>
+            </div>
+            <div>
+              <p className="font-semibold text-slate-900">Telefon</p>
+              <p className="text-slate-600 mt-1">+90 (224) 300 32 32</p>
+              <p className="text-xs text-slate-500 mt-1">Hafta içi 08:30 - 17:30</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  )
+}
+
 function FinalCtaSection() {
   return (
     <section className="py-12 bg-white">
@@ -331,7 +370,7 @@ function FinalCtaSection() {
           
           <div className="relative z-10 shrink-0">
             <Button asChild className="bg-[#0B1727] hover:bg-slate-800 text-white px-10 h-16 text-sm rounded-full shadow-xl">
-              <Link to="/login">Kayıt Ol <ArrowRight className="w-5 h-5 ml-2" /></Link>
+              <Link to="/register">Kayıt Ol <ArrowRight className="w-5 h-5 ml-2" /></Link>
             </Button>
           </div>
         </div>
@@ -349,6 +388,7 @@ export function LandingPage() {
         <FeaturesSection />
         <HowItWorksSection />
         <EcosystemRadialSection />
+        <ContactSection />
         <FinalCtaSection />
       </main>
       <footer className="bg-[#F8FAFC] py-12 border-t border-slate-200">

@@ -93,7 +93,7 @@ describe('public entry experience', () => {
     for (const link of screen.getAllByRole('link', {
       name: /Kayıt Ol/i,
     }))
-      expect(link).toHaveAttribute('href', '/login')
+      expect(link).toHaveAttribute('href', '/register')
   })
 
   it('opens the mobile disclosure, closes on navigation and restores focus on Escape', async () => {

@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { useCreateMentorshipRequest } from '../api/mentorshipApi'
 
@@ -6,10 +7,12 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
   const [message, setMessage] = useState('')
   const mutation = useCreateMentorshipRequest()
 
+  const isValidLength = message.trim().length >= 10
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    if (!message.trim()) return
-    mutation.mutate({ mentorId: mentorId, message }, {
+    if (!isValidLength) return
+    mutation.mutate({ mentorId: mentorId, message: message.trim() }, {
       onSuccess: () => {
         onClose()
       }
@@ -48,33 +51,39 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
           <div className="mb-4 rounded-xl border border-red-200 bg-pastel-peach/60 p-3.5 text-xs text-destructive font-medium space-y-2">
             <p>{errorMessage}</p>
             {isAccessDenied && (
-              <a href="/app/profile" className="inline-block text-xs font-semibold text-primary underline">
+              <Link to="/app/profile" className="inline-block text-xs font-semibold text-primary underline">
                 Profil ve Mezuniyet Doğrulama Sayfasına Git →
-              </a>
+              </Link>
             )}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
-              Kendinizi tanıtın ve neden mentörlük almak istediğinizi açıklayın
-            </label>
+            <div className="flex justify-between items-center mb-1">
+              <label className="block text-sm font-medium text-gray-700">
+                Talep Açıklaması
+              </label>
+              <span className={`text-[11px] font-medium ${isValidLength ? 'text-green-600' : 'text-slate-400'}`}>
+                {message.trim().length}/10 min karakter
+              </span>
+            </div>
             <textarea
-              className="w-full h-32 rounded-lg border border-gray-300 p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none"
-              placeholder="Merhaba, ben..."
+              className="w-full h-32 rounded-lg border border-gray-300 p-3 focus:border-primary focus:ring-1 focus:ring-primary outline-none resize-none text-sm"
+              placeholder="Merhaba, ben BTÜ'den... Mentörlük sürecinde şu konularda deneyiminizden faydalanmak istiyorum..."
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               required
+              minLength={10}
               disabled={mutation.isPending}
             />
           </div>
           
           <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={onClose} disabled={mutation.isPending}>
+            <Button type="button" variant="outline" onClick={onClose} disabled={mutation.isPending} className="rounded-xl">
               İptal
             </Button>
-            <Button type="submit" disabled={mutation.isPending || !message.trim()} className="bg-primary text-white hover:bg-primary/90">
+            <Button type="submit" disabled={mutation.isPending || !isValidLength} className="bg-primary text-white hover:bg-primary/90 rounded-xl">
               {mutation.isPending ? 'Gönderiliyor...' : 'Gönder'}
             </Button>
           </div>

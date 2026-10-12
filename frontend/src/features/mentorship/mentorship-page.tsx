@@ -27,9 +27,21 @@ export function MentorshipPage() {
   // Mentors query
   const queryMentors = useMentors(debouncedQuery, page)
   
+const MENTOR_CHIPS = [
+  { label: 'Tümü', value: '' },
+  { label: 'Yazılım', value: 'Yazılım' },
+  { label: 'Mühendislik', value: 'Mühendislik' },
+  { label: 'Veri & AI', value: 'Veri' },
+  { label: 'Kariyer & Danışmanlık', value: 'Kariyer' },
+  { label: 'Yönetim', value: 'Yönetim' },
+] as const
+
   // Requests queries
   const queryIncoming = useIncomingRequests(0)
   const queryOutgoing = useOutgoingRequests(0)
+
+  const incomingCount = queryIncoming.data?.page?.totalElements
+  const outgoingCount = queryOutgoing.data?.page?.totalElements
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
@@ -37,51 +49,93 @@ export function MentorshipPage() {
     setPage(0)
   }
 
+  const handleChipClick = (val: string) => {
+    setQuery(val)
+    setDebouncedQuery(val)
+    setPage(0)
+  }
+
   return (
     <div className="space-y-6 max-w-5xl mx-auto pt-4">
       {/* Global Search Omnibar Header */}
-      <section className="text-center space-y-3">
-        <h1 className="text-3xl font-bold font-barlow text-primary">Mentörlük</h1>
-        <p className="text-muted-foreground max-w-xl mx-auto">Mentör bul, deneyimlerini paylaş veya gelen talepleri yönet.</p>
+      <section className="text-center space-y-4">
+        <div>
+          <h1 className="text-3xl font-bold font-barlow text-primary">Mentörlük</h1>
+          <p className="mt-1 text-sm text-muted-foreground max-w-xl mx-auto">
+            Deneyimli BTÜ mezunlarıyla birebir bağlantı kurun, kariyer tavsiyesi alın veya yeni mezunlara rehberlik edin.
+          </p>
+        </div>
         
         {activeTab === 'find' && (
-          <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-8">
-            <div className="relative flex items-center bg-white shadow-sm hover:shadow-md transition-shadow rounded-full border border-pastel-blue focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-pastel-blue">
-              <Search className="absolute left-5 text-gray-400" size={20} />
-              <input 
-                type="text" 
-                value={query}
-                onChange={e => setQuery(e.target.value)}
-                placeholder="İsim, şirket, pozisyon veya uzmanlığa göre mentör ara..." 
-                className="w-full h-12 pl-14 pr-32 rounded-full bg-transparent outline-none text-base text-foreground placeholder:text-gray-400"
-              />
-              <Button type="submit" className="absolute right-2 h-10 rounded-full px-6 bg-primary hover:bg-primary/90 text-white font-semibold">
-                Ara
-              </Button>
+          <>
+            <form onSubmit={handleSearch} className="max-w-2xl mx-auto relative mt-6">
+              <div className="relative flex items-center bg-white shadow-sm hover:shadow-md transition-shadow rounded-full border border-pastel-blue focus-within:border-primary/30 focus-within:ring-4 focus-within:ring-pastel-blue">
+                <Search className="absolute left-5 text-gray-400" size={20} />
+                <input 
+                  type="text" 
+                  value={query}
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="İsim, şirket, pozisyon veya uzmanlık alanına göre arayın..." 
+                  className="w-full h-12 pl-14 pr-32 rounded-full bg-transparent outline-none text-sm text-foreground placeholder:text-gray-400"
+                />
+                <Button type="submit" className="absolute right-2 h-9 rounded-full px-5 bg-primary hover:bg-primary/90 text-white font-semibold text-xs">
+                  Ara
+                </Button>
+              </div>
+            </form>
+
+            <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
+              {MENTOR_CHIPS.map(chip => {
+                const active = (chip.value === '' && query === '') || (chip.value !== '' && query.toLowerCase().includes(chip.value.toLowerCase()))
+                return (
+                  <button
+                    key={chip.label}
+                    type="button"
+                    onClick={() => handleChipClick(chip.value)}
+                    className={`rounded-full px-4 py-1.5 text-xs font-semibold transition-all ${
+                      active 
+                        ? 'bg-primary text-white shadow-sm' 
+                        : 'bg-white text-slate-600 border border-slate-200 hover:border-primary/40 hover:bg-pastel-blue-light'
+                    }`}
+                  >
+                    {chip.label}
+                  </button>
+                )
+              })}
             </div>
-          </form>
+          </>
         )}
       </section>
 
       {/* Tabs */}
-      <div className="flex gap-4 border-b border-gray-200 justify-center">
+      <div className="flex gap-2 sm:gap-4 border-b border-gray-200 justify-center">
         <button 
           onClick={() => { setActiveTab('find'); setPage(0); }}
-          className={`pb-3 px-4 font-medium text-sm transition-colors ${activeTab === 'find' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`pb-3 px-4 font-semibold text-sm transition-colors ${activeTab === 'find' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
         >
           Mentör Bul
         </button>
         <button 
           onClick={() => setActiveTab('incoming')}
-          className={`pb-3 px-4 font-medium text-sm transition-colors ${activeTab === 'incoming' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`pb-3 px-4 font-semibold text-sm transition-colors flex items-center gap-1.5 ${activeTab === 'incoming' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
         >
           Gelen Talepler
+          {typeof incomingCount === 'number' && incomingCount > 0 && (
+            <span className="rounded-full bg-primary/10 text-primary text-[10px] px-2 py-0.5 font-bold">
+              {incomingCount}
+            </span>
+          )}
         </button>
         <button 
           onClick={() => setActiveTab('outgoing')}
-          className={`pb-3 px-4 font-medium text-sm transition-colors ${activeTab === 'outgoing' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
+          className={`pb-3 px-4 font-semibold text-sm transition-colors flex items-center gap-1.5 ${activeTab === 'outgoing' ? 'border-b-2 border-primary text-primary' : 'text-gray-500 hover:text-gray-700'}`}
         >
           Giden Talepler
+          {typeof outgoingCount === 'number' && outgoingCount > 0 && (
+            <span className="rounded-full bg-slate-100 text-slate-600 text-[10px] px-2 py-0.5 font-bold">
+              {outgoingCount}
+            </span>
+          )}
         </button>
       </div>
 

@@ -1,7 +1,7 @@
 import { useState, type FormEvent } from 'react'
 import { Link, Navigate, Outlet, useNavigate } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Eye, EyeOff, ArrowRight, LogOut, ShieldCheck, UserPlus, CheckCircle2 } from 'lucide-react'
+import { Eye, EyeOff, ArrowRight, LogOut, ShieldCheck, UserPlus, CheckCircle2, Check, AlertCircle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input, Label } from '@/components/ui/input'
 import { Card } from '@/components/ui/card'
@@ -98,9 +98,12 @@ export function LoginPage() {
               <Link to="/register" className="font-semibold text-primary hover:underline flex items-center gap-1">
                 Hesabın yok mu? Kayıt Ol
               </Link>
-              <div className="flex items-center gap-1">
+              <div className="flex items-center gap-1.5">
                 <button type="button" disabled className="cursor-not-allowed text-muted-foreground">Şifremi Unuttum</button>
                 <span className="rounded bg-pastel-lavender px-1.5 py-0.5 text-[10px] font-semibold text-primary">Yakında</span>
+                <Link to="/forgot-password" className="text-primary hover:underline font-semibold text-[11px] ml-1">
+                  (Destek)
+                </Link>
               </div>
             </div>
             {(error || identity.isError) && (
@@ -127,17 +130,21 @@ export function RegisterPage() {
   const cache = useQueryClient()
   const navigate = useNavigate()
   const [visible, setVisible] = useState(false)
+  const [visibleConfirm, setVisibleConfirm] = useState(false)
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState('')
   const [kvkkAccepted, setKvkkAccepted] = useState(false)
+  const [password, setPassword] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+
+  const isLengthValid = password.length >= 15 && password.length <= 128
+  const isMatchValid = password.length > 0 && passwordConfirm.length > 0 && password === passwordConfirm
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
     const data = new FormData(form)
     const email = String(data.get('email') ?? '').trim()
-    const password = String(data.get('password') ?? '')
-    const passwordConfirm = String(data.get('passwordConfirm') ?? '')
     const firstName = String(data.get('firstName') ?? '').trim()
     const lastName = String(data.get('lastName') ?? '').trim()
 
@@ -150,7 +157,7 @@ export function RegisterPage() {
       return
     }
     if (password.length < 15 || password.length > 128) {
-      setError('Parola en az 15, en fazla 128 karakter uzunluğunda olmalıdır.')
+      setError('Parola en az 15, en fazla 128 karakter uzunluğunda olmalıdır (NIST 800-63B standardı).')
       return
     }
     if (password !== passwordConfirm) {
@@ -222,12 +229,12 @@ export function RegisterPage() {
           <p className="max-w-sm text-base text-pastel-blue leading-relaxed">
             Kariyer fırsatları, mentörlük eşleşmeleri ve üniversite ağı artık tek bir noktada.
           </p>
-          <ul className="space-y-2 text-sm text-pastel-turquoise pt-2">
+          <ul className="space-y-2.5 text-sm text-pastel-turquoise pt-2">
             <li className="flex items-center gap-2">
               <CheckCircle2 size={16} /> Doğrulanmış Bursa Teknik mezun ağı
             </li>
             <li className="flex items-center gap-2">
-              <CheckCircle2 size={16} /> Üniversite onaylı iş & staj ilanları
+              <CheckCircle2 size={16} /> Üniversite onaylı iş & staj fırsatları
             </li>
             <li className="flex items-center gap-2">
               <CheckCircle2 size={16} /> Birebir hızlı mentörlük imkanları
@@ -265,9 +272,27 @@ export function RegisterPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="reg-password" className="text-xs font-semibold text-slate-700">Parola (En az 15 karakter)</Label>
+              <div className="flex items-center justify-between">
+                <Label htmlFor="reg-password" className="text-xs font-semibold text-slate-700">Parola</Label>
+                <span className={`text-[11px] font-medium flex items-center gap-1 ${isLengthValid ? 'text-green-600' : 'text-slate-400'}`}>
+                  {isLengthValid ? <Check size={12} /> : null}
+                  {password.length}/15 min karakter
+                </span>
+              </div>
               <div className="relative">
-                <Input className="pr-12 h-11 rounded-xl" id="reg-password" name="password" type={visible ? 'text' : 'password'} autoComplete="new-password" maxLength={128} required disabled={busy} />
+                <Input 
+                  className="pr-12 h-11 rounded-xl" 
+                  id="reg-password" 
+                  name="password" 
+                  type={visible ? 'text' : 'password'} 
+                  autoComplete="new-password" 
+                  maxLength={128} 
+                  required 
+                  disabled={busy}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="En az 15 karakter"
+                />
                 <Button type="button" variant="ghost" className="absolute right-0 top-0 h-11 px-3 text-slate-400 hover:text-slate-600" aria-label={visible ? 'Parolayı gizle' : 'Parolayı göster'} onClick={() => setVisible(!visible)}>
                   {visible ? <EyeOff size={18} /> : <Eye size={18} />}
                 </Button>
@@ -275,11 +300,35 @@ export function RegisterPage() {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="reg-password-confirm" className="text-xs font-semibold text-slate-700">Parola Tekrarı</Label>
-              <Input className="h-11 rounded-xl" id="reg-password-confirm" name="passwordConfirm" type={visible ? 'text' : 'password'} autoComplete="new-password" maxLength={128} required disabled={busy} />
+              <div className="flex items-center justify-between">
+                <Label htmlFor="reg-password-confirm" className="text-xs font-semibold text-slate-700">Parola Tekrarı</Label>
+                {passwordConfirm.length > 0 && (
+                  <span className={`text-[11px] font-medium flex items-center gap-1 ${isMatchValid ? 'text-green-600' : 'text-destructive'}`}>
+                    {isMatchValid ? <><Check size={12} /> Eşleşti</> : <><AlertCircle size={12} /> Eşleşmiyor</>}
+                  </span>
+                )}
+              </div>
+              <div className="relative">
+                <Input 
+                  className="pr-12 h-11 rounded-xl" 
+                  id="reg-password-confirm" 
+                  name="passwordConfirm" 
+                  type={visibleConfirm ? 'text' : 'password'} 
+                  autoComplete="new-password" 
+                  maxLength={128} 
+                  required 
+                  disabled={busy}
+                  value={passwordConfirm}
+                  onChange={(e) => setPasswordConfirm(e.target.value)}
+                  placeholder="Parolanızı tekrar girin"
+                />
+                <Button type="button" variant="ghost" className="absolute right-0 top-0 h-11 px-3 text-slate-400 hover:text-slate-600" aria-label={visibleConfirm ? 'Parolayı gizle' : 'Parolayı göster'} onClick={() => setVisibleConfirm(!visibleConfirm)}>
+                  {visibleConfirm ? <EyeOff size={18} /> : <Eye size={18} />}
+                </Button>
+              </div>
             </div>
 
-            <div className="flex items-start gap-2 pt-1">
+            <div className="flex items-start gap-2.5 pt-2">
               <input 
                 type="checkbox" 
                 id="kvkk" 
@@ -288,7 +337,7 @@ export function RegisterPage() {
                 className="mt-1 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
               />
               <Label htmlFor="kvkk" className="text-xs text-muted-foreground leading-snug cursor-pointer">
-                BTÜ Mezun360 KVKK Aydınlatma Metnini okudum ve kişisel verilerimin işlenmesini kabul ediyorum.
+                BTÜ Mezun360 KVKK Aydınlatma Metnini okudum ve kişisel verilerimin güvenli biçimde işlenmesini kabul ediyorum.
               </Label>
             </div>
 
@@ -298,7 +347,7 @@ export function RegisterPage() {
               </p>
             )}
 
-            <Button type="submit" className="w-full h-11 rounded-xl font-semibold shadow-sm mt-2" disabled={busy}>
+            <Button type="submit" className="w-full h-11 rounded-xl font-semibold shadow-sm mt-3" disabled={busy}>
               {busy ? 'Kayıt Yapılıyor…' : 'Hesap Oluştur'}
               <UserPlus size={16} className="ml-1.5" aria-hidden="true" />
             </Button>
@@ -317,7 +366,40 @@ export function RegisterPage() {
 }
 
 export function ForgotPasswordPage() {
-  return <Card className="mx-auto max-w-lg space-y-4 my-8"><h1>Parola yardımı</h1><p>Parola sıfırlama henüz kullanıma açılmadı. Bu ekranda e-posta veya sıfırlama bağlantısı gönderilmez.</p><Link to="/login" className="font-semibold text-primary underline">Girişe dön</Link></Card>
+  return (
+    <div className="mx-auto max-w-lg my-8 p-8 rounded-3xl border bg-card shadow-sm space-y-6">
+      <div className="space-y-2 text-center sm:text-left">
+        <span className="inline-flex rounded-full bg-pastel-lavender px-3 py-1 text-xs font-semibold text-primary">
+          Kurumsal Parola & Hesap Desteği
+        </span>
+        <h1 className="text-2xl font-bold tracking-tight text-slate-900">Parola Yardımı</h1>
+        <p className="text-sm text-muted-foreground leading-relaxed">
+          BTÜ Mezun360 platformunda hesap ve veri güvenliğiniz önceliklidir. Otomatik parola sıfırlama akışı kurumsal güvenlik gereği mezuniyet doğrulamasıyla yönetilmektedir.
+        </p>
+      </div>
+
+      <div className="rounded-2xl border border-slate-100 bg-[#FAFAF9] p-5 space-y-3 text-sm">
+        <p className="font-semibold text-slate-900">Nasıl parola yenileyebilirim?</p>
+        <p className="text-slate-600 text-xs leading-relaxed">
+          Kayıtlı e-posta adresiniz, mezuniyet yılınız veya öğrenci numaranızla birlikte Bursa Teknik Üniversitesi Kariyer Gelişimi Uygulama ve Araştırma Merkezi (BUKAGEM) resmi birimine başvurarak parolanızı güvenle güncelleyebilirsiniz:
+        </p>
+        <div className="pt-2">
+          <a
+            href="mailto:kariyer@btu.edu.tr?subject=BTU%20Mezun360%20Parola%20Destek%20Talebi"
+            className="inline-flex items-center gap-2 rounded-xl bg-primary px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-primary/90 transition-colors"
+          >
+            kariyer@btu.edu.tr Adresine E-posta Gönder →
+          </a>
+        </div>
+      </div>
+
+      <div className="pt-2 text-center sm:text-left">
+        <Link to="/login" className="text-sm font-semibold text-primary hover:underline">
+          ← Giriş Ekranına Dön
+        </Link>
+      </div>
+    </div>
+  )
 }
 
 export function AuthenticatedPlaceholder({ admin = false }: { admin?: boolean }) {

@@ -31,7 +31,12 @@ function ReviewContent({ id, saved }: { id: string; saved: () => void }) {
   if (query.isError) return <><p role="alert">Başvuru yüklenemedi.</p><Button onClick={() => void query.refetch()}>Tekrar dene</Button></>
   const r = query.data.data
   return <div className="mt-5 space-y-4"><StatusBadge status={r.status} /><h3 className="text-lg font-semibold">{r.evidence.firstName} {r.evidence.lastName}</h3><p>{r.evidence.department} · {r.evidence.graduationYear}</p><p className="text-sm text-muted-foreground">Gönderim: {reviewDate(r.submittedAt)}</p>
-    <h4 className="font-semibold">Beyan edilen eğitim</h4><ul className="space-y-3">{r.evidence.education.map((e, i) => <li key={i} className="rounded-xl bg-pastel-lavender p-3 text-sm"><p className="font-semibold">{e.institution}</p><p>{e.department} · {e.degree}</p><p>{e.startYear} – {e.graduationYear ?? 'Devam ediyor'}</p></li>)}</ul>
+    <h4 className="font-semibold">Beyan edilen eğitim</h4>
+    {r.evidence?.education && r.evidence.education.length > 0 ? (
+      <ul className="space-y-3">{r.evidence.education.map((e, i) => <li key={i} className="rounded-xl bg-pastel-lavender p-3 text-sm"><p className="font-semibold">{e.institution}</p><p>{e.department} · {e.degree}</p><p>{e.startYear} – {e.graduationYear ?? 'Devam ediyor'}</p></li>)}</ul>
+    ) : (
+      <p className="text-xs text-muted-foreground bg-slate-50 p-3 rounded-xl">Ekli eğitim kaydı bulunmuyor.</p>
+    )}
     {r.rejectionReason && <p className="rounded-xl bg-pastel-peach p-3">{r.rejectionReason}</p>}
     <ReviewActions key={version} snapshot={query.data} saved={saved} reload={() => { void query.refetch().then(result => { if (result.isSuccess) setVersion(v => v + 1) }) }} />
   </div>

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
@@ -8,6 +9,7 @@ import type { JobPostRequest } from '../api/jobs';
 
 export function PostJobModal() {
   const [open, setOpen] = useState(false);
+  const [urlError, setUrlError] = useState('');
   const queryClient = useQueryClient();
   
   const [form, setForm] = useState({
@@ -25,6 +27,7 @@ export function PostJobModal() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['jobs'] });
       setOpen(false);
+      setUrlError('');
       setForm({
         title: '',
         company: '',
@@ -48,29 +51,38 @@ export function PostJobModal() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.applicationUrl.startsWith('http://') && !form.applicationUrl.startsWith('https://')) {
-      alert('Başvuru linki http:// veya https:// ile başlamalıdır.');
+      setUrlError('Başvuru linki http:// veya https:// ile başlamalıdır.');
       return;
     }
+    setUrlError('');
     mutation.mutate(form as any);
   };
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
+    <Dialog open={open} onOpenChange={(val) => { setOpen(val); if (!val) setUrlError(''); }}>
       <DialogTrigger asChild>
-        <Button className="bg-[#233A85] hover:bg-[#1a2b63] text-white">İlan Ekle</Button>
+        <Button className="bg-[#233A85] hover:bg-[#1a2b63] text-white rounded-xl shadow-sm font-semibold">
+          + İlan Ekle
+        </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[525px]">
+      <DialogContent className="sm:max-w-[540px] max-h-[85vh] overflow-y-auto">
         <DialogTitle className="text-[#233A85]">Yeni İlan Ekle</DialogTitle>
         
         {mutation.isError && (
           <div className="rounded-xl border border-red-200 bg-red-50 p-3.5 text-xs text-destructive font-medium space-y-1">
             <p>{errorMsg || 'İlan eklenirken bir hata oluştu.'}</p>
             {errorObj?.status === 403 && (
-              <a href="/app/profile" className="inline-block font-semibold text-primary underline">
+              <Link to="/app/profile" className="inline-block font-semibold text-primary underline">
                 Profil Doğrulama Durumunu İncele →
-              </a>
+              </Link>
             )}
           </div>
+        )}
+
+        {urlError && (
+          <p role="alert" className="rounded-xl border border-red-200 bg-red-50 p-3 text-xs text-destructive font-medium">
+            {urlError}
+          </p>
         )}
 
         <form onSubmit={onSubmit} className="space-y-4 py-2">
