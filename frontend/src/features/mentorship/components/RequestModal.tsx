@@ -24,14 +24,19 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
   const problemCode = errorObj?.problem?.code
   const status = errorObj?.status
 
-  const isAccessDenied = status === 403 || 
+  const isDirectoryOptInRequired = errorMessage.includes('Görünür Ol') || errorMessage.includes('Ağ Görünürlüğü') || errorMessage.includes('Ayarlar')
+  const isVerificationRequired = !isDirectoryOptInRequired && (
+    status === 403 || 
     errorMessage.includes('Access is denied') || 
     errorMessage.includes('verified') || 
     errorMessage.includes('doğrulanmış') || 
     problemCode === 'FORBIDDEN'
+  )
 
-  if (isAccessDenied) {
-    errorMessage = "Mentörlük talebi gönderebilmek için mezuniyetinizin onaylanmış (VERIFIED) olması ve profilinizin tamamlanmış olması gerekmektedir."
+  if (isDirectoryOptInRequired) {
+    errorMessage = "Mentörlük talebi gönderebilmek ve alabilmek için Ayarlar sayfasından 'Mezunlar Ağında Görünür Ol' iznini açmanız gerekmektedir."
+  } else if (isVerificationRequired) {
+    errorMessage = "Mentörlük talebi gönderebilmek için mezuniyetinizin Kariyer Merkezi tarafından doğrulanmış (VERIFIED) olması gerekmektedir."
   } else if (problemCode === "VALIDATION_FAILED" || errorMessage === "One or more fields are invalid.") {
     errorMessage = "Lütfen geçerli ve yeterli uzunlukta bir açıklama giriniz (En az 10 karakter)."
   } else if (errorMessage === "You cannot mentor yourself.") {
@@ -50,11 +55,15 @@ export function RequestModal({ mentorId, mentorName, onClose }: { mentorId: stri
         {mutation.isError && (
           <div className="mb-4 rounded-xl border border-red-200 bg-pastel-peach/60 p-3.5 text-xs text-destructive font-medium space-y-2">
             <p>{errorMessage}</p>
-            {isAccessDenied && (
+            {isDirectoryOptInRequired ? (
+              <Link to="/app/settings" className="inline-block text-xs font-semibold text-primary underline">
+                Ayarlar ve Gizlilik Sayfasına Git (Ağ İznini Aç) →
+              </Link>
+            ) : isVerificationRequired ? (
               <Link to="/app/profile" className="inline-block text-xs font-semibold text-primary underline">
                 Profil ve Mezuniyet Doğrulama Sayfasına Git →
               </Link>
-            )}
+            ) : null}
           </div>
         )}
 

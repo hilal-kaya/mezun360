@@ -85,72 +85,147 @@ export function PostJobModal() {
           </p>
         )}
 
-        <form onSubmit={onSubmit} className="space-y-4 py-2">
-          <div className="space-y-2">
-            <label htmlFor="title" className="block text-sm font-medium">İlan Başlığı</label>
-            <Input id="title" required minLength={3} value={form.title} onChange={e => setForm({...form, title: e.target.value})} disabled={mutation.isPending} />
-          </div>
+        <form onSubmit={onSubmit} className="space-y-5 py-2">
+          {/* Section 1: Temel Bilgiler */}
+          <div className="space-y-3">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">1. Temel Bilgiler</h3>
+            <div className="space-y-1.5">
+              <label htmlFor="title" className="block text-xs font-semibold text-slate-700">
+                İlan Başlığı <span className="text-destructive">*</span>
+              </label>
+              <Input 
+                id="title" 
+                required 
+                minLength={3} 
+                value={form.title} 
+                onChange={e => setForm({...form, title: e.target.value})} 
+                disabled={mutation.isPending} 
+                placeholder="örn. Yazılım Mühendisi veya Stajyer"
+                className="rounded-xl h-10"
+              />
+            </div>
 
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <label htmlFor="company" className="block text-sm font-medium">Şirket</label>
-              <Input id="company" required minLength={2} value={form.company} onChange={e => setForm({...form, company: e.target.value})} />
-            </div>
-            <div className="space-y-2">
-              <label htmlFor="jobType" className="block text-sm font-medium">İlan Türü</label>
-              <select 
-                id="jobType"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                value={form.jobType} onChange={e => setForm({...form, jobType: e.target.value})}
-              >
-                <option value="FULL_TIME">Tam Zamanlı</option>
-                <option value="PART_TIME">Yarı Zamanlı</option>
-                <option value="INTERNSHIP">Staj</option>
-                <option value="CONTRACT">Sözleşmeli</option>
-                <option value="FREELANCE">Serbest (Freelance)</option>
-              </select>
-            </div>
-            
-            <div className="space-y-2">
-              <label htmlFor="workModel" className="block text-sm font-medium">Çalışma Şekli</label>
-              <select 
-                id="workModel"
-                className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                value={form.workModel} onChange={e => setForm({...form, workModel: e.target.value})}
-              >
-                <option value="REMOTE">Uzaktan</option>
-                <option value="HYBRID">Hibrit</option>
-                <option value="ONSITE">Ofisten</option>
-              </select>
+            <div className="space-y-1.5">
+              <label htmlFor="company" className="block text-xs font-semibold text-slate-700">
+                Şirket / Kurum Adı <span className="text-destructive">*</span>
+              </label>
+              <Input 
+                id="company" 
+                required 
+                minLength={2} 
+                value={form.company} 
+                onChange={e => setForm({...form, company: e.target.value})} 
+                disabled={mutation.isPending}
+                placeholder="örn. Bursa Teknik Üniversitesi veya Şirket A.Ş."
+                className="rounded-xl h-10"
+              />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="location" className="block text-sm font-medium">Konum (İsteğe Bağlı)</label>
-            <Input id="location" value={form.location} onChange={e => setForm({...form, location: e.target.value})} placeholder="örn. İstanbul" />
+          {/* Section 2: Çalışma Koşulları */}
+          <div className="space-y-3 pt-2 border-t border-slate-100">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">2. Çalışma Koşulları</h3>
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-1.5">
+                <label htmlFor="jobType" className="block text-xs font-semibold text-slate-700">
+                  İlan Türü <span className="text-destructive">*</span>
+                </label>
+                <select 
+                  id="jobType"
+                  className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  value={form.jobType} 
+                  onChange={e => setForm({...form, jobType: e.target.value})}
+                  disabled={mutation.isPending}
+                >
+                  <option value="FULL_TIME">Tam Zamanlı</option>
+                  <option value="PART_TIME">Yarı Zamanlı</option>
+                  <option value="INTERNSHIP">Staj</option>
+                  <option value="CONTRACT">Sözleşmeli</option>
+                  <option value="FREELANCE">Serbest (Freelance)</option>
+                </select>
+              </div>
+              
+              <div className="space-y-1.5">
+                <label htmlFor="workModel" className="block text-xs font-semibold text-slate-700">
+                  Çalışma Modeli <span className="text-destructive">*</span>
+                </label>
+                <select 
+                  id="workModel"
+                  className="flex h-10 w-full rounded-xl border border-input bg-background px-3 py-2 text-xs font-medium focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                  value={form.workModel} 
+                  onChange={e => setForm({...form, workModel: e.target.value})}
+                  disabled={mutation.isPending}
+                >
+                  <option value="REMOTE">Uzaktan (Remote)</option>
+                  <option value="HYBRID">Hibrit</option>
+                  <option value="ONSITE">Ofisten</option>
+                </select>
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <label htmlFor="location" className="block text-xs font-semibold text-slate-700">
+                Konum / Şehir <span className="text-muted-foreground font-normal">(İsteğe Bağlı)</span>
+              </label>
+              <Input 
+                id="location" 
+                value={form.location} 
+                onChange={e => setForm({...form, location: e.target.value})} 
+                disabled={mutation.isPending}
+                placeholder="örn. Bursa, İstanbul veya Tüm Türkiye" 
+                className="rounded-xl h-10"
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="applicationUrl" className="block text-sm font-medium">Başvuru Linki</label>
-            <Input id="applicationUrl" type="url" required value={form.applicationUrl} onChange={e => setForm({...form, applicationUrl: e.target.value})} placeholder="https://..." />
+          {/* Section 3: Başvuru ve Detaylar */}
+          <div className="space-y-3 pt-2 border-t border-slate-100">
+            <h3 className="text-xs font-bold text-slate-500 uppercase tracking-wider">3. Başvuru & Detaylar</h3>
+            <div className="space-y-1.5">
+              <label htmlFor="applicationUrl" className="block text-xs font-semibold text-slate-700">
+                Başvuru Linki <span className="text-destructive">*</span>
+              </label>
+              <Input 
+                id="applicationUrl" 
+                type="url" 
+                required 
+                value={form.applicationUrl} 
+                onChange={e => setForm({...form, applicationUrl: e.target.value})} 
+                disabled={mutation.isPending}
+                placeholder="https://sirketiniz.com/kariyer/ilan" 
+                className="rounded-xl h-10"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <div className="flex justify-between items-center">
+                <label htmlFor="description" className="block text-xs font-semibold text-slate-700">
+                  İlan Detayı & Gereksinimler <span className="text-destructive">*</span>
+                </label>
+                <span className={`text-[10px] font-medium ${form.description.trim().length >= 20 ? 'text-green-600' : 'text-slate-400'}`}>
+                  {form.description.trim().length}/20 min
+                </span>
+              </div>
+              <textarea 
+                id="description" 
+                className="flex min-h-[90px] w-full rounded-xl border border-input bg-background p-3 text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+                value={form.description} 
+                onChange={e => setForm({...form, description: e.target.value})}
+                rows={4} 
+                required
+                minLength={20}
+                disabled={mutation.isPending}
+                placeholder="Pozisyonun sorumluluklarını, aranan yetkinlikleri ve çalışma imkanlarını açıklayın."
+              />
+            </div>
           </div>
 
-          <div className="space-y-2">
-            <label htmlFor="description" className="block text-sm font-medium">İlan Detayı</label>
-            <textarea 
-              id="description" 
-              className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-              value={form.description} onChange={e => setForm({...form, description: e.target.value})}
-              rows={4} 
-              required
-              minLength={20}
-              placeholder="Rolü, gereksinimleri vb. açıklayın."
-            />
-          </div>
-
-          <div className="flex justify-end pt-4">
-            <Button type="submit" disabled={mutation.isPending} className="bg-[#233A85] text-white hover:bg-[#1a2b63]">
-              {mutation.isPending ? 'Ekleniyor...' : 'İlan Ekle'}
+          <div className="flex justify-end gap-2.5 pt-4 border-t border-slate-100">
+            <Button type="button" variant="outline" onClick={() => setOpen(false)} disabled={mutation.isPending} className="rounded-xl">
+              Vazgeç
+            </Button>
+            <Button type="submit" disabled={mutation.isPending} className="bg-primary text-white hover:bg-primary/90 rounded-xl font-semibold shadow-sm px-6">
+              {mutation.isPending ? 'İlan Ekleniyor...' : 'İlanı Yayınla'}
             </Button>
           </div>
         </form>

@@ -144,9 +144,9 @@ function FeaturesSection() {
             <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Farklı sektörlerden mezunlarla yeniden buluş, deneyimlerini paylaş ve güçlü bağlantılar kur.
             </p>
-            <a href="#mezun-agi" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
-              Daha fazla keşfet <ArrowRight className="w-4 h-4 ml-2" />
-            </a>
+            <Link to="/register" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
+              Kayıt Ol ve Bağlan <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
           </div>
 
           {/* Card 2 */}
@@ -162,9 +162,9 @@ function FeaturesSection() {
             <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Sana uygun kariyer fırsatlarını keşfet; üniversite topluluğuna özel ilanlara kolayca ulaş.
             </p>
-            <a href="#is-staj" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
-              Daha fazla keşfet <ArrowRight className="w-4 h-4 ml-2" />
-            </a>
+            <Link to="/register" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
+              Kayıt Ol ve İncele <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
           </div>
 
           {/* Card 3 */}
@@ -180,9 +180,9 @@ function FeaturesSection() {
             <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Yolculuğunu daha önce tamamlayanlardan ilham al ya da deneyiminle bir başkasına ışık ol.
             </p>
-            <a href="#mentorluk" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
-              Daha fazla keşfet <ArrowRight className="w-4 h-4 ml-2" />
-            </a>
+            <Link to="/register" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
+              Kayıt Ol ve Mentörlük Al <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
           </div>
 
           {/* Card 4 */}
@@ -198,9 +198,9 @@ function FeaturesSection() {
             <p className="text-slate-600 leading-relaxed mb-6 max-w-sm">
               Buluşmalar, kariyer sohbetleri ve atölyelerle kampüs ruhunu hayatının her döneminde yaşa.
             </p>
-            <a href="#etkinlikler" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
-              Daha fazla keşfet <ArrowRight className="w-4 h-4 ml-2" />
-            </a>
+            <Link to="/register" className="inline-flex items-center text-sm font-bold text-slate-900 group-hover:text-slate-700">
+              Kayıt Ol ve Katıl <ArrowRight className="w-4 h-4 ml-2" />
+            </Link>
           </div>
         </div>
       </div>

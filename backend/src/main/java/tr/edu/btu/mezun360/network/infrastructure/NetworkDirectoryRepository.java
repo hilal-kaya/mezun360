@@ -27,6 +27,9 @@ public interface NetworkDirectoryRepository extends JpaRepository<AlumniProfile,
           AND (:#{#query == null} = true OR 
               CONCAT(p.firstName, ' ', p.lastName) ilike CONCAT('%', :query, '%') OR
               p.department ilike CONCAT('%', :query, '%') OR
+              p.currentCompany ilike CONCAT('%', :query, '%') OR
+              p.currentPosition ilike CONCAT('%', :query, '%') OR
+              p.city ilike CONCAT('%', :query, '%') OR
               p.industry ilike CONCAT('%', :query, '%') OR
               CAST(p.graduationYear AS string) ilike CONCAT('%', :query, '%')
           )

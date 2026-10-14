@@ -40,17 +40,28 @@ public class MentorshipService {
     }
 
     private void enforceMentorshipEligibility(UUID userId) {
+        List<Boolean> verificationStatuses = jdbcTemplate.query(
+            "SELECT (r.status = 'VERIFIED') AS is_verified FROM mezun360.alumni_profiles p " +
+            "JOIN mezun360.alumni_verification_requests r ON p.id = r.profile_id " +
+            "WHERE p.user_id = ? ORDER BY r.submitted_at DESC LIMIT 1",
+            (rs, rowNum) -> rs.getBoolean("is_verified"),
+            userId
+        );
+
+        if (verificationStatuses.isEmpty() || !Boolean.TRUE.equals(verificationStatuses.get(0))) {
+            throw new AccessDeniedException("Mentörlük işlemleri için mezuniyetinizin doğrulanmış (VERIFIED) olması gerekmektedir.");
+        }
+
         List<Boolean> optInStatuses = jdbcTemplate.query(
             "SELECT aps.directory_opt_in FROM mezun360.alumni_profiles p " +
             "JOIN mezun360.alumni_privacy_settings aps ON p.id = aps.profile_id " +
-            "JOIN mezun360.alumni_verification_requests r ON p.id = r.profile_id " +
-            "WHERE p.user_id = ? AND r.status = 'VERIFIED' ORDER BY r.submitted_at DESC LIMIT 1",
+            "WHERE p.user_id = ?",
             (rs, rowNum) -> rs.getBoolean("directory_opt_in"),
             userId
         );
 
-        if (optInStatuses.isEmpty() || !optInStatuses.get(0)) {
-            throw new AccessDeniedException("Mentörlük işlemleri için mezuniyetinizin doğrulanmış (VERIFIED) olması ve profilinizin hazır olması gerekmektedir.");
+        if (optInStatuses.isEmpty() || !Boolean.TRUE.equals(optInStatuses.get(0))) {
+            throw new AccessDeniedException("Mentörlük sistemini kullanabilmek için Ayarlar sayfasından 'Mezunlar Ağında Görünür Ol' iznini açmanız gerekmektedir.");
         }
     }
 

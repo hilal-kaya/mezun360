@@ -122,10 +122,10 @@ function AlumniCard({ alumni }: { alumni: AlumniNetworkDTO }) {
 const FILTER_CHIPS = [
   { label: 'Tümü', value: '' },
   { label: 'Mühendislik', value: 'Mühendislik' },
-  { label: 'Bilişim & Yazılım', value: 'Yazılım' },
-  { label: 'Veri & AI', value: 'Veri' },
-  { label: 'Elektrik & Elektronik', value: 'Elektrik' },
-  { label: 'Makine', value: 'Makine' },
+  { label: 'Bilgisayar Müh.', value: 'Bilgisayar' },
+  { label: 'Matematik', value: 'Matematik' },
+  { label: 'Makine Müh.', value: 'Makine' },
+  { label: 'Endüstri Müh.', value: 'Endüstri' },
 ] as const
 
 export function AlumniNetworkPage() {
@@ -156,6 +156,12 @@ export function AlumniNetworkPage() {
     setPage(0)
   }
 
+  const handleClear = () => {
+    setQuery('')
+    setDebouncedQuery('')
+    setPage(0)
+  }
+
   return (
     <div className="flex flex-col gap-6 max-w-5xl mx-auto pt-2">
       {/* Global Search Omnibar Header */}
@@ -174,9 +180,19 @@ export function AlumniNetworkPage() {
               type="text" 
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="İsim, bölüm, sektör veya mezuniyet yılı ile arayın..." 
+              placeholder="İsim, bölüm, unvan, şirket veya mezuniyet yılı ile arayın..." 
               className="w-full h-12 pl-14 pr-32 rounded-full bg-transparent outline-none text-sm text-foreground placeholder:text-gray-400"
             />
+            {query && (
+              <button 
+                type="button" 
+                onClick={handleClear} 
+                className="absolute right-20 text-xs text-muted-foreground hover:text-foreground font-semibold px-2 py-1 rounded-full"
+                aria-label="Aramayı temizle"
+              >
+                ✕
+              </button>
+            )}
             <Button type="submit" className="absolute right-2 h-9 rounded-full px-5 bg-primary hover:bg-primary/90 text-white font-semibold text-xs">
               Ara
             </Button>

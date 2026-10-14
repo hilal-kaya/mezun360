@@ -28,10 +28,16 @@ export interface JobPostRequest {
 
 export interface Page<T> {
   content: T[];
-  totalElements: number;
-  totalPages: number;
-  number: number;
-  size: number;
+  totalElements?: number;
+  totalPages?: number;
+  number?: number;
+  size?: number;
+  page?: {
+    size: number;
+    number: number;
+    totalElements: number;
+    totalPages: number;
+  };
 }
 
 export async function searchJobs(params: { query?: string; page?: number; size?: number }): Promise<Page<JobPostDTO>> {

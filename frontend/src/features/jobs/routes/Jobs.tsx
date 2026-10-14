@@ -75,6 +75,16 @@ export function Jobs() {
               placeholder="Pozisyon, şirket, çalışma şekli veya konuma göre arayın..." 
               className="w-full h-12 pl-14 pr-32 rounded-full bg-transparent outline-none text-sm text-foreground placeholder:text-gray-400"
             />
+            {query && (
+              <button 
+                type="button" 
+                onClick={() => { setQuery(''); setDebouncedQuery(''); }}
+                className="absolute right-20 text-xs text-muted-foreground hover:text-foreground font-semibold px-2 py-1 rounded-full"
+                aria-label="Aramayı temizle"
+              >
+                ✕
+              </button>
+            )}
             <button type="submit" className="absolute right-2 h-9 rounded-full px-5 bg-primary hover:bg-primary/90 text-white font-semibold text-xs transition-colors">
               Ara
             </button>
@@ -130,8 +140,14 @@ export function Jobs() {
           )
         )}
 
+        {data && !isLoading && !isError && (
+          <p className="text-sm text-muted-foreground font-medium px-1">
+            Toplam <span className="text-slate-900 font-bold">{data.page?.totalElements ?? data.totalElements ?? data.content.length}</span> ilan listeleniyor.
+          </p>
+        )}
+
         {data?.content.length === 0 && (
-          <div className="bg-gray-50 p-12 rounded-lg text-center border border-dashed border-gray-300">
+          <div className="bg-gray-50 p-12 rounded-2xl text-center border border-dashed border-gray-300">
             <Briefcase className="mx-auto h-12 w-12 text-gray-400 mb-4" />
             <h3 className="text-lg font-medium text-gray-900">İlan bulunamadı</h3>
             <p className="text-gray-500 mt-2">Farklı anahtar kelimelerle arama yapmayı deneyin.</p>

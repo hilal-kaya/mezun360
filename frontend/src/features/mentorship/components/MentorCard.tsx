@@ -1,52 +1,59 @@
 import type { MentorResponse } from '../api/mentorshipApi'
 import { Button } from '@/components/ui/button'
-import { Briefcase } from 'lucide-react'
+import { Building2, Sparkles } from 'lucide-react'
 
 export function MentorCard({ mentor, onRequest }: { mentor: MentorResponse, onRequest: () => void }) {
+  const initials = `${mentor.firstName.charAt(0)}${mentor.lastName.charAt(0)}`.toUpperCase()
+
   return (
-    <li className="flex flex-col justify-between rounded-3xl border border-pastel-blue bg-white p-6 shadow-sm transition-all hover:shadow-md hover:border-primary/20 hover:bg-pastel-blue-light/50">
+    <li className="flex flex-col justify-between rounded-3xl border border-slate-200/80 bg-white p-5 sm:p-6 shadow-xs transition-all hover:shadow-md hover:border-indigo-300 hover:-translate-y-0.5">
       <div>
-        <div className="flex items-center gap-4">
-          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-pastel-blue text-lg font-bold text-primary">
-            {mentor.firstName.charAt(0)}{mentor.lastName.charAt(0)}
+        <div className="flex items-start gap-3.5 mb-4">
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-pastel-blue to-pastel-mint text-base font-bold text-primary shadow-xs">
+            {initials}
           </div>
-          <div>
-            <h3 className="font-bold text-primary text-lg">{mentor.firstName} {mentor.lastName}</h3>
-            {mentor.title && (
-              <p className="text-sm font-medium text-gray-700">{mentor.title}</p>
+          <div className="min-w-0 flex-1">
+            <div className="flex items-center gap-1.5">
+              <h3 className="font-bold text-slate-900 text-base truncate font-barlow">
+                {mentor.firstName} {mentor.lastName}
+              </h3>
+            </div>
+            {mentor.title ? (
+              <p className="text-xs font-medium text-slate-600 truncate">{mentor.title}</p>
+            ) : (
+              <p className="text-xs text-muted-foreground">BTÜ Mezun Mentör</p>
+            )}
+            {mentor.company && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground mt-1 truncate">
+                <Building2 size={13} className="shrink-0 text-slate-400" />
+                <span className="truncate">{mentor.company}</span>
+              </div>
             )}
           </div>
         </div>
-        
-        <div className="mt-5 space-y-2 text-sm text-gray-600 mb-4">
-          {mentor.company && (
-            <div className="flex items-center gap-2">
-              <Briefcase size={16} className="text-gray-400" />
-              <p>{mentor.company}</p>
-            </div>
-          )}
-        </div>
 
         {mentor.expertise && mentor.expertise.length > 0 && (
-          <div className="mb-6 flex flex-wrap gap-2">
-            {mentor.expertise.slice(0, 5).map(skill => (
-              <span key={skill} className="rounded-full bg-pastel-blue-light px-3 py-1 text-xs font-semibold text-primary">
+          <div className="mb-5 flex flex-wrap gap-1.5 pt-2 border-t border-slate-100">
+            {mentor.expertise.slice(0, 4).map(skill => (
+              <span key={skill} className="rounded-full bg-pastel-blue/40 px-2.5 py-0.5 text-[11px] font-semibold text-primary">
                 {skill}
               </span>
             ))}
-            {mentor.expertise.length > 5 && (
-              <span className="rounded-full bg-gray-100 px-3 py-1 text-xs font-semibold text-gray-600">
-                +{mentor.expertise.length - 5}
+            {mentor.expertise.length > 4 && (
+              <span className="rounded-full bg-slate-100 px-2 py-0.5 text-[10px] font-semibold text-slate-500">
+                +{mentor.expertise.length - 4}
               </span>
             )}
           </div>
         )}
       </div>
+
       <Button 
         onClick={onRequest} 
         variant="outline" 
-        className="w-full rounded-xl border-pastel-blue text-primary hover:bg-pastel-blue/20"
+        className="w-full rounded-xl border-slate-200 hover:border-primary hover:bg-primary hover:text-white transition-all text-xs font-semibold h-10 gap-1.5 shadow-xs"
       >
+        <Sparkles size={14} className="text-amber-500 group-hover:text-white" />
         Mentörlük Talep Et
       </Button>
     </li>

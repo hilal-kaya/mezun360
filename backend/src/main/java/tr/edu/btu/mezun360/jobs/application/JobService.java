@@ -59,16 +59,37 @@ public class JobService {
         
         Specification<JobPost> spec = Specification.where(null);
         if (query != null && !query.isBlank()) {
-            final String searchPattern = "%" + query + "%";
-            spec = spec.and((root, cq, cb) -> 
-                cb.or(
-                    cb.like(cb.lower(root.get("title")), cb.lower(cb.literal(searchPattern))),
-                    cb.like(cb.lower(root.get("company")), cb.lower(cb.literal(searchPattern))),
-                    cb.like(cb.lower(root.get("location")), cb.lower(cb.literal(searchPattern))),
-                    cb.like(cb.lower(root.get("jobType").as(String.class)), cb.lower(cb.literal(searchPattern))),
-                    cb.like(cb.lower(root.get("workModel").as(String.class)), cb.lower(cb.literal(searchPattern)))
-                )
-            );
+            final String searchPattern = "%" + query.trim() + "%";
+            final String lowerQuery = query.trim().toLowerCase(java.util.Locale.forLanguageTag("tr"));
+            spec = spec.and((root, cq, cb) -> {
+                java.util.List<jakarta.persistence.criteria.Predicate> predicates = new java.util.ArrayList<>();
+                predicates.add(cb.like(cb.lower(root.get("title")), cb.lower(cb.literal(searchPattern))));
+                predicates.add(cb.like(cb.lower(root.get("company")), cb.lower(cb.literal(searchPattern))));
+                predicates.add(cb.like(cb.lower(root.get("location")), cb.lower(cb.literal(searchPattern))));
+                predicates.add(cb.like(cb.lower(root.get("jobType").as(String.class)), cb.lower(cb.literal(searchPattern))));
+                predicates.add(cb.like(cb.lower(root.get("workModel").as(String.class)), cb.lower(cb.literal(searchPattern))));
+
+                if (lowerQuery.contains("staj")) {
+                    predicates.add(cb.equal(root.get("jobType"), tr.edu.btu.mezun360.jobs.domain.JobType.INTERNSHIP));
+                }
+                if (lowerQuery.contains("tam zaman")) {
+                    predicates.add(cb.equal(root.get("jobType"), tr.edu.btu.mezun360.jobs.domain.JobType.FULL_TIME));
+                }
+                if (lowerQuery.contains("yarı zaman") || lowerQuery.contains("yari zaman")) {
+                    predicates.add(cb.equal(root.get("jobType"), tr.edu.btu.mezun360.jobs.domain.JobType.PART_TIME));
+                }
+                if (lowerQuery.contains("uzak") || lowerQuery.contains("remote")) {
+                    predicates.add(cb.equal(root.get("workModel"), tr.edu.btu.mezun360.jobs.domain.WorkModel.REMOTE));
+                }
+                if (lowerQuery.contains("hibrit") || lowerQuery.contains("hybrid")) {
+                    predicates.add(cb.equal(root.get("workModel"), tr.edu.btu.mezun360.jobs.domain.WorkModel.HYBRID));
+                }
+                if (lowerQuery.contains("ofis")) {
+                    predicates.add(cb.equal(root.get("workModel"), tr.edu.btu.mezun360.jobs.domain.WorkModel.ONSITE));
+                }
+
+                return cb.or(predicates.toArray(new jakarta.persistence.criteria.Predicate[0]));
+            });
         }
 
         return jobPostRepository.findAll(spec, pageable).map(job -> {

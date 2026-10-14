@@ -76,11 +76,23 @@ const MENTOR_CHIPS = [
                   value={query}
                   onChange={e => setQuery(e.target.value)}
                   placeholder="İsim, şirket, pozisyon veya uzmanlık alanına göre arayın..." 
-                  className="w-full h-12 pl-14 pr-32 rounded-full bg-transparent outline-none text-sm text-foreground placeholder:text-gray-400"
+                  className="w-full h-12 pl-14 pr-36 rounded-full bg-transparent outline-none text-sm text-foreground placeholder:text-gray-400"
                 />
-                <Button type="submit" className="absolute right-2 h-9 rounded-full px-5 bg-primary hover:bg-primary/90 text-white font-semibold text-xs">
-                  Ara
-                </Button>
+                <div className="absolute right-2 flex items-center gap-1">
+                  {query && (
+                    <button
+                      type="button"
+                      onClick={() => { setQuery(''); setDebouncedQuery(''); setPage(0); }}
+                      className="size-7 rounded-full text-slate-400 hover:text-slate-600 hover:bg-slate-100 flex items-center justify-center transition-colors text-xs font-bold"
+                      aria-label="Aramayı temizle"
+                    >
+                      ✕
+                    </button>
+                  )}
+                  <Button type="submit" className="h-9 rounded-full px-5 bg-primary hover:bg-primary/90 text-white font-semibold text-xs">
+                    Ara
+                  </Button>
+                </div>
               </div>
             </form>
 
@@ -149,9 +161,36 @@ const MENTOR_CHIPS = [
             </div>
           ) : (
             <>
+              <div className="flex items-center justify-between px-1">
+                <p className="text-xs font-semibold text-muted-foreground">
+                  Toplam <span className="text-slate-900 font-bold">{queryMentors.data.page.totalElements}</span> kayıtlı mentör
+                </p>
+                {query && (
+                  <button 
+                    type="button"
+                    onClick={() => { setQuery(''); setDebouncedQuery(''); setPage(0); }}
+                    className="text-xs text-primary hover:underline font-semibold"
+                  >
+                    Filtreleri Temizle
+                  </button>
+                )}
+              </div>
+
               {queryMentors.data.content.length === 0 ? (
-                <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-8 text-center text-gray-500">
-                  Aradığınız kriterlere uygun mentör bulunamadı.
+                <div className="rounded-2xl border border-dashed border-gray-300 bg-white p-12 text-center text-slate-600 space-y-3">
+                  <p className="text-base font-semibold text-slate-800">Aradığınız kriterlere uygun mentör bulunamadı.</p>
+                  <p className="text-xs text-muted-foreground max-w-sm mx-auto">
+                    Farklı bir arama terimi deneyebilir veya filtreleri temizleyerek tüm mentörleri listeleyebilirsiniz.
+                  </p>
+                  {query && (
+                    <Button 
+                      variant="outline" 
+                      onClick={() => { setQuery(''); setDebouncedQuery(''); setPage(0); }}
+                      className="rounded-xl text-xs"
+                    >
+                      Tüm Mentörleri Göster
+                    </Button>
+                  )}
                 </div>
               ) : (
                 <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">

@@ -32,6 +32,7 @@ public class MentorSearchService {
                     cb.like(cb.lower(root.get("lastName")), cb.lower(cb.literal(searchPattern))),
                     cb.like(cb.lower(root.get("currentCompany")), cb.lower(cb.literal(searchPattern))),
                     cb.like(cb.lower(root.get("currentPosition")), cb.lower(cb.literal(searchPattern))),
+                    cb.like(cb.lower(root.get("department")), cb.lower(cb.literal(searchPattern))),
                     cb.like(cb.lower(skillsJoin.get("name")), cb.lower(cb.literal(searchPattern)))
                 );
             });
